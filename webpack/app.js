@@ -30,7 +30,11 @@ module.exports = {
       { 
         directory: path.resolve(__dirname, '../dist'),
         publicPath: '/assets/js',
-      },    
+      },   
+      { 
+        directory: path.resolve(__dirname, '../example-data'),
+        publicPath: '/api',
+      },   
     ],
     port: 3000,
   },

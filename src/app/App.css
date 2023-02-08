@@ -1,3 +1,24 @@
-/* body {
+body {
   margin: 0;
-} */
+}
+
+.header {
+  width: 100vw;
+  height: 100px;
+  background-color: rgb(173, 216, 247);
+}
+
+.main-content {
+  width: 100wv;
+  height: 700px;
+}
+
+.footer {
+  width: 100vw;
+  height: 60px;
+  background-color: rgb(173, 216, 247);
+}
+
+.spot-list .selected {
+  text-decoration: underline;
+}
