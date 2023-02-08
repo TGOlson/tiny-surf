@@ -1,6 +1,6 @@
 # tiny-surf
 
-A tiny little way to check the waves. 
+A tiny way to check the waves.
 
 ### design
 
