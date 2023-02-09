@@ -36,6 +36,7 @@ module.exports = {
         publicPath: '/api',
       },   
     ],
+    historyApiFallback: true,
     port: 3000,
   },
 };
