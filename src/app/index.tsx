@@ -5,20 +5,28 @@ import {
   RouterProvider,
 } from "react-router-dom";
 
-import App from "./App";
-import SpotList from "./components/SpotList";
-import ErrorPage from "./ErrorPage";
+import Root from "./pages/Root";
+import SpotExplorer from "./pages/SpotExplorer";
+import ErrorPage from "./pages/ErrorPage";
+
 import "./index.css";
+
+import { regionLoader, spotLoader } from "./loaders";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <App />,
+    element: <Root />,
     errorElement: <ErrorPage />,
     children: [
       {
-        path: "s/:spotId",
-        element: <SpotList />,
+        path: "r/:regionId",
+        loader: regionLoader
+      },
+      {
+        path: "r/:regionId/s/:spotId",
+        element: <SpotExplorer />,
+        loader: spotLoader
       },
     ],
   },

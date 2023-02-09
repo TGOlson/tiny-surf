@@ -3,10 +3,17 @@ type Location = {
   type : "Point"
 };
 
-// properties that all taxomies include
+type AssociatedLink = {
+  href: string,
+  key: 'taxonomy' | 'api' | 'www' | 'travel'
+};
+
+// All taxomies include these base properties
 type SurflineBaseTaxonomy = {
   _id: string,
-  associated: object, // unused, not well typed
+  associated: {
+    links: [AssociatedLink, AssociatedLink | null, AssociatedLink | null]
+  },
   contains: SurflineTaxonomy[],
   location: Location,
   name: string,
@@ -18,11 +25,13 @@ type SurflineBaseTaxonomy = {
   updatedAt: string,
 };
 
+// Type specific taxonomy properties
 type SurflineSpotTaxonomy = {
   type: 'spot',
   category: 'surfline',
   spot: string,
   hasSpots: false,
+  liesIn: [string, string]
 };
 
 type SurflineSubregionTaxonomy = {
@@ -30,6 +39,7 @@ type SurflineSubregionTaxonomy = {
   category: 'surfline',
   subregion: string,
   hasSpots: true,
+  liesIn: [string, string]
 };
 
 
@@ -38,16 +48,17 @@ type SurflineRegionTaxonomy = {
   category: 'surfline',
   region: string,
   hasSpots: true,
+  liesIn: [string]
 };
 
 type SurflineGeonameTaxonomy = {
   type: 'geoname',
   category: 'geonames',
   geonameId: string,
-  spot: string,
   hasSpots: true,
   enumeratedPath: string,
-  geonames: object, // unused, not well typed
+  liesIn: [string | null] // null if geoname is earth, string in all other cases
+  geonames: object, // not well typed, unclear if this is useful
 };
 
 

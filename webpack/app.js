@@ -32,7 +32,7 @@ module.exports = {
         publicPath: '/assets/js',
       },   
       { 
-        directory: path.resolve(__dirname, '../example-data'),
+        directory: path.resolve(__dirname, '../sample-data'),
         publicPath: '/api',
       },   
     ],
