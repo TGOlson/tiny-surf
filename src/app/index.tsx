@@ -1,21 +1,24 @@
 import React from "react";
 import ReactDOMClient from 'react-dom/client';
-import {createBrowserRouter, RouterProvider} from "react-router-dom";
+import {
+  createBrowserRouter,
+  RouterProvider,
+} from "react-router-dom";
 
 import App from "./App";
-import PageNotFound from "./PageNotFound";
-
+import SpotList from "./components/SpotList";
+import ErrorPage from "./ErrorPage";
 import "./index.css";
 
 const router = createBrowserRouter([
   {
-    path: '/',
+    path: "/",
     element: <App />,
-    errorElement: <PageNotFound />,
+    errorElement: <ErrorPage />,
     children: [
       {
-        path: '/spot/:spotId',
-        element: <App />
+        path: "s/:spotId",
+        element: <SpotList />,
       },
     ],
   },
@@ -24,5 +27,5 @@ const router = createBrowserRouter([
 const rootElement = document.getElementById("root") as HTMLElement;
 
 ReactDOMClient.createRoot(rootElement).render(
-    <RouterProvider router={router} />
+  <RouterProvider router={router} />
 );

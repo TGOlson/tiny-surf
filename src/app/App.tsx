@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Outlet } from 'react-router-dom';
 import { Region } from '../shared/types';
 import { fetchRegion, SOUTH_SD_REGION_ID } from './api';
 
@@ -37,12 +38,13 @@ class App extends Component<AppProps, AppState> {
     const selected = spots ? spots[0]?.id : null;
 
     console.log(spots, selected);
+    // {spots && selected ? <SpotList spots={spots} selected={selected} /> : 'loading spots...'}
 
     return (
         <div>
-          <Header/>
-          {spots && selected ? <SpotList spots={spots} selected={selected} /> : 'loading spots...'}
-          <Footer/>
+          <Header />
+          <Outlet />
+          <Footer />
         </div>
 
     );

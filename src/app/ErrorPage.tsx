@@ -2,7 +2,7 @@ import React from "react";
 import { isRouteErrorResponse, useRouteError } from "react-router-dom";
 
 // type refinement of 'unknown' is kind of a pain...
-const isError = (error: unknown): error is Error => {
+const hasMessage = (error: unknown): error is object & {message: string} => {
   return error !== null 
     && typeof error === 'object'
     && 'message' in error
@@ -11,12 +11,12 @@ const isError = (error: unknown): error is Error => {
 
 const getErrorMessage = (error: unknown): string => {
   if (isRouteErrorResponse(error)) return `${error.status} ${error.statusText}`;
-  if (isError(error)) return error.message;
+  if (hasMessage(error)) return error.message;
 
   return 'Unknown error';
 };
 
-const PageNotFound = () => {
+const ErrorPage = () => {
   const error = useRouteError();
   console.error(error);
 
@@ -31,6 +31,6 @@ const PageNotFound = () => {
       </p>
     </div>
   );
-}
+};
 
-export default PageNotFound;
+export default ErrorPage;
