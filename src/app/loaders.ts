@@ -1,6 +1,8 @@
+import { useDispatch } from 'react-redux';
 import { LoaderFunctionArgs, Params, redirect } from 'react-router-dom';
 import { Spot } from '../shared/types';
 import { fetchRegion } from './api';
+import { addRegion } from './region-reducer';
 
 const getParam = (key: string) => (params: Params): string => {
   const val = params[key];
@@ -33,7 +35,7 @@ export async function spotLoader({params}: LoaderFunctionArgs): Promise<{selecte
   console.log('regionId', regionId);
   console.log('spotId', spotId);
 
-  const {spots} = await fetchRegion(regionId);
+  const region = await fetchRegion(regionId);
 
-  return {selected: spotId, spots};
+  return {selected: spotId, spots: region.spots};
 }
