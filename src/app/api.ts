@@ -1,4 +1,4 @@
-import { SurflineTaxonomy } from "../shared/types/surfline-taxonomy";
+import { Taxonomy } from "../shared/surfline/taxonomy";
 import { Region } from "../shared/types";
 
 
@@ -11,7 +11,7 @@ export const CALIFORNIA_GEONAME_ID = '58f7ed51dadb30820bb387a6';
 // const regionUrl = (id: string) => `https://services.surfline.com/taxonomy?type=taxonomy&id=${id}`;
 const regionUrl = (id: string) => `/api/taxonomy_${id}.json`;
 
-const taxonomyToRegion = (taxonomy: SurflineTaxonomy): Region => {
+const taxonomyToRegion = (taxonomy: Taxonomy): Region => {
   if (taxonomy.type !== 'subregion') throw new Error(`Unexpected taxonomy type: ${taxonomy.type}`);
 
   const id = taxonomy._id;
@@ -27,6 +27,6 @@ const taxonomyToRegion = (taxonomy: SurflineTaxonomy): Region => {
 
 export const fetchRegion = (id: string): Promise<Region> => {
   return fetch(regionUrl(id))
-    .then(res => res.json() as Promise<SurflineTaxonomy>)
+    .then(res => res.json() as Promise<Taxonomy>)
     .then(taxonomy => taxonomyToRegion(taxonomy));
 };

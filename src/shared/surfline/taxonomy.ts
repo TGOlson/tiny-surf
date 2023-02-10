@@ -1,20 +1,20 @@
-type Location = {
+export type Location = {
   coordinates : [number, number],
   type : "Point"
 };
 
-type AssociatedLink = {
+export type AssociatedLink = {
   href: string,
   key: 'taxonomy' | 'api' | 'www' | 'travel'
 };
 
 // All taxomies include these base properties
-type SurflineBaseTaxonomy = {
+type BaseTaxonomy = {
   _id: string,
   associated: {
     links: [AssociatedLink, AssociatedLink | null, AssociatedLink | null]
   },
-  contains: SurflineTaxonomy[],
+  contains: Taxonomy[],
   location: Location,
   name: string,
   type: 'spot' | 'subregion' | 'region' | 'geoname',
@@ -26,7 +26,7 @@ type SurflineBaseTaxonomy = {
 };
 
 // Type specific taxonomy properties
-type SurflineSpotTaxonomy = {
+export type SpotTaxonomy = BaseTaxonomy & {
   type: 'spot',
   category: 'surfline',
   spot: string,
@@ -34,7 +34,7 @@ type SurflineSpotTaxonomy = {
   liesIn: [string, string]
 };
 
-type SurflineSubregionTaxonomy = {
+export type SubregionTaxonomy = BaseTaxonomy & {
   type: 'subregion',
   category: 'surfline',
   subregion: string,
@@ -43,7 +43,7 @@ type SurflineSubregionTaxonomy = {
 };
 
 
-type SurflineRegionTaxonomy = {
+export type RegionTaxonomy = BaseTaxonomy & {
   type: 'region',
   category: 'surfline',
   region: string,
@@ -51,7 +51,7 @@ type SurflineRegionTaxonomy = {
   liesIn: [string]
 };
 
-type SurflineGeonameTaxonomy = {
+export type GeonameTaxonomy = BaseTaxonomy & {
   type: 'geoname',
   category: 'geonames',
   geonameId: string,
@@ -62,8 +62,10 @@ type SurflineGeonameTaxonomy = {
 };
 
 
-export type SurflineTaxonomy 
-  = (SurflineBaseTaxonomy & SurflineSpotTaxonomy)
-  | (SurflineBaseTaxonomy & SurflineSubregionTaxonomy)
-  | (SurflineBaseTaxonomy & SurflineRegionTaxonomy)
-  | (SurflineBaseTaxonomy & SurflineGeonameTaxonomy);
+export type Taxonomy = SpotTaxonomy | SubregionTaxonomy | RegionTaxonomy | GeonameTaxonomy;
+
+// type refinement helpers
+export const isSpotTaxonomy = (t: Taxonomy): t is SpotTaxonomy => t.type === 'spot';
+export const isSubregionTaxonomy = (t: Taxonomy): t is SubregionTaxonomy => t.type === 'subregion';
+export const isRegionTaxonomy = (t: Taxonomy): t is RegionTaxonomy => t.type === 'region';
+export const isGeonameTaxonomy = (t: Taxonomy): t is GeonameTaxonomy => t.type === 'geoname';
