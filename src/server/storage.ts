@@ -9,6 +9,7 @@ async function readJSON<T> (p: string): Promise<T> {
 }
 
 const RAW_TAXONOMY_PATH = path.resolve(__dirname, '../data/raw/taxonomy.json');
+const RAW_EXTRA_TAXONOMY_PATH = path.resolve(__dirname, '../data/raw/taxonomy_extra.json');
 
 export async function writeRawTaxonomyData(tx: TaxonomyResponse): Promise<void> {
   return writeFile(RAW_TAXONOMY_PATH, JSON.stringify(tx));
@@ -16,4 +17,12 @@ export async function writeRawTaxonomyData(tx: TaxonomyResponse): Promise<void> 
 
 export async function readRawTaxonomyData(): Promise<TaxonomyResponse> {
   return readJSON(RAW_TAXONOMY_PATH);
+}
+
+export async function writeRawExtraTaxonomyData(tx: TaxonomyResponse[]): Promise<void> {
+  return writeFile(RAW_EXTRA_TAXONOMY_PATH, JSON.stringify(tx));
+}
+
+export async function readRawExtraTaxonomyData(): Promise<TaxonomyResponse[]> {
+  return readJSON(RAW_EXTRA_TAXONOMY_PATH);
 }

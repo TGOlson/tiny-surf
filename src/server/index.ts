@@ -1,20 +1,36 @@
 import { inspectTaxonomy, parseSpots } from "./surfline/parse";
-import { readRawTaxonomyData, writeRawTaxonomyData } from "./storage";
-import { fetchAllTaxonomies } from "./surfline/taxonomy";
+import { readRawExtraTaxonomyData, readRawTaxonomyData, writeRawExtraTaxonomyData, writeRawTaxonomyData } from "./storage";
+import { fetchAllTaxonomies, fetchTaxonomy } from "./surfline/taxonomy";
+import { flattenTaxonomyResponse } from "./surfline/taxonomy/types";
 
 async function main () {
   const [_, __, cmd] = process.argv;
 
   switch (cmd) {
-    case '--download-taxonomy': {
+    case '--fetch-taxonomy': {
       const tx = await fetchAllTaxonomies();
       return await writeRawTaxonomyData(tx);
     }
     case '--inspect-taxonomy': {
       const tx = await readRawTaxonomyData();
-      const res = inspectTaxonomy(tx);
+      const res = inspectTaxonomy(flattenTaxonomyResponse(tx));
       console.log(res);
       return;
+    }
+    case '--inspect-taxonomy-with-extra': {
+      const tx = await readRawTaxonomyData();
+      const txs = await readRawExtraTaxonomyData();
+      const flattened = txs.map(flattenTaxonomyResponse).flat().concat(flattenTaxonomyResponse(tx));
+      const res = inspectTaxonomy(flattened);
+      console.log(res, res.liesInIds.uniqueUnlinked.vals);
+      return;
+    }
+    case '--fetch-unlinked-taxonomy': {
+      const tx = await readRawTaxonomyData();
+      const res = inspectTaxonomy(flattenTaxonomyResponse(tx));
+      const unlinkedIds = res.liesInIds.uniqueUnlinked.vals;
+      const txs = await Promise.all(unlinkedIds.map(id => fetchTaxonomy(id, 1)));
+      return await writeRawExtraTaxonomyData(txs);
     }
     case '--parse-spots': {
       const tx = await readRawTaxonomyData();

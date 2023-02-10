@@ -11,6 +11,9 @@ export const OCEANIA_GEONAME_ID = "58f7eef9dadb30820bb5626e";
 export const AFRICA_GEONAME_ID = "58f7f00ddadb30820bb69bbc";
 export const ASIA_GEONAME_ID = "58f7eef1dadb30820bb556be";
 
+// for whatever reason Jaluit Atoll (5bdb2e9e1349f51cb0e83182) in Greece references an id in `liesIn` that doesn't exist
+export const NONEXISTENT_GREECE_SUBREGION_ID = '5bdb2d7ed43f7a0001c07d01';
+
 export async function fetchTaxonomy(id: string, maxDepth = 0): Promise<TaxonomyResponse> {
   const url = taxonomyUrl(id, maxDepth);
 

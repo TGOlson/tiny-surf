@@ -72,3 +72,6 @@ export const isSpotTaxonomy = (t: Taxonomy): t is SpotTaxonomy => t.type === 'sp
 export const isSubregionTaxonomy = (t: Taxonomy): t is SubregionTaxonomy => t.type === 'subregion';
 export const isRegionTaxonomy = (t: Taxonomy): t is RegionTaxonomy => t.type === 'region';
 export const isGeonameTaxonomy = (t: Taxonomy): t is GeonameTaxonomy => t.type === 'geoname';
+
+export const toTaxonomy = (tx: TaxonomyResponse): Taxonomy => tx;
+export const flattenTaxonomyResponse = (tx: TaxonomyResponse): Taxonomy[] => tx.contains.concat(tx.in).concat([toTaxonomy(tx)]);
