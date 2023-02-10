@@ -1,4 +1,4 @@
-import { isSpotTaxonomy, Taxonomy } from "../shared/surfline/taxonomy";
+import { isSpotTaxonomy, Taxonomy } from "../server/surfline/taxonomy/types";
 import { Region } from "../shared/types";
 
 
