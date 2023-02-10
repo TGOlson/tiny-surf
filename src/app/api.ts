@@ -1,4 +1,4 @@
-import { Taxonomy } from "../shared/surfline/taxonomy";
+import { isSpotTaxonomy, Taxonomy } from "../shared/surfline/taxonomy";
 import { Region } from "../shared/types";
 
 
@@ -18,7 +18,7 @@ const taxonomyToRegion = (taxonomy: Taxonomy): Region => {
   const name = taxonomy.name;
 
   const spots = taxonomy.contains
-    .filter(x => x.type === 'spot')
+    .filter(isSpotTaxonomy)
     .sort((a, b) => b.location.coordinates[1] - a.location.coordinates[1]) // sorted north to south
     .map(({_id, name}) => ({id: _id, name}));
 
