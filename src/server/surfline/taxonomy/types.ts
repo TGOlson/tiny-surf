@@ -1,7 +1,7 @@
 export type TaxonomyQuery = {
   id: string,
   type?: 'taxonomy' | TaxonomyType,
-  maxDepth?: number,
+  maxDepth?: 0 | 1 | 2 | 3 | 4 | 5 | 6,
 };
 
 export type TaxonomyType = 'spot' | 'subregion' | 'region' | 'geoname';
@@ -28,7 +28,14 @@ type BaseTaxonomy = {
   category: 'surfline' | 'geonames',
   depth: number,
   hasSpots: boolean,
-  liesIn: string[], // other taxonomy ids
+  // other taxonomy ids
+  // first item is null if geoname is earth, string in all other cases
+  // most type=spot taxonomies have 2 'liesIn', but a few have 1 or 3
+  liesIn: [
+    string | null, 
+    string | null, 
+    string | null
+  ],
   updatedAt: string,
 };
 
@@ -38,7 +45,6 @@ export type SpotTaxonomy = BaseTaxonomy & {
   category: 'surfline',
   spot: string,
   hasSpots: false,
-  liesIn: [string, string, string | undefined]
 };
 
 export type SubregionTaxonomy = BaseTaxonomy & {
@@ -46,16 +52,13 @@ export type SubregionTaxonomy = BaseTaxonomy & {
   category: 'surfline',
   subregion: string,
   hasSpots: true,
-  liesIn: [string, string]
 };
-
 
 export type RegionTaxonomy = BaseTaxonomy & {
   type: 'region',
   category: 'surfline',
   region: string,
   hasSpots: true,
-  liesIn: [string]
 };
 
 export type GeonameTaxonomy = BaseTaxonomy & {
@@ -63,8 +66,20 @@ export type GeonameTaxonomy = BaseTaxonomy & {
   category: 'geonames',
   geonameId: string,
   enumeratedPath: string, // comma seperated string path to this geoname
-  liesIn: [string | null] // null if geoname is earth, string in all other cases
-  geonames: object, // not well typed, unclear if this is useful
+  // 'string' vals may have better enum types, could clean this up...
+  geonames: {
+    population: number,
+    fcode: string,
+    fcl: string,
+    lat: string,
+    adminName1: string,
+    fcodeName: string,
+    toponymName: string,
+    fclName: string,
+    name: string,
+    geonameId: number,
+    lng: string,
+  }
 };
 
 export type Taxonomy = SpotTaxonomy | SubregionTaxonomy | RegionTaxonomy | GeonameTaxonomy;
@@ -74,3 +89,9 @@ export type TaxonomyResponse = Taxonomy & {
   in: Taxonomy[],
   contains: Taxonomy[],
 };
+
+// type refinement helpers
+export const isSpotTaxonomy = (t: Taxonomy): t is SpotTaxonomy => t.type === 'spot';
+export const isSubregionTaxonomy = (t: Taxonomy): t is SubregionTaxonomy => t.type === 'subregion';
+export const isRegionTaxonomy = (t: Taxonomy): t is RegionTaxonomy => t.type === 'region';
+export const isGeonameTaxonomy = (t: Taxonomy): t is GeonameTaxonomy => t.type === 'geoname';

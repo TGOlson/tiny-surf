@@ -2,9 +2,9 @@ import {uniqBy} from 'ramda';
 
 import { Spot } from "../../shared/types";
 import { notNull } from "../../shared/util";
-import { NONEXISTENT_BAJA_SUBREGION_ID } from './taxonomy/constants';
+import { NONEXISTENT_BAJA_SUBREGION_ID, NONEXISTENT_GREECE_SUBREGION_ID } from './taxonomy/constants';
 import { GeonameTaxonomy, Taxonomy } from "./taxonomy/types";
-import { isGeonameTaxonomy, isRegionTaxonomy, isSpotTaxonomy, isSubregionTaxonomy } from "./taxonomy";
+import { isGeonameTaxonomy, isRegionTaxonomy, isSpotTaxonomy, isSubregionTaxonomy } from "./taxonomy/types";
 
 export type TaxonomyInspection = {
   numIds: number,
@@ -25,6 +25,17 @@ export type TaxonomyInspection = {
       vals: string[]
     }
   }
+};
+
+const referencesBadId = (tx: Taxonomy): boolean => {
+  return tx.liesIn.includes(NONEXISTENT_GREECE_SUBREGION_ID) 
+    || tx.liesIn.includes(NONEXISTENT_BAJA_SUBREGION_ID);
+};
+
+export const cleanTaxonomy = (txs: Taxonomy[]): Taxonomy[] => {
+  return uniqBy(x => x._id, txs)
+    .filter(x => x.liesIn ? !referencesBadId(x) : true);
+
 };
 
 // A taxonomy is a slightly-complicated semi-recursive data structre with a few different sub-types
@@ -86,12 +97,6 @@ export const parseSpots = (txs: Taxonomy[]): Spot[] => {
 
     const liesIn = spot.liesIn.filter(notNull).map(x => geonamesById[x]).filter(notNull);
 
-    // const liesInOne = geonamesById[spot.liesIn[0]];
-    // const liesInTwo = geonamesById[spot.liesIn[1]];
-
-    // TODO: this happens a little more than expected
-    // maybe the full dataset is not quite as fully inclusize as expected
-    // may need to improve crawling logic later...
     if (liesIn.length === 0) {
       console.log(`Unable to find geoname for spot: ${spot._id}, ${spot.name}`);
     }
