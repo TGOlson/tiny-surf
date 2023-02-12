@@ -1,7 +1,6 @@
 import { inspectTaxonomy, parseSpots } from "./surfline/parse";
 import { readRawExtraTaxonomyData, readRawTaxonomyData, writeRawExtraTaxonomyData, writeRawTaxonomyData } from "./storage";
-import { fetchAllTaxonomies, fetchTaxonomy } from "./surfline/taxonomy";
-import { flattenTaxonomyResponse } from "./surfline/taxonomy/types";
+import { fetchAllTaxonomies, fetchTaxonomy, flattenTaxonomyResponse } from "./surfline/taxonomy";
 
 async function main () {
   const [_, __, cmd] = process.argv;
@@ -14,7 +13,7 @@ async function main () {
     case '--inspect-taxonomy': {
       const tx = await readRawTaxonomyData();
       const res = inspectTaxonomy(flattenTaxonomyResponse(tx));
-      console.log(res);
+      console.log(res, res.liesInIds.uniqueUnlinked.vals);
       return;
     }
     case '--inspect-taxonomy-with-extra': {
@@ -29,12 +28,16 @@ async function main () {
       const tx = await readRawTaxonomyData();
       const res = inspectTaxonomy(flattenTaxonomyResponse(tx));
       const unlinkedIds = res.liesInIds.uniqueUnlinked.vals;
-      const txs = await Promise.all(unlinkedIds.map(id => fetchTaxonomy(id, 1)));
+      const txs = await Promise.all(unlinkedIds.map(id => fetchTaxonomy({id, maxDepth: 1})));
       return await writeRawExtraTaxonomyData(txs);
     }
     case '--parse-spots': {
       const tx = await readRawTaxonomyData();
-      const spots = parseSpots(tx.contains).filter(s => s.locationNamePath.includes('California'));
+      const txs = await readRawExtraTaxonomyData();
+      const flattened = txs.map(flattenTaxonomyResponse).flat().concat(flattenTaxonomyResponse(tx));
+
+      const spots = parseSpots(flattened).filter(s => s.locationNamePath.includes('California'));
+      
       console.log(spots);
       return;
     }

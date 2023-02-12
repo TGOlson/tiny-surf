@@ -1,3 +1,11 @@
+export type TaxonomyQuery = {
+  id: string,
+  type?: 'taxonomy' | TaxonomyType,
+  maxDepth?: number,
+};
+
+export type TaxonomyType = 'spot' | 'subregion' | 'region' | 'geoname';
+
 export type Location = {
   coordinates : [number, number],
   type : "Point"
@@ -12,8 +20,11 @@ export type AssociatedLink = {
 type BaseTaxonomy = {
   _id: string,
   location: Location,
+  associated: {
+    links: [AssociatedLink, AssociatedLink | null, AssociatedLink | null]
+  },
   name: string,
-  type: 'spot' | 'subregion' | 'region' | 'geoname',
+  type: TaxonomyType,
   category: 'surfline' | 'geonames',
   depth: number,
   hasSpots: boolean,
@@ -27,7 +38,7 @@ export type SpotTaxonomy = BaseTaxonomy & {
   category: 'surfline',
   spot: string,
   hasSpots: false,
-  liesIn: [string, string]
+  liesIn: [string, string, string | undefined]
 };
 
 export type SubregionTaxonomy = BaseTaxonomy & {
@@ -60,18 +71,6 @@ export type Taxonomy = SpotTaxonomy | SubregionTaxonomy | RegionTaxonomy | Geona
 
 // Top level response includes a few extra fields
 export type TaxonomyResponse = Taxonomy & {
-  associated: {
-    links: [AssociatedLink, AssociatedLink | null, AssociatedLink | null]
-  },
   in: Taxonomy[],
   contains: Taxonomy[],
 };
-
-// type refinement helpers
-export const isSpotTaxonomy = (t: Taxonomy): t is SpotTaxonomy => t.type === 'spot';
-export const isSubregionTaxonomy = (t: Taxonomy): t is SubregionTaxonomy => t.type === 'subregion';
-export const isRegionTaxonomy = (t: Taxonomy): t is RegionTaxonomy => t.type === 'region';
-export const isGeonameTaxonomy = (t: Taxonomy): t is GeonameTaxonomy => t.type === 'geoname';
-
-export const toTaxonomy = (tx: TaxonomyResponse): Taxonomy => tx;
-export const flattenTaxonomyResponse = (tx: TaxonomyResponse): Taxonomy[] => tx.contains.concat(tx.in).concat([toTaxonomy(tx)]);

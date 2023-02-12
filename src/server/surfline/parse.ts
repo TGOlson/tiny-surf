@@ -2,7 +2,9 @@ import {uniqBy} from 'ramda';
 
 import { Spot } from "../../shared/types";
 import { notNull } from "../../shared/util";
-import { GeonameTaxonomy, isGeonameTaxonomy, isRegionTaxonomy, isSpotTaxonomy, isSubregionTaxonomy, Taxonomy } from "./taxonomy/types";
+import { NONEXISTENT_BAJA_SUBREGION_ID } from './taxonomy/constants';
+import { GeonameTaxonomy, Taxonomy } from "./taxonomy/types";
+import { isGeonameTaxonomy, isRegionTaxonomy, isSpotTaxonomy, isSubregionTaxonomy } from "./taxonomy";
 
 export type TaxonomyInspection = {
   numIds: number,
@@ -70,7 +72,7 @@ export const inspectTaxonomy = (txs: Taxonomy[]): TaxonomyInspection => {
 };
 
 export const parseSpots = (txs: Taxonomy[]): Spot[] => {
-  const spots = txs.filter(isSpotTaxonomy);
+  const spots = txs.filter(isSpotTaxonomy).filter(x => !x.liesIn.includes(NONEXISTENT_BAJA_SUBREGION_ID));
   const geonames = txs.filter(isGeonameTaxonomy);
 
   const geonamesById = geonames.reduce((accum: {[key: string]: GeonameTaxonomy}, geo: GeonameTaxonomy) => {
@@ -82,20 +84,24 @@ export const parseSpots = (txs: Taxonomy[]): Spot[] => {
     const lat = spot.location.coordinates[1];
     const long = spot.location.coordinates[0];
 
-    const liesInOne = geonamesById[spot.liesIn[0]];
-    const liesInTwo = geonamesById[spot.liesIn[1]];
+    const liesIn = spot.liesIn.filter(notNull).map(x => geonamesById[x]).filter(notNull);
+
+    // const liesInOne = geonamesById[spot.liesIn[0]];
+    // const liesInTwo = geonamesById[spot.liesIn[1]];
 
     // TODO: this happens a little more than expected
     // maybe the full dataset is not quite as fully inclusize as expected
     // may need to improve crawling logic later...
-    if (!liesInOne && !liesInTwo) {
+    if (liesIn.length === 0) {
       console.log(`Unable to find geoname for spot: ${spot._id}, ${spot.name}`);
     }
 
-    const enumeratedPathOne = liesInOne ? liesInOne.enumeratedPath : '';
-    const enumeratedPathTwo = liesInTwo ? liesInTwo.enumeratedPath : '';
+    const enumeratedPaths = liesIn.map(x => x.enumeratedPath).sort((a, b) => b.length - a.length);
 
-    const enumeratedPath = enumeratedPathOne.length > enumeratedPathTwo.length ? enumeratedPathOne : enumeratedPathTwo;
+    const enumeratedPath = enumeratedPaths[0];
+
+    if (!enumeratedPath) throw new Error('Unexpected access error');
+
     const locationNamePath = enumeratedPath.split(',').slice(1);
 
     return {
