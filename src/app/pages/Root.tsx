@@ -1,3 +1,4 @@
+import { CssBaseline, Grid } from '@mui/material';
 import React from 'react';
 import { Outlet } from 'react-router-dom';
 
@@ -6,10 +7,18 @@ import Header from '../components/Header';
 
 const Root = () => {
   return (
-    <div>
-      <Header />
-      <Outlet />
-    </div>
+    <React.Fragment>
+      <CssBaseline />
+
+      <Grid container spacing={2}>
+        <Grid item xs={12}>
+          <Header />
+        </Grid>
+        <Grid item xs={12}>
+          <Outlet />
+        </Grid>
+      </Grid>
+    </React.Fragment>
   );
   // <Footer />
 };

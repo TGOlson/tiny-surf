@@ -1,5 +1,7 @@
+import { Grid } from '@mui/material';
 import React, { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
+import SpotInfo from '../components/SpotInfo';
 import SpotList from '../components/SpotList';
 
 import { useAppDispatch, useAppSelector } from '../hooks';
@@ -33,7 +35,7 @@ const SpotExplorer = () => {
   
   const spots = spotsData.data;
 
-  const selectedSpot = spots.find(spot => spot.slug === paramSlug);
+  const selectedSpot = spots.find(spot => spot.slug === selected);
   
   if (!selectedSpot) {
     return <p>Unable to find spot {paramSlug}</p>;
@@ -42,10 +44,17 @@ const SpotExplorer = () => {
   const location = selectedSpot.locationNamePath.slice(2).join(' ');
 
   return (
-    <div className="spot-list">
-      <h4>{location}</h4>
-      <SpotList spots={spots} selected={selectedSpot} />
-    </div>
+    <Grid container justifyContent="center" spacing={2}>
+      <Grid item xs={12}>
+        <h4>{location}</h4>
+      </Grid>
+      <Grid item xs={4}>
+        <SpotList spots={spots} selected={selectedSpot} />
+      </Grid>
+      <Grid item xs={8} md={4}>
+        <SpotInfo spot={selectedSpot} />
+      </Grid>
+    </Grid>
   );
 };
 

@@ -1,36 +1,15 @@
-// import React from 'react';
-// import { Link } from 'react-router-dom';
+import React from 'react';
 
-// import { Spot } from '../../shared/types';
-// import { useAppDispatch } from '../hooks';
-// import { spotSelected } from '../spot-reducer';
+import { Spot } from '../../shared/types';
 
-// type Params = {
-//   spots: Spot[],
-//   selected: Spot | null;
-// };
+type Params = {
+  spot: Spot | null;
+};
 
-// const SpotList = ({spots, selected}: Params) => {
-//   const dispatch = useAppDispatch();
+const SpotInfo = ({spot}: Params) => {
+  return (
+    <p>{spot ? spot.name : 'Please select a spot!'}</p>
+  );
+};
 
-//   return (
-//     <div className="spot-list">
-//       <ul>
-//         {spots.map(spot => (
-//           <li key={spot.id}>
-//             <Link 
-//               to={"../" + spot.slug} 
-//               onClick={() => dispatch(spotSelected(spot.slug))} 
-//               relative="path"
-//               className={selected?.id === spot.id ? 'selected' : ''}
-//             >
-//               {spot.name}
-//             </Link>
-//           </li>
-//         ))}
-//       </ul>
-//     </div>
-//   );
-// };
-
-// export default SpotList;
+export default SpotInfo;
