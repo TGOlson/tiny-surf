@@ -3,7 +3,7 @@ import {uniqBy} from 'ramda';
 import { Spot } from "../../shared/types";
 import { notNull } from "../../shared/util";
 import { NONEXISTENT_BAJA_SUBREGION_ID, NONEXISTENT_GREECE_SUBREGION_ID } from './taxonomy/constants';
-import { GeonameTaxonomy, Taxonomy } from "./taxonomy/types";
+import { GeonameTaxonomy, SpotTaxonomy, Taxonomy } from "./taxonomy/types";
 import { isGeonameTaxonomy, isRegionTaxonomy, isSpotTaxonomy, isSubregionTaxonomy } from "./taxonomy/types";
 
 export type TaxonomyInspection = {
@@ -82,6 +82,11 @@ export const inspectTaxonomy = (txs: Taxonomy[]): TaxonomyInspection => {
   };
 };
 
+const createSlug = (spot: SpotTaxonomy): string => {
+  const base = `${spot.name} ${spot._id.slice(20)}`;
+  return base.toLowerCase().replace(/ /g, '-');
+};
+
 export const parseSpots = (txs: Taxonomy[]): Spot[] => {
   const spots = txs.filter(isSpotTaxonomy).filter(x => !x.liesIn.includes(NONEXISTENT_BAJA_SUBREGION_ID));
   const geonames = txs.filter(isGeonameTaxonomy);
@@ -95,24 +100,27 @@ export const parseSpots = (txs: Taxonomy[]): Spot[] => {
     const lat = spot.location.coordinates[1];
     const long = spot.location.coordinates[0];
 
-    const liesIn = spot.liesIn.filter(notNull).map(x => geonamesById[x]).filter(notNull);
+    const geonames = spot.liesIn.filter(notNull).map(x => geonamesById[x]).filter(notNull);
 
-    if (liesIn.length === 0) {
+    if (geonames.length === 0) {
       console.log(`Unable to find geoname for spot: ${spot._id}, ${spot.name}`);
     }
 
-    const enumeratedPaths = liesIn.map(x => x.enumeratedPath).sort((a, b) => b.length - a.length);
+    const sortedGeonames = geonames.sort((a, b) => b.enumeratedPath.length - a.enumeratedPath.length);
 
-    const enumeratedPath = enumeratedPaths[0];
+    const closestGeoname = sortedGeonames[0];
 
-    if (!enumeratedPath) throw new Error('Unexpected access error');
+    if (!closestGeoname) throw new Error('Unexpected access error');
 
-    const locationNamePath = enumeratedPath.split(',').slice(1);
+    const locationNamePath = closestGeoname.enumeratedPath.split(',').slice(1);
+    const slug = createSlug(spot);
 
     return {
       id: spot._id,
       name: spot.name,
+      slug,
       location: {lat, long},
+      geonameId: closestGeoname._id,
       locationNamePath
     };
   });

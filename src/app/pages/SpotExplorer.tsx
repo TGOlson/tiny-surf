@@ -1,23 +1,41 @@
-import React from 'react';
-import { NavLink, useLoaderData } from 'react-router-dom';
-import { Spot } from '../../shared/types';
-import { spotLoader } from '../loaders';
+import React, { useEffect } from 'react';
+import { NavLink } from 'react-router-dom';
 
-const SpotItem = (spot: Spot) =>(
-  <li key={spot.id}>
-    <NavLink to={"../" + spot.id} relative="path">{spot.name}</NavLink>
-  </li>
-);
+import { useAppDispatch, useAppSelector } from '../hooks';
+import { fetchSpots, spotSelected } from '../spot-reducer';
 
 const SpotExplorer = () => {
-  // TODO: this typing is gnarly, refactor to a better place
-  const {spots} = useLoaderData() as Awaited<ReturnType<typeof spotLoader>>;
-  console.log('spots', spots);
+  const dispatch = useAppDispatch();
+  const spotsData = useAppSelector(st => st.spot.spots);
+
+  useEffect(() => {
+    if (spotsData.status === 'idle') void dispatch(fetchSpots());
+  }, [spotsData.status, dispatch]);
+
+  if (spotsData.status === 'idle' || spotsData.status === 'pending' ) {
+    return <p>Loading...</p>;
+  }
+
+  if (spotsData.status === 'rejected') {
+    return <p>Error: {spotsData.error}</p>;
+  }
+
+  const spots = spotsData.data;
 
   return (
     <div className="spot-list">
       <ul>
-        {spots.map(spot => SpotItem(spot))}
+        {spots.map(spot => (
+          <li key={spot.id}>
+            <NavLink 
+              to={"../" + spot.slug} 
+              onClick={() => dispatch(spotSelected(spot.slug))} 
+              relative="path"
+            >
+              {spot.name}
+            </NavLink>
+          </li>
+        ))}
       </ul>
     </div>
   );

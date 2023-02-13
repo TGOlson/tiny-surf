@@ -13,7 +13,6 @@ import ErrorPage from "./pages/ErrorPage";
 import "./index.css";
 
 import store from './store';
-import { regionLoader, spotLoader } from "./loaders";
 
 const router = createBrowserRouter([
   {
@@ -22,13 +21,8 @@ const router = createBrowserRouter([
     errorElement: <ErrorPage />,
     children: [
       {
-        path: "r/:regionId",
-        loader: regionLoader
-      },
-      {
-        path: "r/:regionId/s/:spotId",
+        path: "/s/:slug",
         element: <SpotExplorer />,
-        loader: spotLoader
       },
     ],
   },

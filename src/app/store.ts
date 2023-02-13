@@ -1,11 +1,19 @@
 import { configureStore } from '@reduxjs/toolkit';
-import regionReducer from './region-reducer';
+import { logger } from 'redux-logger';
+
 import spotReducer from './spot-reducer';
 
-export default configureStore({
+const store = configureStore({
   reducer: {
     spot: spotReducer,
-    region: regionReducer,
   },
-  devTools: true,
+  middleware: getDefaultMiddleware => getDefaultMiddleware().concat(logger)
 });
+
+// Infer the `RootState` and `AppDispatch` types from the store itself
+export type RootState = ReturnType<typeof store.getState>;
+
+// Inferred type: {posts: PostsState, comments: CommentsState, users: UsersState}
+export type AppDispatch = typeof store.dispatch;
+
+export default store;

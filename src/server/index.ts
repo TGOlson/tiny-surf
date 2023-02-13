@@ -50,29 +50,7 @@ async function main () {
       return await parsedCASpots.write(sortedSpots);
     }
     case '--test': {
-      const spots = await parsedCASpots.read();
-
-      // const slugify = ()
-      const slugs = spots.map(x => {
-        const base = `${x.name} ${x.id.slice(20)}`;
-        return base.toLowerCase().replace(/ /g, '-');
-      });
-
-      const dupes: string[] = [];
-      const slugMap = slugs.reduce((accum: {[key: string]: string}, slug) => {
-        if (accum[slug]) {
-          dupes.push(slug);
-        }
-
-        accum[slug] = slug;
-
-        return accum;
-      }, {});
-
-      console.log('dupes', dupes);
-      
-      // const tx = await fetchEarthTaxonomy({maxDepth: 5});
-      console.log(slugs);
+      console.log('nothing here...');
       
       return;
     }

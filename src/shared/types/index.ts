@@ -1,10 +1,13 @@
 export type Spot = {
   id: string,
-  name: string
+  name: string,
+  slug: string,
   location: {
     lat: number,
     long: number,
-  }
+  },
+  geonameId: string, // id of closest geoname, not necessarily the closest taxonomy type
+  
   // keeping this really simple for now
   // this is a path of locations for a spot:
   // eg. ["Earth", "North America", "California", ...]
