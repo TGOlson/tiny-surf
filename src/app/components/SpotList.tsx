@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import Box from '@mui/material/Box';
@@ -16,7 +16,6 @@ type Params = {
   spots: Spot[],
   selected: Spot;
 };
-
 
 const renderRow = ({style, index, data}: ListChildComponentProps<{spots: Spot[], selected: Spot}>): JSX.Element => {
   const dispatch = useAppDispatch();
@@ -44,14 +43,17 @@ const renderRow = ({style, index, data}: ListChildComponentProps<{spots: Spot[],
  };
 
 const SpotList = ({spots, selected}: Params) => {
-
   const listRef: React.RefObject<FixedSizeList> = React.createRef();
-
-  // const [firstRender, setFirstRender] = useState(true);
-
-  const initialScrollOffset = -1 * spots.findIndex(spot => spot.id === selected.id);
-  console.log(initialScrollOffset);
-
+  const [firstRender, setFirstRender] = useState(true);
+  
+  useEffect(() => {
+    if (listRef.current && firstRender) {
+      const initialScrollOffset = spots.findIndex(spot => spot.id === selected.id);
+      
+      listRef.current.scrollToItem(initialScrollOffset, 'center');
+      setFirstRender(false);
+    }
+  }, [listRef, firstRender]);
 
   return (
     <Box
@@ -65,29 +67,11 @@ const SpotList = ({spots, selected}: Params) => {
         itemCount={spots.length}
         overscanCount={5}
         itemData={{spots, selected}}
-        initialScrollOffset={initialScrollOffset}
       >
         {renderRow}
       </FixedSizeList>
     </Box>
   );
-
-    // <div className="spot-list">
-    //   <ul>
-    //     {spots.map(spot => (
-    //       <li key={spot.id}>
-    //         <Link 
-    //           to={"../" + spot.slug} 
-    //           onClick={() => dispatch(spotSelected(spot.slug))} 
-    //           relative="path"
-    //           className={selected?.id === spot.id ? 'selected' : ''}
-    //         >
-    //           {spot.name}
-    //         </Link>
-    //       </li>
-    //     ))}
-    //   </ul>
-    // </div>
 };
 
 export default SpotList;
