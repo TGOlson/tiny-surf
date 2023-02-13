@@ -19,6 +19,6 @@ body {
   background-color: rgb(173, 216, 247);
 }
 
-.spot-list .active {
+.spot-list .selected {
   background-color: lightblue;
 }
