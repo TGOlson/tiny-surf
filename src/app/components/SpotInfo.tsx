@@ -17,6 +17,14 @@ const SpotInfo = ({spot}: Params) => {
     if (!forecast || forecast.status === 'idle') void dispatch(fetchForecast(spot.id));
   }, [forecast, dispatch]);
 
+  if (!forecast || forecast.status === 'idle' || forecast.status === 'pending' ) {
+    return <p>Loading...</p>;
+  }
+
+  if (forecast.status === 'rejected') {
+    return <p>Error: {forecast.error}</p>;
+  }
+
   return (
     <p>{spot.name}</p>
   );

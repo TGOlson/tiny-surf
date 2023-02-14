@@ -1,3 +1,4 @@
+import { fetchCombinedForecast } from "../server/surfline/forecasts";
 import { Forecast, Spot } from "../shared/types";
 
 export async function fetchSpots(): Promise<Spot[]> {
@@ -7,5 +8,9 @@ export async function fetchSpots(): Promise<Spot[]> {
 
 export async function fetchForecast(spotId: string): Promise<Forecast> {
   console.log('fetching forecast for spot', spotId);
-  return {spotId: '123'};
+  return fetchCombinedForecast({
+    spotId,
+    days: 3,
+    intervalHours: 24,
+  });
 }

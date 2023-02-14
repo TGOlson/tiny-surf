@@ -1,7 +1,8 @@
-import {uniqBy} from 'ramda';
+import {all, uniq, uniqBy} from 'ramda';
 
-import { Spot } from "../../shared/types";
+import { Forecast, Spot } from "../../shared/types";
 import { notNull } from "../../shared/util";
+import { RatingForecast, TideForecast, Units, WaveForecast, WindForecast } from './forecasts/types';
 import { NONEXISTENT_BAJA_SUBREGION_ID, NONEXISTENT_GREECE_SUBREGION_ID } from './taxonomy/constants';
 import { GeonameTaxonomy, SpotTaxonomy, Taxonomy } from "./taxonomy/types";
 import { isGeonameTaxonomy, isRegionTaxonomy, isSpotTaxonomy, isSubregionTaxonomy } from "./taxonomy/types";
@@ -125,4 +126,76 @@ export const parseSpots = (txs: Taxonomy[]): Spot[] => {
       locationNamePath
     };
   });
+};
+
+function allEqualBy<T, K>(fn: (x: T) => K, xs: T[]): boolean {
+  return allEqual(xs.map(fn));
+}
+
+function allEqual<T>(xs: T[]): boolean {
+  return uniq(xs).length === 1;
+}
+
+export const parseForecast = (
+  spotId: string, 
+  waves: WaveForecast, 
+  ratings: RatingForecast,
+  winds: WindForecast,
+  tides: TideForecast,
+): Forecast => {
+
+  // TODO: could check if these are the same aross all forecast
+  const units = waves.associated.units;
+  const utcOffset = waves.associated.utcOffset;
+
+  const wavesStart = Math.min(...waves.data.wave.map(x => x.timestamp));
+  const ratingsStart = Math.min(...ratings.data.rating.map(x => x.timestamp));
+  const windStart = Math.min(...winds.data.wind.map(x => x.timestamp));
+  const tidesStart = Math.min(...tides.data.tides.map(x => x.timestamp));
+  const startTimestamp = wavesStart;
+
+  if (!allEqual([wavesStart, ratingsStart, windStart, tidesStart])) {
+    console.log('uneven start tides', wavesStart, ratingsStart, windStart, tidesStart);
+  }
+
+  const parsedWaves = waves.data.wave.map(wave => {
+    const {min, max, plus} = wave.surf;
+    const hour = (wave.timestamp - startTimestamp) / 60 / 60;
+
+    return {hour, min, max, plus};
+  });
+
+  const parsedRatings = ratings.data.rating.map(rating => {
+    const {key, value} = rating.rating;
+    const hour = (rating.timestamp - startTimestamp) / 60 / 60;
+    
+    return {key, value, hour};
+  });
+
+    const parsedWind = winds.data.wind.map(wind => {
+      const {speed, direction, timestamp} = wind;
+      const hour = (timestamp - startTimestamp) / 60 / 60;
+      
+      return {speed, direction, hour};
+    });
+    
+  const parsedTides = tides.data.tides.map(tide => {
+    const {height, type, timestamp} = tide;
+    const hour = (timestamp - startTimestamp) / 60 / 60;
+
+    return {height, type, hour};
+  });
+
+  return {
+    spotId,
+    units,
+    startTimestamp,
+    utcOffset,
+    data: {
+      waves: parsedWaves, 
+      ratings: parsedRatings,
+      wind: parsedWind,
+      tides: parsedTides,
+    }
+  };
 };

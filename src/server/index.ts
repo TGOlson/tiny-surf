@@ -1,7 +1,10 @@
-import { cleanTaxonomy, inspectTaxonomy, parseSpots } from "./surfline/parse";
-import { earthTaxonomy, additionalTaxonomy, allTaxonomy, parsedSpots, parsedCASpots } from "./storage";
-import { fetchEarthTaxonomy, fetchTaxonomy, flattenTaxonomyResponse } from "./surfline/taxonomy";
+import path from 'path';
 import { uniqBy } from "ramda";
+
+import { cleanTaxonomy, inspectTaxonomy, parseForecast, parseSpots } from "./surfline/parse";
+import { earthTaxonomy, additionalTaxonomy, allTaxonomy, parsedSpots, parsedCASpots, readJSON } from "./storage";
+import { fetchEarthTaxonomy, fetchTaxonomy, flattenTaxonomyResponse } from "./surfline/taxonomy";
+import { RatingForecast, TideForecast, WaveForecast, WindForecast } from './surfline/forecasts/types';
 
 async function main () {
   const [_, __, cmd] = process.argv;
@@ -49,8 +52,21 @@ async function main () {
       
       return await parsedCASpots.write(sortedSpots);
     }
-    case '--test': {
-      console.log('nothing here...');
+    case '--test-parse-forecast': {
+      const waves: WaveForecast = await readJSON(path.resolve(__dirname, '../sample-data/tourmy-waves.json'));
+      const wind: WindForecast = await readJSON(path.resolve(__dirname, '../sample-data/tourmy-wind.json'));
+      const ratings: RatingForecast = await readJSON(path.resolve(__dirname, '../sample-data/tourmy-ratings.json'));
+      const tides: TideForecast = await readJSON(path.resolve(__dirname, '../sample-data/tourmy-tides.json'));
+
+      const forecast = parseForecast(
+        '5842041f4e65fad6a77088c4',
+        waves,
+        ratings,
+        wind,
+        tides,
+      );
+
+      console.log(forecast.data.tides);
       
       return;
     }

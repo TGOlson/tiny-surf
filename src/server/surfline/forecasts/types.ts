@@ -2,11 +2,12 @@
 // type ForecastType = 'wind' | 'wave' | 'rating' | 'tides' | 'weather';
 
 export type ForecastQuery = {
-  days: number;
-  intervalHours: number;
+  spotId: string,
+  days: number,
+  intervalHours: number,
 };
 
-type Units = {
+export type Units = {
   // TODO: are there other values that are ever returned? 
   temperature: "F",
   tideHeight: "FT",
@@ -16,12 +17,12 @@ type Units = {
   pressure: "MB"
 };
 
-type Location = {
+export type Location = {
   lon: number,
   lat: number,
 };
 
-type Wind = {
+export type Wind = {
   timestamp: number,
   utcOffset: number,
   speed: number,
@@ -43,7 +44,7 @@ export type WindForecast = {
   }
 };
 
-type Swell = {
+export type Swell = {
   height: number,
   period: number,
   impact: number,
@@ -52,7 +53,7 @@ type Swell = {
   optimalScore: number,
 };
 
-type Wave = {
+export type Wave = {
   timestamp: number,
   probability: null,
   utcOffset: number,
@@ -84,7 +85,7 @@ export type WaveForecast = {
   }
 };
 
-type Rating = {
+export type Rating = {
   timestamp: number,
   utcOffset: number,
   rating: {
@@ -103,7 +104,7 @@ export type RatingForecast = {
   }
 };
 
-type Tide = {
+export type Tide = {
   timestamp: number,
   utcOffset: number,
   type: 'HIGH' | 'LOW' | 'NORMAL',
@@ -126,13 +127,13 @@ export type TideForecast = {
   }
 };
 
-type SunriseSunsetTimes = {
+export type SunriseSunsetTimes = {
   midnight: number,
   sunrise: number,
   sunset: number,
 };
 
-type SunlightTimes = SunriseSunsetTimes & {
+export type SunlightTimes = SunriseSunsetTimes & {
   midnightUTCOffset: number,
   dawn: number,
   dawnUTCOffset: number,
@@ -143,7 +144,7 @@ type SunlightTimes = SunriseSunsetTimes & {
 };
 
 
-type Weather = {
+export type Weather = {
   timestamp: number,
   utcOffset: number,
   temperature: number,
@@ -164,7 +165,7 @@ export type WeatherForecast = {
   }
 };
 
-type Forecast = {
+export type Forecast = {
   timestamp: number,
   weather: Pick<Weather, 'temperature' | 'condition'>,
   wind: Pick<Wind, 'speed' | 'direction'>,

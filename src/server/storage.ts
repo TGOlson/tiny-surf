@@ -4,7 +4,7 @@ import { writeFile, readFile } from 'fs/promises';
 import { Taxonomy } from './surfline/taxonomy/types';
 import { Spot } from '../shared/types';
 
-async function readJSON<T> (p: string): Promise<T> {
+export async function readJSON<T> (p: string): Promise<T> {
   const res = await readFile(p, 'utf8');
   return JSON.parse(res) as T;
 }
