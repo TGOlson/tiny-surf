@@ -1,17 +1,8 @@
 import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
 
-import * as api from './api';
-import { Spot } from '../shared/types';
-
-export const fetchSpots = createAsyncThunk('spots/fetchSpots', api.fetchSpots);
-
-
-type LoadingState<T>
-  = {status: 'idle'}
-  | {status: 'pending'}
-  | {status: 'fulfilled', data: T}
-  | {status: 'rejected', error: string};
-
+import * as api from '../api';
+import { Spot } from '../../shared/types';
+import { LoadingState } from './types';
 
 type State = {
   spots: LoadingState<Spot[]>;
@@ -22,6 +13,8 @@ const initialState: State = {
   spots: {status: 'idle'},
   selected: null
 };
+
+export const fetchSpots = createAsyncThunk('spots/fetchSpots', api.fetchSpots);
 
 export const spotSlice = createSlice({
   name: 'spot',

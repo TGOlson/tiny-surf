@@ -5,7 +5,7 @@ import SpotInfo from '../components/SpotInfo';
 import SpotList from '../components/SpotList';
 
 import { useAppDispatch, useAppSelector } from '../hooks';
-import { fetchSpots, spotSelected } from '../spot-reducer';
+import { fetchSpots, spotSelected } from '../slices/spot-slice';
 
 const SpotExplorer = () => {
   const params = useParams();

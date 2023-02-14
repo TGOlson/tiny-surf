@@ -1,11 +1,13 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { logger } from 'redux-logger';
 
-import spotReducer from './spot-reducer';
+import spotReducer from './slices/spot-slice';
+import forecastReducer from './slices/forecast-slice';
 
 const store = configureStore({
   reducer: {
     spot: spotReducer,
+    forecast: forecastReducer
   },
   middleware: getDefaultMiddleware => getDefaultMiddleware().concat(logger)
 });

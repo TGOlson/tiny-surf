@@ -1,77 +1,100 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import Box from '@mui/material/Box';
-import ListItem from '@mui/material/ListItem';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemText from '@mui/material/ListItemText';
-import { FixedSizeList, ListChildComponentProps } from 'react-window';
-
+import { List, ListSubheader, ListItem, ListItemButton, ListItemText } from '@mui/material';
+import { GroupedVirtuoso, GroupedVirtuosoHandle, ItemProps, ListProps, GroupProps } from 'react-virtuoso';
+import { groupBy } from 'ramda';
 
 import { Spot } from '../../shared/types';
 import { useAppDispatch } from '../hooks';
-import { spotSelected } from '../spot-reducer';
+import { spotSelected } from '../slices/spot-slice';
 
 type Params = {
   spots: Spot[],
   selected: Spot;
 };
 
-const renderRow = ({style, index, data}: ListChildComponentProps<{spots: Spot[], selected: Spot}>): JSX.Element => {
+const SpotList = ({spots, selected}: Params) => {
+  const listRef: React.RefObject<GroupedVirtuosoHandle> = React.useRef(null);
+
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  const {spots, selected} = data;
-  const spot = spots[index];
+  const index = spots.findIndex(spot => spot.id === selected.id);
 
-  if (!spot) throw new Error('Unexpected access error');
-
-  const onClick = () => {
-    navigate(`/s/${spot.slug}`);
-    dispatch(spotSelected(spot.slug));
-  };
-
-  const isSelected = spot.id === selected.id;
+  const height = 504; // 36 per * 14 items
+  const groups = groupBy(x => x, spots.map(x => x.locationNamePath.slice(2, 5).join(' / ')));
+  const groupLabels = Object.keys(groups).map(x => x.replace('United States', 'US'));
+  const groupCounts = Object.values(groups).map(x => x.length);
 
   return (
-   <ListItem dense style={style} key={index} component="div" disablePadding>
-      <ListItemButton selected={isSelected} onClick={onClick} >
-        <ListItemText primary={spot.name} />
-      </ListItemButton>
-    </ListItem>
+    <GroupedVirtuoso 
+      ref={listRef}
+      style={{ height }} 
+      groupCounts={groupCounts} 
+      components={MUIComponents}
+      initialTopMostItemIndex={{index, align: 'center'}}
+      groupContent={index => <div>{groupLabels[index]}</div>}
+      itemContent={index => {
+        const spot = spots[index];
+
+        if (!spot) throw new Error('Unexpected access error');
+    
+        const isSelected = spot.id === selected.id;
+
+        const onClick = () => {
+          navigate(`/s/${spot.slug}`);
+          dispatch(spotSelected(spot.slug));
+        };
+
+        return (
+            <ListItemButton selected={isSelected} onClick={onClick}>
+              <ListItemText primary={spot.name} />
+            </ListItemButton>
+        );
+      }} />
   );
- };
+};
 
-const SpotList = ({spots, selected}: Params) => {
-  const listRef: React.RefObject<FixedSizeList> = React.createRef();
-  const [firstRender, setFirstRender] = useState(true);
-  
-  useEffect(() => {
-    if (listRef.current && firstRender) {
-      const initialScrollOffset = spots.findIndex(spot => spot.id === selected.id);
-      
-      listRef.current.scrollToItem(initialScrollOffset, 'center');
-      setFirstRender(false);
-    }
-  }, [listRef, firstRender]);
-
-  return (
-    <Box
-      sx={{ width: '100%', height: 600, maxWidth: 360, bgcolor: 'background.paper' }}
-    >
-      <FixedSizeList
-        ref={listRef}
-        height={600}
-        width={'100%'}
-        itemSize={46}
-        itemCount={spots.length}
-        overscanCount={5}
-        itemData={{spots, selected}}
+// kind of clunky mapping of different component libraries
+// mostly taking from: https://virtuoso.dev/material-ui-endless-scrolling/
+const MUIComponents = {
+  List: React.forwardRef(function MUIListComponent({style, children}: ListProps, ref: React.ForwardedRef<HTMLDivElement>) {
+    return (
+      <List 
+        dense
+        style={{ padding: 0, ...style, margin: 0 }} 
+        component="div" 
+        ref={ref}
       >
-        {renderRow}
-      </FixedSizeList>
-    </Box>
-  );
+        {children}
+      </List>
+    );
+  }),
+
+  Item: ({ children, ...props }: ItemProps<unknown>) => {
+    return (
+      <ListItem disablePadding component="div" {...props} style={{ margin: 0 }}>
+        {children}
+      </ListItem>
+    );
+  },
+
+  Group: ({ children, style, ...props }: GroupProps) => {
+    return (
+      <ListSubheader
+        disableGutters
+        component="div"
+        {...props}
+        style={{
+          ...style,
+          backgroundColor: 'white',
+        }}
+      >
+        {children}
+      </ListSubheader>
+    );
+  },
 };
 
 export default SpotList;
