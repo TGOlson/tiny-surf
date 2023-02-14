@@ -1,5 +1,6 @@
 export type Spot = {
-  id: string,
+  id: string, // corresponds to surfline spot id
+  taxonomyId: string, // corresponds to surfline taxonomy id
   name: string,
   slug: string,
   location: {
@@ -15,4 +16,8 @@ export type Spot = {
   // TODO: works for v0 test but probably needs to be split into a seperate data model at some points
   // eg. for search through regions or sorting
   locationNamePath: string[],
+};
+
+export type Forecast = {
+  spotId: string
 };

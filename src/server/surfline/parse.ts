@@ -83,7 +83,7 @@ export const inspectTaxonomy = (txs: Taxonomy[]): TaxonomyInspection => {
 };
 
 const createSlug = (spot: SpotTaxonomy): string => {
-  const base = `${spot.name} ${spot._id.slice(20)}`;
+  const base = `${spot.name} ${spot.spot.slice(20)}`;
   return base.toLowerCase().replace(/ /g, '-');
 };
 
@@ -116,7 +116,8 @@ export const parseSpots = (txs: Taxonomy[]): Spot[] => {
     const slug = createSlug(spot);
 
     return {
-      id: spot._id,
+      id: spot.spot,
+      taxonomyId: spot._id,
       name: spot.name,
       slug,
       location: {lat, long},
