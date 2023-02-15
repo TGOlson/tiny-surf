@@ -1,6 +1,7 @@
 import express, { Response } from 'express';
 import { parsedCASpots, parsedSpots } from './storage';
 import { fetchCombinedForecast } from './surfline/forecast';
+import { isSurflineError } from 'surfline/error';
 
 const app = express();
 const port = 3000;
@@ -13,8 +14,13 @@ const hasMessage = (error: unknown): error is object & {message: string} => {
 };
 
 const handle500 = (res: Response) => (err: unknown) => {
-  const message = hasMessage(err) ? err.message : 'Unknown error';
-  res.status(500).json({message});
+  if (isSurflineError(err)) {
+    const message = `Surfline Error: ${err.message}`;
+    res.status(err.status).json({message});
+  } else {
+    const message = hasMessage(err) ? err.message : 'Unknown error';
+    res.status(500).json({message});
+  }
 };
 
 app.get('/api/spots', (_req, res) => {
@@ -29,7 +35,7 @@ app.get('/api/ca-spots', (_req, res) => {
   }).catch(handle500(res));
 });
 
-// TODO: better error handling on bad ids
+// TODO: add logging to api calls (esp for fields w/ unknown types)
 // TODO: use time based cache to limit amount of calls to surfline
 
 // for testing: tourmaline id = 5842041f4e65fad6a77088c4

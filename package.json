@@ -47,6 +47,6 @@
     "react-router-dom": "^6.8.1",
     "react-virtuoso": "^4.1.0",
     "redux-logger": "^3.0.6",
-    "surfline": "^0.0.1"
+    "surfline": "^0.0.5"
   }
 }
