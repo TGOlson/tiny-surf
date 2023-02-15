@@ -1,10 +1,14 @@
 import path from 'path';
 import { uniqBy } from "ramda";
 
-import { cleanTaxonomy, inspectTaxonomy, parseForecast, parseSpots } from "./surfline/parse";
+import { fetchEarthTaxonomy, fetchTaxonomy } from "surfline/taxonomy";
+import { RatingForecast, TideForecast, WaveForecast, WindForecast } from 'surfline/forecasts/types';
+
 import { earthTaxonomy, additionalTaxonomy, allTaxonomy, parsedSpots, parsedCASpots, readJSON } from "./storage";
-import { fetchEarthTaxonomy, fetchTaxonomy, flattenTaxonomyResponse } from "./surfline/taxonomy";
-import { RatingForecast, TideForecast, WaveForecast, WindForecast } from './surfline/forecasts/types';
+
+import { parseForecast } from "./surfline/forecast";
+import { cleanTaxonomy, inspectTaxonomy, parseSpots, flattenTaxonomyResponse } from './surfline/taxonomy';
+import { startServer } from './server';
 
 async function main () {
   const [_, __, cmd] = process.argv;
@@ -68,6 +72,10 @@ async function main () {
 
       console.log(forecast.data.tides);
       
+      return;
+    }
+    case '--start-server': {
+      startServer();
       return;
     }
     default:

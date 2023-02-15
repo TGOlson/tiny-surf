@@ -1,7 +1,7 @@
 import path from 'path';
 import { writeFile, readFile } from 'fs/promises';
 
-import { Taxonomy } from './surfline/taxonomy/types';
+import { Taxonomy } from 'surfline/taxonomy/types';
 import { Spot } from '../shared/types';
 
 export async function readJSON<T> (p: string): Promise<T> {

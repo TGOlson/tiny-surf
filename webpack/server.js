@@ -12,4 +12,5 @@ module.exports = {
   resolve: {
     extensions: ['.js', '.ts'],
   },
+  externals: [{ "express": "require('express')" }]
 };

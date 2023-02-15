@@ -1,4 +1,4 @@
-import { CombinedForecast, Units } from "../../server/surfline/forecasts/types";
+import { Units } from "surfline/forecasts/types";
 
 export type Spot = {
   id: string, // corresponds to surfline spot id
