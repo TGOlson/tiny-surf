@@ -6,7 +6,7 @@ const hasMessage = (error: unknown): error is object & {message: string} => {
   return error !== null 
     && typeof error === 'object'
     && 'message' in error
-    && typeof (error as Record<'message', unknown>).message === 'string';
+    && typeof error.message === 'string';
 };
 
 const getErrorMessage = (error: unknown): string => {
