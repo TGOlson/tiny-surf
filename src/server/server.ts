@@ -29,6 +29,9 @@ app.get('/api/ca-spots', (_req, res) => {
   }).catch(handle500(res));
 });
 
+// TODO: better error handling on bad ids
+// TODO: use time based cache to limit amount of calls to surfline
+
 // for testing: tourmaline id = 5842041f4e65fad6a77088c4
 app.get('/api/forecast/:spotId', (req, res) => {
   const spotId = req.params.spotId;
