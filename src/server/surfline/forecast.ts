@@ -21,6 +21,9 @@ export async function fetchCombinedForecast(spotId: string): Promise<Forecast> {
   return parseForecast(spotId, waves, ratings, winds, tides);
 }
 
+// surfline timestamps are in seconds, convert to millis for ease of use
+const toMillis = (ts: number): number => ts * 1000;
+
 export const parseForecast = (
   spotId: string, 
   waves: WaveForecast, 
@@ -45,22 +48,22 @@ export const parseForecast = (
 
   const parsedWaves = waves.data.wave.map(({timestamp, surf}) => {
     const {min, max, plus} = surf;
-    return {timestamp, min, max, plus};
+    return {min, max, plus, timestamp: toMillis(timestamp)};
   });
 
   const parsedRatings = ratings.data.rating.map(({timestamp, rating}) => {
     const {key, value} = rating;
-    return {timestamp, key, value};
+    return {key, value, timestamp: toMillis(timestamp)};
   });
 
   const parsedWind = winds.data.wind.map(wind => {
     const {timestamp, speed, direction} = wind;
-    return {timestamp, speed, direction};
+    return {speed, direction, timestamp: toMillis(timestamp)};
   });
     
   const parsedTides = tides.data.tides.map(tide => {
     const {timestamp, height, type} = tide;
-    return {timestamp, height, type};
+    return {height, type, timestamp: toMillis(timestamp)};
   });
 
   return {

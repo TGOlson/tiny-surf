@@ -21,22 +21,22 @@ export function makeTTLCache<T>({ttlSeconds, debug}: TTLCacheConfig): TTLCache<T
     const entry = cache.get(id);
 
     if (entry === undefined) {
-      if (debug) console.log('No entry found for id:', id);
+      if (debug) console.log('[ttl-cache] no entry found for id:', id);
       return undefined;
     }
     
     if (secondsElapsed(entry.setAt) > ttlSeconds) {
-      if (debug) console.log('Entry past TTL for id:', id);
+      if (debug) console.log('[ttl-cache] entry past TTL for id:', id);
       del(id);
       return undefined;
     }
     
-    if (debug) console.log('Entry found id:', id);
+    if (debug) console.log('[ttl-cache] entry found for id:', id);
     return entry.val;
   };
   
   const set = (id: string, val: T) => {
-    if (debug) console.log('Setting entry for id:', id);
+    if (debug) console.log('[ttl-cache] setting entry for id:', id);
     
     cache.set(id, {
       setAt: Date.now(),

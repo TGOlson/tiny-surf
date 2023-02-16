@@ -1,24 +1,22 @@
 import path from 'path';
 import fs from 'fs/promises';
 
-import { RatingForecast, WaveForecast, WindForecast } from 'surfline/forecasts/types';
+import { RatingForecast, Units, WaveForecast, WindForecast } from 'surfline/forecasts/types';
 
 const log = (x: string, filename: string): Promise<void> => {
   const p = path.resolve(__dirname, `../logs/${filename}`);
   return fs.writeFile(p, `${x}\n`, {flag: 'a'});
 };
 
+const logUnits = (units: Units) => () => log(JSON.stringify(units), 'units.json');
+
 export const logInterestingWindFields = (x: WindForecast) => 
-  log(JSON.stringify({
-    'x.data.wind[0]?.directionType': x.data.wind[0]?.directionType,
-  }), 'wind.json');
-
+  Promise.all(x.data.wind.map(x => log(x.directionType, 'wind-direction-type.json')))
+    .then(logUnits(x.associated.units));
+    
 export const logInterestingWaveFields = (x: WaveForecast) => 
-  log(JSON.stringify({
-    'x.data.wave[0]?.surf.humanRelation': x.data.wave[0]?.surf.humanRelation,
-  }), 'wave.json');
-
+  Promise.all(x.data.wave.map(x => log(x.surf.humanRelation, 'surf-human-relation.json')))
+    .then(logUnits(x.associated.units));
+  
 export const logInterestingRatingFields = (x: RatingForecast) => 
-  log(JSON.stringify({
-    'x.data.rating[0]?.rating.key': x.data.rating[0]?.rating.key,
-  }), 'rating.json');
+  Promise.all(x.data.rating.map(x => log(x.rating.key, 'rating-key.json')));
