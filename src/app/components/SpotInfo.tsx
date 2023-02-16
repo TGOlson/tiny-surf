@@ -26,7 +26,20 @@ const SpotInfo = ({spot}: Params) => {
   }
 
   return (
-    <p>{spot.name}</p>
+    <div>
+      <p>{spot.name}</p>
+      <p>Rating: {forecast.data.data.ratings[0]?.key}</p>
+      <p>Wave height: {forecast.data.data.waves[0]?.min}-{forecast.data.data.waves[0]?.max} {forecast.data.units.waveHeight.toLowerCase()}.</p>
+      <p>Wind: {forecast.data.data.wind[0]?.speed} {forecast.data.units.windSpeed.toLowerCase()}.</p>
+      <p>Tides:</p>
+      <ul>
+        {forecast.data.data.tides.filter(x => x.type !== 'NORMAL').map(tide => {
+          return (
+            <li key={tide.timestamp}>Tide: <span>{tide.type}</span> at <span>{(new Date(tide.timestamp * 1000)).toLocaleString()}</span></li>
+          );
+        })}
+      </ul>
+    </div>
   );
 };
 

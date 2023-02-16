@@ -51,7 +51,7 @@ const SpotExplorer = () => {
       <Grid item xs={4}>
         <SpotList spots={spots} selected={selectedSpot} />
       </Grid>
-      <Grid item xs={8} md={4}>
+      <Grid item xs={8} md={6}>
         <SpotInfo spot={selectedSpot} />
       </Grid>
     </Grid>

@@ -27,23 +27,23 @@ export type Forecast = {
   utcOffset: number,
   data: {
     ratings: {
-      hour: number,
+      timestamp: number,
       key: string,
       value: number,
     }[],
     waves: {
-      hour: number,
+      timestamp: number,
       min: number,
       max: number,
       plus: boolean,
     }[],
     wind: {
-      hour: number,
+      timestamp: number,
       speed: number,
       direction: number,
     }[],
     tides: {
-      hour: number,
+      timestamp: number,
       height: number,
       type: 'HIGH' | 'LOW' | 'NORMAL',
     }[],

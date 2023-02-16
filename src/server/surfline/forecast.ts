@@ -2,6 +2,7 @@ import { fetchForecast } from 'surfline';
 import { RatingForecast, TideForecast, WaveForecast, WindForecast } from 'surfline/forecasts/types';
 import { Forecast } from "../../shared/types";
 import { allEqual } from '../../shared/util';
+import { logInterestingRatingFields, logInterestingWaveFields, logInterestingWindFields } from './log-interesting-fields';
 
 export async function fetchCombinedForecast(spotId: string): Promise<Forecast> {
   const partialConfig = {spotId, days: 3, intervalHours: 3};
@@ -12,6 +13,10 @@ export async function fetchCombinedForecast(spotId: string): Promise<Forecast> {
     fetchForecast({type: 'wind', ...partialConfig}),
     fetchForecast({type: 'tides', ...partialConfig}),
   ]);
+
+  await logInterestingWaveFields(waves);
+  await logInterestingRatingFields(ratings);
+  await logInterestingWindFields(winds);
 
   return parseForecast(spotId, waves, ratings, winds, tides);
 }
@@ -35,35 +40,27 @@ export const parseForecast = (
   const startTimestamp = wavesStart;
 
   if (!allEqual([wavesStart, ratingsStart, windStart, tidesStart])) {
-    console.log('uneven start tides', wavesStart, ratingsStart, windStart, tidesStart);
+    console.log('uneven start times', wavesStart, ratingsStart, windStart, tidesStart);
   }
 
-  const parsedWaves = waves.data.wave.map(wave => {
-    const {min, max, plus} = wave.surf;
-    const hour = (wave.timestamp - startTimestamp) / 60 / 60;
-
-    return {hour, min, max, plus};
+  const parsedWaves = waves.data.wave.map(({timestamp, surf}) => {
+    const {min, max, plus} = surf;
+    return {timestamp, min, max, plus};
   });
 
-  const parsedRatings = ratings.data.rating.map(rating => {
-    const {key, value} = rating.rating;
-    const hour = (rating.timestamp - startTimestamp) / 60 / 60;
-    
-    return {key, value, hour};
+  const parsedRatings = ratings.data.rating.map(({timestamp, rating}) => {
+    const {key, value} = rating;
+    return {timestamp, key, value};
   });
 
-    const parsedWind = winds.data.wind.map(wind => {
-      const {speed, direction, timestamp} = wind;
-      const hour = (timestamp - startTimestamp) / 60 / 60;
-      
-      return {speed, direction, hour};
-    });
+  const parsedWind = winds.data.wind.map(wind => {
+    const {timestamp, speed, direction} = wind;
+    return {timestamp, speed, direction};
+  });
     
   const parsedTides = tides.data.tides.map(tide => {
-    const {height, type, timestamp} = tide;
-    const hour = (timestamp - startTimestamp) / 60 / 60;
-
-    return {height, type, hour};
+    const {timestamp, height, type} = tide;
+    return {timestamp, height, type};
   });
 
   return {

@@ -1,10 +1,20 @@
 import express, { Response } from 'express';
+import morgan from 'morgan';
+import path from 'path';
+
 import { parsedCASpots, parsedSpots } from './storage';
 import { fetchCombinedForecast } from './surfline/forecast';
 import { isSurflineError } from 'surfline/error';
+import nocache from 'nocache';
 
 const app = express();
-const port = 3000;
+
+app.use(nocache());
+app.use(morgan('tiny'));
+app.use(express.static(path.resolve(__dirname, '../public')));
+app.use('/assets/js', express.static(path.resolve(__dirname, '../dist')));
+
+const PORT = 3000;
 
 const hasMessage = (error: unknown): error is object & {message: string} => {
   return error !== null 
@@ -47,7 +57,10 @@ app.get('/api/forecast/:spotId', (req, res) => {
   }).catch(handle500(res));
 });
 
+app.get('*', (_req, res) => {
+  res.sendFile(path.resolve(__dirname, '../public/index.html'));
+});
 
-export const startServer = () => app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`);
+export const startServer = () => app.listen(PORT, () => {
+  console.log(`Example app listening on port ${PORT}`);
 });

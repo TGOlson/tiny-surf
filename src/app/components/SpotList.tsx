@@ -30,7 +30,7 @@ const SpotList = ({spots, selected}: Params) => {
   return (
     <GroupedVirtuoso 
       ref={listRef}
-      style={{ height }} 
+      style={{ height, maxWidth: 300 }} 
       groupCounts={groupCounts} 
       components={MUIComponents}
       initialTopMostItemIndex={{index, align: 'center'}}

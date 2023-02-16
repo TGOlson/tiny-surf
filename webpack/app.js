@@ -22,21 +22,4 @@ module.exports = {
       console: false,
     }
   },
-  devServer: {
-    static: [
-      { 
-        directory: path.resolve(__dirname, '../public') 
-      },
-      { 
-        directory: path.resolve(__dirname, '../dist'),
-        publicPath: '/assets/js',
-      },   
-      { 
-        directory: path.resolve(__dirname, '../data/parsed'),
-        publicPath: '/api',
-      },   
-    ],
-    historyApiFallback: true,
-    port: 3000,
-  },
 };
