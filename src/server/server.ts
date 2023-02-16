@@ -6,6 +6,7 @@ import { parsedCASpots, parsedSpots } from './storage';
 import { fetchCombinedForecast } from './surfline/forecast';
 import { isSurflineError } from 'surfline/error';
 import nocache from 'nocache';
+import { makeTTLCache } from './ttl-cache';
 
 const app = express();
 
@@ -13,6 +14,12 @@ app.use(nocache());
 app.use(morgan('tiny'));
 app.use(express.static(path.resolve(__dirname, '../public')));
 app.use('/assets/js', express.static(path.resolve(__dirname, '../dist')));
+
+const forecastCache = makeTTLCache({
+  // forecasts don't change often, only expire entries after 30m
+  ttlSeconds: 60 * 30, 
+  debug: true
+});
 
 const PORT = 3000;
 
@@ -52,7 +59,15 @@ app.get('/api/ca-spots', (_req, res) => {
 app.get('/api/forecast/:spotId', (req, res) => {
   const spotId = req.params.spotId;
 
+  const cachedForecast = forecastCache.get(spotId);
+
+  if (cachedForecast) {
+    return res.json(cachedForecast);
+  }
+
   fetchCombinedForecast(spotId).then(forecast => {
+    forecastCache.set(spotId, forecast);
+
     res.json(forecast);
   }).catch(handle500(res));
 });
