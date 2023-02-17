@@ -13,6 +13,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@types/luxon": "^3.2.0",
     "@types/morgan": "^1.9.4",
     "@types/ramda": "^0.28.23",
     "@types/react": "^18.0.27",
@@ -52,6 +53,6 @@
     "react-router-dom": "^6.8.1",
     "react-virtuoso": "^4.1.0",
     "redux-logger": "^3.0.6",
-    "surfline": "^0.0.5"
+    "surfline": "^0.0.6"
   }
 }
