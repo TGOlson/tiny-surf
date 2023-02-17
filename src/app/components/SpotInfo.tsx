@@ -1,77 +1,36 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 
-import { Forecast, Spot } from '../../shared/types';
+import { Spot } from '../../shared/types';
 import { useAppDispatch, useAppSelector } from '../hooks';
 import { fetchForecast } from '../slices/forecast-slice';
 
-import { Line } from 'react-chartjs-2';
+import { DateTime, FixedOffsetZone }  from 'luxon';
 
-// import chart.js for side effects
-// alternative is to use `.register` on every component we use
-import 'chart.js/auto';
-import 'chartjs-adapter-luxon';
+import WaveChart from './charts/WaveChart';
+import TideChart from './charts/TideChart';
+import WindChart from './charts/WindChart';
 
 type Params = {
   spot: Spot;
 };
 
-const TideChart = ({tides}: {tides: Forecast['data']['tides']}) => {
-
-
-  const data = {
-    datasets: [{
-      data: tides.map(tide => ({x: tide.timestamp, y: tide.height})),
-    }]
-  };
-
-  return (
-    <Line 
-      data={data} 
-      options={{
-        elements: {
-          point: {
-            pointStyle: false
-          },
-          line: {
-            tension: 0.4,
-            cubicInterpolationMode: 'monotone'
-          }
-        },
-        scales: {
-          x: {
-            type: 'time',
-            time: {
-              // Luxon format string
-              tooltipFormat: 't',
-            },
-          },
-        },
-        plugins: {
-          legend: {
-              display: false,
-          },
-          tooltip: {
-            displayColors: false,
-            intersect: false,
-            callbacks: {
-              // title: () => '',
-              label: (context) => {
-                return `${context.parsed.y} ft.`;
-                // return `${context.label} ${context.parsed.y} ft.`;
-              },
-              labelPointStyle: () => ({pointStyle: false, rotation: 0}),
-            }
-          }
-        }
-      }} 
-    />
-  );
+const getDateTime = (ts: number, offset: number): DateTime => {
+  const zone = FixedOffsetZone.instance(offset * 60); // offset in minutes
+  return DateTime.fromMillis(ts, {zone});
 };
+
+function addDateTime<T extends object & {timestamp: number}>(utcOffset: number): (x: T) => T & {datetime: DateTime} {
+  return (x: T) => ({...x, datetime: getDateTime(x.timestamp, utcOffset)});
+}
+
+const isDay = (dayOffset: number) => (x: object & {datetime: DateTime}) => 
+  x.datetime.day === DateTime.now().plus({days: dayOffset}).day;
 
 const SpotInfo = ({spot}: Params) => {
   const dispatch = useAppDispatch();
+  
   const forecast = useAppSelector(st => st.forecast.forecasts[spot.id]);
-
+  const day = useAppSelector(st => st.forecast.day);
 
   useEffect(() => {
     if (!forecast || forecast.status === 'idle') void dispatch(fetchForecast(spot.id));
@@ -85,23 +44,25 @@ const SpotInfo = ({spot}: Params) => {
     return <p>Error: {forecast.error}</p>;
   }
 
-  const {data, units} = forecast.data;
+  const {data, units, utcOffset} = forecast.data;
+
+  const dayOffset = day === 'today' ? 0 : 1;
+
+  const waves = data.waves.map(addDateTime(utcOffset)).filter(isDay(dayOffset));
+  const wind = data.wind.map(addDateTime(utcOffset)).filter(isDay(dayOffset));
+  const tides = data.tides.map(addDateTime(utcOffset)).filter(isDay(dayOffset));
 
   return (
     <div>
+      <p>{spot.locationNamePath[spot.locationNamePath.length - 1]}</p>
       <p>{spot.name}</p>
       <p>Rating: {data.ratings[0]?.key}</p>
-      <p>Wave height: {data.waves[0]?.min}-{data.waves[0]?.max} {units.waveHeight.toLowerCase()}.</p>
-      <p>Wind: {data.wind[0]?.speed} {units.windSpeed.toLowerCase()}.</p>
-      <TideChart tides={data.tides.slice(0, 23)}/>
-      <p>Tides:</p>
-      <ul>
-        {forecast.data.data.tides.filter(x => x.type !== 'NORMAL').map(tide => {
-          return (
-            <li key={tide.timestamp}>Tide: <span>{tide.type}</span> at <span>{(new Date(tide.timestamp)).toLocaleString()}</span></li>
-          );
-        })}
-      </ul>
+      <p>Waves</p>
+      <WaveChart data={waves} units={units}/>
+      <p>Wind</p>
+      <WindChart data={wind} units={units}/>
+      <p>Tide</p>
+      <TideChart data={tides} units={units}/>
     </div>
   );
 };

@@ -7,11 +7,13 @@ import { LoadingState } from './types';
 type State = {
   forecasts: {
     [key: string]: LoadingState<Forecast>;
-  }
+  },
+  day: 'today' | 'tomorrow' | 'next'
 };
 
 const initialState: State = {
-  forecasts: {}
+  forecasts: {},
+  day: 'today',
 };
 
 export const fetchForecast = createAsyncThunk('spots/fetchForecast', api.fetchForecast);
