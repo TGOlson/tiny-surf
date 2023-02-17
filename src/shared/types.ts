@@ -1,4 +1,4 @@
-import { Units } from "surfline/forecasts/types";
+import { Tide, Units, WaveSizeDescription, Wind } from "surfline/forecasts/types";
 
 export type Spot = {
   id: string, // corresponds to surfline spot id
@@ -20,32 +20,42 @@ export type Spot = {
   locationNamePath: string[],
 };
 
+export type RatingDetails = {
+  timestamp: number,
+  key: string,
+  value: number,
+};
+
+export type WaveDetails = {
+  timestamp: number,
+  min: number,
+  max: number,
+  plus: boolean,
+  description: WaveSizeDescription, 
+};
+
+export type WindDetails = {
+  timestamp: number,
+  speed: number,
+  direction: number,
+  directionType: Wind['directionType'],
+};
+
+export type TideDetails = {
+  timestamp: number,
+  height: number,
+  type: Tide['type'],
+};
+
 export type Forecast = {
   spotId: string,
   units: Units,
   startTimestamp: number,
   utcOffset: number,
   data: {
-    ratings: {
-      timestamp: number,
-      key: string,
-      value: number,
-    }[],
-    waves: {
-      timestamp: number,
-      min: number,
-      max: number,
-      plus: boolean,
-    }[],
-    wind: {
-      timestamp: number,
-      speed: number,
-      direction: number,
-    }[],
-    tides: {
-      timestamp: number,
-      height: number,
-      type: 'HIGH' | 'LOW' | 'NORMAL',
-    }[],
+    ratings: RatingDetails[],
+    waves: WaveDetails[],
+    wind: WindDetails[],
+    tides: TideDetails[],
   }
 };
