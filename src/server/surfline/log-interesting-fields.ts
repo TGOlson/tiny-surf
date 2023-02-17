@@ -1,7 +1,7 @@
 import path from 'path';
 import fs from 'fs/promises';
 
-import { RatingForecast, Units, WaveForecast, WindForecast } from 'surfline/forecasts/types';
+import { Units, WaveForecast, WindForecast } from 'surfline/forecasts/types';
 
 const log = (x: string, filename: string): Promise<void> => {
   const p = path.resolve(__dirname, `../logs/${filename}`);
@@ -18,5 +18,5 @@ export const logInterestingWaveFields = (x: WaveForecast) =>
   Promise.all(x.data.wave.map(x => log(x.surf.humanRelation, 'surf-human-relation.json')))
     .then(logUnits(x.associated.units));
   
-export const logInterestingRatingFields = (x: RatingForecast) => 
-  Promise.all(x.data.rating.map(x => log(x.rating.key, 'rating-key.json')));
+// export const logInterestingRatingFields = (x: RatingForecast) => 
+//   Promise.all(x.data.rating.map(x => log(x.rating.key, 'rating-key.json')));

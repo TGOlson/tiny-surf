@@ -2,10 +2,10 @@ import { fetchForecast } from 'surfline';
 import { RatingForecast, TideForecast, WaveForecast, WindForecast } from 'surfline/forecasts/types';
 import { Forecast } from "../../shared/types";
 import { allEqual } from '../../shared/util';
-import { logInterestingRatingFields, logInterestingWaveFields, logInterestingWindFields } from './log-interesting-fields';
+import { logInterestingWaveFields, logInterestingWindFields } from './log-interesting-fields';
 
 export async function fetchCombinedForecast(spotId: string): Promise<Forecast> {
-  const partialConfig = {spotId, days: 3, intervalHours: 3};
+  const partialConfig = {spotId, days: 3, intervalHours: 1};
 
   const [waves, ratings, winds, tides] = await Promise.all([
     fetchForecast({type: 'wave', ...partialConfig}),
@@ -15,7 +15,6 @@ export async function fetchCombinedForecast(spotId: string): Promise<Forecast> {
   ]);
 
   await logInterestingWaveFields(waves);
-  await logInterestingRatingFields(ratings);
   await logInterestingWindFields(winds);
 
   return parseForecast(spotId, waves, ratings, winds, tides);
@@ -47,8 +46,8 @@ export const parseForecast = (
   }
 
   const parsedWaves = waves.data.wave.map(({timestamp, surf}) => {
-    const {min, max, plus} = surf;
-    return {min, max, plus, timestamp: toMillis(timestamp)};
+    const {min, max, plus, humanRelation} = surf;
+    return {min, max, plus, timestamp: toMillis(timestamp), description: humanRelation};
   });
 
   const parsedRatings = ratings.data.rating.map(({timestamp, rating}) => {
@@ -57,8 +56,8 @@ export const parseForecast = (
   });
 
   const parsedWind = winds.data.wind.map(wind => {
-    const {timestamp, speed, direction} = wind;
-    return {speed, direction, timestamp: toMillis(timestamp)};
+    const {timestamp, speed, direction, directionType} = wind;
+    return {speed, direction, timestamp: toMillis(timestamp), directionType};
   });
     
   const parsedTides = tides.data.tides.map(tide => {
