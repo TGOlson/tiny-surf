@@ -6,21 +6,13 @@ import { fetchForecast } from '../slices/forecast-slice';
 
 import { Line } from 'react-chartjs-2';
 
-// little hack to register everything from chart.js
-// alternative is to use `.register` on ever component we use
+// import chart.js for side effects
+// alternative is to use `.register` on every component we use
 import 'chart.js/auto';
 import 'chartjs-adapter-luxon';
 
 type Params = {
   spot: Spot;
-};
-const timeString = (ts: number): string => {
-  // TODO: use utc offset
-  const date = new Date(ts);
-  const hours = date.getHours();
-  const minutes = date.getMinutes();
-
-  return `${hours > 12 ? hours - 12 : hours}:${minutes}${hours >= 12 ? 'pm' : 'am'}`;
 };
 
 const TideChart = ({tides}: {tides: Forecast['data']['tides']}) => {
@@ -36,6 +28,15 @@ const TideChart = ({tides}: {tides: Forecast['data']['tides']}) => {
     <Line 
       data={data} 
       options={{
+        elements: {
+          point: {
+            pointStyle: false
+          },
+          line: {
+            tension: 0.4,
+            cubicInterpolationMode: 'monotone'
+          }
+        },
         scales: {
           x: {
             type: 'time',
@@ -49,6 +50,18 @@ const TideChart = ({tides}: {tides: Forecast['data']['tides']}) => {
           legend: {
               display: false,
           },
+          tooltip: {
+            displayColors: false,
+            intersect: false,
+            callbacks: {
+              // title: () => '',
+              label: (context) => {
+                return `${context.parsed.y} ft.`;
+                // return `${context.label} ${context.parsed.y} ft.`;
+              },
+              labelPointStyle: () => ({pointStyle: false, rotation: 0}),
+            }
+          }
         }
       }} 
     />
