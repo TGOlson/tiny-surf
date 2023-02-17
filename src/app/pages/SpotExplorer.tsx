@@ -41,13 +41,8 @@ const SpotExplorer = () => {
     return <p>Unable to find spot {paramSlug}</p>;
   }
 
-  const location = selectedSpot.locationNamePath.slice(2).join(' ');
-
   return (
     <Grid container justifyContent="center" spacing={2}>
-      <Grid item xs={12}>
-        <h4>{location}</h4>
-      </Grid>
       <Grid item xs={4}>
         <SpotList spots={spots} selected={selectedSpot} />
       </Grid>

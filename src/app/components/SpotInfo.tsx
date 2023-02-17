@@ -9,6 +9,7 @@ import { DateTime, FixedOffsetZone }  from 'luxon';
 import WaveChart from './charts/WaveChart';
 import TideChart from './charts/TideChart';
 import WindChart from './charts/WindChart';
+import { Card, CardContent, Typography } from '@mui/material';
 
 type Params = {
   spot: Spot;
@@ -52,18 +53,22 @@ const SpotInfo = ({spot}: Params) => {
   const wind = data.wind.map(addDateTime(utcOffset)).filter(isDay(dayOffset));
   const tides = data.tides.map(addDateTime(utcOffset)).filter(isDay(dayOffset));
 
+  const location = spot.locationNamePath[spot.locationNamePath.length - 1];
+
   return (
-    <div>
-      <p>{spot.locationNamePath[spot.locationNamePath.length - 1]}</p>
-      <p>{spot.name}</p>
-      <p>Rating: {data.ratings[0]?.key}</p>
-      <p>Waves</p>
-      <WaveChart data={waves} units={units}/>
-      <p>Wind</p>
-      <WindChart data={wind} units={units}/>
-      <p>Tide</p>
-      <TideChart data={tides} units={units}/>
-    </div>
+    <Card sx={{ minWidth: 275, maxWidth: 350 }}>
+      <CardContent>
+        <Typography variant="h5" component="div">{spot.name}</Typography>
+        <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>{location}</Typography>
+        <p>Rating: {data.ratings[0]?.key}</p>
+        <Typography sx={{ fontSize: 12 }}>WAVES</Typography>
+        <WaveChart data={waves} units={units}/>
+        <Typography sx={{ fontSize: 12 }}>WIND</Typography>
+        <WindChart data={wind} units={units}/>
+        <Typography sx={{ fontSize: 12 }}>TIDE</Typography>
+        <TideChart data={tides} units={units}/>
+      </CardContent>
+    </Card>
   );
 };
 

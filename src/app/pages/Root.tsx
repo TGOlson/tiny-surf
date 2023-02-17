@@ -10,7 +10,7 @@ const Root = () => {
     <React.Fragment>
       <CssBaseline />
 
-      <Grid container spacing={2}>
+      <Grid container spacing={2} className='content'>
         <Grid item xs={12}>
           <Header />
         </Grid>
