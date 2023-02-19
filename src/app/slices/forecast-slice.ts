@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 
 import * as api from '../api';
 import { Forecast } from '../../shared/types';
@@ -8,12 +8,12 @@ type State = {
   forecasts: {
     [key: string]: LoadingState<Forecast>;
   },
-  day: 'today' | 'tomorrow' | 'next'
+  day: 0 | 1 | 2
 };
 
 const initialState: State = {
   forecasts: {},
-  day: 'today',
+  day: 0,
 };
 
 export const fetchForecast = createAsyncThunk('spots/fetchForecast', api.fetchForecast);
@@ -21,7 +21,11 @@ export const fetchForecast = createAsyncThunk('spots/fetchForecast', api.fetchFo
 export const forecastSlice = createSlice({
   name: 'forecast',
   initialState,
-  reducers: {},
+  reducers: {
+    daySelected: (state, {payload}: PayloadAction<0 | 1 | 2>) => {
+      state.day = payload;
+    }
+  },
   extraReducers: (builder) => {
     return builder
       .addCase(fetchForecast.pending, (state: State, {meta}) => {
@@ -35,5 +39,7 @@ export const forecastSlice = createSlice({
       });
   }
 });
+
+export const {daySelected} = forecastSlice.actions;
 
 export default forecastSlice.reducer;
