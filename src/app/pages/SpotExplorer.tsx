@@ -43,10 +43,10 @@ const SpotExplorer = () => {
 
   return (
     <Grid container justifyContent="center" spacing={2}>
-      <Grid item xs={4}>
+      <Grid item xs={6} sm={4}>
         <SpotList spots={spots} selected={selectedSpot} />
       </Grid>
-      <Grid item xs={8} md={6}>
+      <Grid item xs={6} sm={5}>
         <SpotInfo spot={selectedSpot} />
       </Grid>
     </Grid>
