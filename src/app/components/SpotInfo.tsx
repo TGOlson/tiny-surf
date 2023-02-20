@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { Box } from '@mui/system';
-import { Button, Card, CardActions, CardContent, CardHeader, Divider, LinearProgress, Tab, Tabs, Typography } from '@mui/material';
+import { Card, CardActions, CardContent, CardHeader, Divider, LinearProgress, Tab, Tabs, Typography } from '@mui/material';
+import WavesIcon from '@mui/icons-material/Waves';
 import { DateTime, FixedOffsetZone }  from 'luxon';
 
 import { Spot } from '../../shared/types';
@@ -61,7 +62,10 @@ const SpotInfo = ({spot}: Params) => {
     content = (
       <React.Fragment>
         <p>Rating: {data.ratings[0]?.key}</p>
-        <Typography sx={{ fontSize: 12 }}>WAVES</Typography>
+        <Box>
+          <WavesIcon />
+          <Typography sx={{ fontSize: 12 }}>WAVES</Typography>
+        </Box>
         <WaveChart data={waves} units={units}/>
         <Typography sx={{ fontSize: 12 }}>WIND</Typography>
         <WindChart data={wind} units={units}/>

@@ -26,7 +26,11 @@ const WaveChart = ({data: waveData, units}: WaveChartProps) => {
     scales: {
       y: {
         min: 0,
-        suggestedMax: 10,
+        suggestedMax: 15,
+        title: {
+          display: true,
+          text: `Height ${units.waveHeight.toLowerCase()}.`
+        }
       }
     },
     plugins: {

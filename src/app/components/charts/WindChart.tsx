@@ -25,7 +25,11 @@ const WindChart = ({data: windData, units}: WindChartProps) => {
     scales: {
       y: {
         min: 0,
-        suggestedMax: 10,
+        suggestedMax: 20,
+        title: {
+          display: true,
+          text: `Speed ${units.windSpeed.toLowerCase()}.`
+        }
       }
     },
     plugins: {

@@ -1,4 +1,5 @@
-import { Grid } from '@mui/material';
+import { Grid, Stack } from '@mui/material';
+import { Box } from '@mui/system';
 import React, { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import SpotInfo from '../components/SpotInfo';
@@ -42,14 +43,14 @@ const SpotExplorer = () => {
   }
 
   return (
-    <Grid container justifyContent="center" spacing={2}>
-      <Grid item xs={6} sm={4}>
+    <Stack direction="row" justifyContent="center" spacing={2}>
+      <Box sx={{width: 280}}>
         <SpotList spots={spots} selected={selectedSpot} />
-      </Grid>
-      <Grid item xs={6} sm={5}>
+      </Box>
+      <Box sx={{width: 360}}>
         <SpotInfo spot={selectedSpot} />
-      </Grid>
-    </Grid>
+      </Box>
+    </Stack>
   );
 };
 

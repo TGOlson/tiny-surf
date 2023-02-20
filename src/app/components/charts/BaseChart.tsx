@@ -35,7 +35,8 @@ const commonOptions: ChartOptions = {
       },
       ticks: {
         display: false,
-      }
+      },
+      display: false,
     },
   },
   interaction: {
@@ -71,7 +72,7 @@ const BaseChart = ({type, data, options}: BaseChartProps) => {
       }} 
       options={opts}
       style={{
-        maxHeight: 120,
+        maxHeight: 100,
       }}
     />
   );

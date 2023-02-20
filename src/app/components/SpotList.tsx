@@ -51,10 +51,10 @@ const SpotList = ({spots, selected}: Params) => {
   };
 
   return (
-    <Paper sx={{ maxWidth: '100%' }}>
+    <Paper>
       <GroupedVirtuoso 
         ref={listRef}
-        style={{ height, maxWidth: 300 }} 
+        style={{ height }} 
         groupCounts={groupCounts} 
         components={MUIComponents}
         initialTopMostItemIndex={{index, align: 'center'}}

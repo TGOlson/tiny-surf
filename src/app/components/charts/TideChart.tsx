@@ -25,8 +25,12 @@ const TideChart = ({data: tideData, units}: TideChartProps) => {
     },
     scales: {
       y: {
-        suggestedMin: -3,
-        suggestedMax: 8,
+        suggestedMin: -5,
+        suggestedMax: 10,
+        title: {
+          display: true,
+          text: `Height ${units.tideHeight.toLowerCase()}.`
+        }
       }
     },
     plugins: {
