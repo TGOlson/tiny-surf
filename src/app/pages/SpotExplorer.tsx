@@ -47,7 +47,7 @@ const SpotExplorer = () => {
       <Box sx={{width: 280}}>
         <SpotList spots={spots} selected={selectedSpot} />
       </Box>
-      <Box sx={{width: 360}}>
+      <Box sx={{width: 400}}>
         <SpotInfo spot={selectedSpot} />
       </Box>
     </Stack>

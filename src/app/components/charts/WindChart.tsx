@@ -26,9 +26,8 @@ const WindChart = ({data: windData, units}: WindChartProps) => {
       y: {
         min: 0,
         suggestedMax: 20,
-        title: {
-          display: true,
-          text: `Speed ${units.windSpeed.toLowerCase()}.`
+        ticks: {
+          callback: (x) => `${x} ${units.windSpeed.toLowerCase()}.`
         }
       }
     },

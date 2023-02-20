@@ -1,8 +1,12 @@
 import React, { useEffect } from 'react';
 import { Box } from '@mui/system';
-import { Card, CardActions, CardContent, CardHeader, Divider, LinearProgress, Tab, Tabs, Typography } from '@mui/material';
-import WavesIcon from '@mui/icons-material/Waves';
+import { Button, Card, CardActions, CardContent, CardHeader, Divider, LinearProgress, Tab, Tabs, Typography } from '@mui/material';
 import { DateTime, FixedOffsetZone }  from 'luxon';
+
+import AutoAwesomeOutlinedIcon from '@mui/icons-material/AutoAwesomeOutlined';
+import SurfingIcon from '@mui/icons-material/Surfing';
+import WavesIcon from '@mui/icons-material/Waves';
+import AirIcon from '@mui/icons-material/Air';
 
 import { Spot } from '../../shared/types';
 import { useAppDispatch, useAppSelector } from '../hooks';
@@ -61,15 +65,13 @@ const SpotInfo = ({spot}: Params) => {
   
     content = (
       <React.Fragment>
-        <p>Rating: {data.ratings[0]?.key}</p>
-        <Box>
-          <WavesIcon />
-          <Typography sx={{ fontSize: 12 }}>WAVES</Typography>
-        </Box>
+        <Button disabled size="small" variant="text" startIcon={<AutoAwesomeOutlinedIcon />}>RATING</Button>
+        <p>{data.ratings[0]?.key}</p>
+        <Button disabled size="small" variant="text" startIcon={<SurfingIcon />}>WAVES</Button>
         <WaveChart data={waves} units={units}/>
-        <Typography sx={{ fontSize: 12 }}>WIND</Typography>
+        <Button disabled size="small" variant="text" startIcon={<AirIcon />}>WIND</Button>
         <WindChart data={wind} units={units}/>
-        <Typography sx={{ fontSize: 12 }}>TIDE</Typography>
+        <Button disabled size="small" variant="text" startIcon={<WavesIcon />}>TIDE</Button>
         <TideChart data={tides} units={units}/>
       </React.Fragment>
     );

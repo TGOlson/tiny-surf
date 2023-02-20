@@ -27,9 +27,8 @@ const WaveChart = ({data: waveData, units}: WaveChartProps) => {
       y: {
         min: 0,
         suggestedMax: 15,
-        title: {
-          display: true,
-          text: `Height ${units.waveHeight.toLowerCase()}.`
+        ticks: {
+          callback: (x) => `${x} ${units.waveHeight.toLowerCase()}.`
         }
       }
     },
