@@ -1,11 +1,12 @@
 import React from 'react';
 import SearchIcon from '@mui/icons-material/Search';
-import { Autocomplete, createFilterOptions, InputAdornment, TextField } from '@mui/material';
+import { Autocomplete, createFilterOptions, InputAdornment, TextField, Typography } from '@mui/material';
 
 import { useAppDispatch, useAppSelector } from '../hooks';
 import { Box } from '@mui/system';
 import { useNavigate } from 'react-router-dom';
 import { spotSelected } from '../slices/spot-slice';
+import { smallRegion } from '../utils';
 
 type SpotSearchParams = {
   small?: boolean
@@ -34,8 +35,9 @@ const SpotSearch = ({small}: SpotSearchParams) => {
         stringify: (spot) => JSON.stringify(spot)
       })}
       renderOption={(props, spot) => (
-        <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
-          {spot.name} ({spot.locationNamePath.join(' / ')})
+        <Box component="li" {...props}>
+          <Typography>{spot.name} <Typography variant="caption">{smallRegion(spot).join(', ')}</Typography>
+          </Typography>
         </Box>
       )}
       renderInput={(params) => (
