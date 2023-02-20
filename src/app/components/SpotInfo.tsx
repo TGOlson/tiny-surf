@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { Box } from '@mui/system';
-import { Button, Card, CardActions, CardContent, CardHeader, Divider, LinearProgress, Tab, Tabs, Typography } from '@mui/material';
+import { Button, Card, CardActions, CardContent, CardHeader, Divider, LinearProgress, Tab, Tabs } from '@mui/material';
 import { DateTime, FixedOffsetZone }  from 'luxon';
 
 import AutoAwesomeOutlinedIcon from '@mui/icons-material/AutoAwesomeOutlined';
@@ -15,6 +15,7 @@ import { daySelected, fetchForecast } from '../slices/forecast-slice';
 import WaveChart from './charts/WaveChart';
 import TideChart from './charts/TideChart';
 import WindChart from './charts/WindChart';
+import { spotLocation } from '../utils';
 
 type Params = {
   spot: Spot;
@@ -77,9 +78,7 @@ const SpotInfo = ({spot}: Params) => {
     );
   }
   
-  const locationParts = spot.locationNamePath;
-  const nParts = spot.locationNamePath.length;
-  const location = `${locationParts[nParts - 1] ?? ''}, ${locationParts[nParts - 2] ?? ''}`;
+  const location = spotLocation(spot).smallRegion.join(', ');
 
   return (
     <Card sx={{minHeight: '504px'}}>

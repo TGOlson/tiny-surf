@@ -8,6 +8,7 @@ import { groupBy } from 'ramda';
 import { Spot } from '../../shared/types';
 import { useAppDispatch } from '../hooks';
 import { spotSelected } from '../slices/spot-slice';
+import { spotLocation } from '../utils';
 
 type Params = {
   spots: Spot[],
@@ -23,10 +24,16 @@ const SpotList = ({spots, selected}: Params) => {
   const index = spots.findIndex(spot => spot.id === selected.id);
 
   const height = 504; // 36 per * 14 items
-  const groups = groupBy(x => x, spots.map(x => x.locationNamePath.slice(2, 5).join(' / ')));
+  const groups = groupBy(x => x, spots.map(x => {
+    const location = spotLocation(x);
 
-  // TODO: hardcoded for testing CA/US spots, clean this up...
-  const groupLabels = Object.keys(groups).map(x => x.replace('United States', 'US'));
+    // TODO: hardcoded for testing CA/US spots, clean this up...
+    const country = location.country.replace('United States', 'US');
+
+    return `${country} / ${location.largeRegion.join(' / ')}`;
+  }));
+
+  const groupLabels = Object.keys(groups);
   const groupCounts = Object.values(groups).map(x => x.length);
 
   const itemContent = (index: number) => {

@@ -1,5 +1,5 @@
 import path from 'path';
-import { uniqBy } from "ramda";
+import { uniq, uniqBy } from "ramda";
 
 import { fetchEarthTaxonomy, fetchTaxonomy } from "surfline/taxonomy";
 import { RatingForecast, TideForecast, WaveForecast, WindForecast } from 'surfline/forecasts/types';
@@ -76,6 +76,15 @@ async function main () {
     }
     case '--start-server': {
       startServer();
+      return;
+    }
+    case '--test': {
+      const spots = await parsedSpots.read();
+      const nParts = spots.map(spot => spot.locationNamePath.length);
+      const uniqueNParts = uniq(nParts);
+
+      console.log(uniqueNParts);
+      
       return;
     }
     default:
