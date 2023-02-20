@@ -15,7 +15,7 @@ import { daySelected, fetchForecast } from '../slices/forecast-slice';
 import WaveChart from './charts/WaveChart';
 import TideChart from './charts/TideChart';
 import WindChart from './charts/WindChart';
-import { spotLocation } from '../utils';
+import { smallRegion } from '../utils';
 
 type Params = {
   spot: Spot;
@@ -67,7 +67,7 @@ const SpotInfo = ({spot}: Params) => {
     content = (
       <React.Fragment>
         <Button disabled size="small" variant="text" startIcon={<AutoAwesomeOutlinedIcon />}>RATING</Button>
-        <p>{data.ratings[0]?.key}</p>
+        <p>{data.ratings?.[0]?.key}</p>
         <Button disabled size="small" variant="text" startIcon={<SurfingIcon />}>WAVES</Button>
         <WaveChart data={waves} units={units}/>
         <Button disabled size="small" variant="text" startIcon={<AirIcon />}>WIND</Button>
@@ -78,7 +78,7 @@ const SpotInfo = ({spot}: Params) => {
     );
   }
   
-  const location = spotLocation(spot).smallRegion.join(', ');
+  const location = smallRegion(spot).join(', ');
 
   return (
     <Card sx={{minHeight: '504px'}}>

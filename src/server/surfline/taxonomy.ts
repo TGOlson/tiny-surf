@@ -92,8 +92,13 @@ const createSlug = (spot: SpotTaxonomy): string => {
   return base.toLowerCase().replace(/ /g, '-');
 };
 
+// another invalid spot id, seems like it's used for testing, filter it out...
+const INVALID_SPOT_ID_SEYBOUSE = '584204214e65fad6a7709ce5';
+
 export const parseSpots = (txs: Taxonomy[]): Spot[] => {
-  const spots = txs.filter(isSpotTaxonomy).filter(x => !x.liesIn.includes(NONEXISTENT_BAJA_SUBREGION_ID));
+  const spots = txs.filter(isSpotTaxonomy)
+    .filter(x => !x.liesIn.includes(NONEXISTENT_BAJA_SUBREGION_ID) && x.spot !== INVALID_SPOT_ID_SEYBOUSE);
+
   const geonames = txs.filter(isGeonameTaxonomy);
 
   const geonamesById = geonames.reduce((accum: {[key: string]: GeonameTaxonomy}, geo: GeonameTaxonomy) => {
@@ -118,6 +123,7 @@ export const parseSpots = (txs: Taxonomy[]): Spot[] => {
     if (!closestGeoname) throw new Error('Unexpected access error');
 
     const locationNamePath = closestGeoname.enumeratedPath.split(',').slice(1);
+    const locationParts = spotLocation(locationNamePath);
     const slug = createSlug(spot);
 
     return {
@@ -125,12 +131,29 @@ export const parseSpots = (txs: Taxonomy[]): Spot[] => {
       taxonomyId: spot._id,
       name: spot.name,
       slug,
-      location: {lat, long},
+      location: {
+        coordinates: {lat, long},
+        ...locationParts,
+      },
       geonameId: closestGeoname._id,
       locationNamePath
     };
   });
 };
+
+// All spots have at least 5 or 6 location pieces, so this should be a safe operation
+export const spotLocation = (parts: Spot['locationNamePath']): Omit<Spot['location'], 'coordinates'> => {
+  // parts[0] === 'Earth'
+  const continent = parts[1];
+  const country = parts[2];
+
+  if (!continent || !country) throw new Error(`Unexpected access error for ${parts.join(',')}`);
+  
+  const regions = parts.slice(3);
+
+  return {continent, country, regions};
+};
+
 
 const toTaxonomy = (tx: TaxonomyResponse): Taxonomy => {
   const newTx: Taxonomy = {...tx};

@@ -6,8 +6,15 @@ export type Spot = {
   name: string,
   slug: string,
   location: {
-    lat: number,
-    long: number,
+    coordinates: {
+      lat: number,
+      long: number,
+    },
+    continent: string,
+    country: string,
+    // will have 0-5 items, with 2-3 being most common 
+    // (eg. all California spots have 2-3 additional locations here)
+    regions: string[]
   },
   geonameId: string, // id of closest geoname, not necessarily the closest taxonomy type
   
@@ -53,7 +60,7 @@ export type Forecast = {
   startTimestamp: number,
   utcOffset: number,
   data: {
-    ratings: RatingDetails[],
+    ratings: RatingDetails[] | null,
     waves: WaveDetails[],
     wind: WindDetails[],
     tides: TideDetails[],

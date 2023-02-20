@@ -6,9 +6,10 @@ import { RatingForecast, TideForecast, WaveForecast, WindForecast } from 'surfli
 
 import { earthTaxonomy, additionalTaxonomy, allTaxonomy, parsedSpots, parsedCASpots, readJSON } from "./storage";
 
-import { parseForecast } from "./surfline/forecast";
+import { fetchCombinedForecast, parseForecast } from "./surfline/forecast";
 import { cleanTaxonomy, inspectTaxonomy, parseSpots, flattenTaxonomyResponse } from './surfline/taxonomy';
 import { startServer } from './server';
+import { fetchForecast } from 'surfline';
 
 async function main () {
   const [_, __, cmd] = process.argv;
@@ -45,14 +46,14 @@ async function main () {
     }
     case '--parse-spots': {
       const txs = await allTaxonomy.read();
-      const spots = parseSpots(txs).filter(s => s.locationNamePath.includes('California'));
+      const spots = parseSpots(txs);
       
       return await parsedSpots.write(spots);
     }
     case '--parse-ca-spots': {
       const txs = await allTaxonomy.read();
       const spots = parseSpots(txs).filter(s => s.locationNamePath.includes('California'));
-      const sortedSpots = spots.sort((a, b) => b.location.lat - a.location.lat);
+      const sortedSpots = spots.sort((a, b) => b.location.coordinates.lat - a.location.coordinates.lat);
       
       return await parsedCASpots.write(sortedSpots);
     }
@@ -79,11 +80,13 @@ async function main () {
       return;
     }
     case '--test': {
-      const spots = await parsedSpots.read();
-      const nParts = spots.map(spot => spot.locationNamePath.length);
-      const uniqueNParts = uniq(nParts);
+      // const spots = await parsedSpots.read();
+      // const res = spots.filter(spot => spot.locationNamePath.length > 6);
+      // const uniqueNParts = uniq(nParts);
 
-      console.log(uniqueNParts);
+      
+      const res = await fetchCombinedForecast('5842041f4e65fad6a7708801');
+      console.log(res);
       
       return;
     }

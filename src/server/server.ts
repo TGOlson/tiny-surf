@@ -33,9 +33,11 @@ const hasMessage = (error: unknown): error is object & {message: string} => {
 const handle500 = (res: Response) => (err: unknown) => {
   if (isSurflineError(err)) {
     const message = `Surfline Error: ${err.message}`;
+    console.error('Handling surfline API error', err);
     res.status(err.status).json({message});
   } else {
     const message = hasMessage(err) ? err.message : 'Unknown error';
+    console.error('Unexpected error', err);
     res.status(500).json({message});
   }
 };

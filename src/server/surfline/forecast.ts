@@ -1,6 +1,6 @@
 import { fetchForecast } from 'surfline';
 import { RatingForecast, TideForecast, WaveForecast, WindForecast } from 'surfline/forecasts/types';
-import { Forecast } from "../../shared/types";
+import { Forecast, RatingDetails } from "../../shared/types";
 import { allEqual } from '../../shared/util';
 import { logInterestingWaveFields, logInterestingWindFields } from './log-interesting-fields';
 
@@ -36,13 +36,13 @@ export const parseForecast = (
   const utcOffset = waves.associated.utcOffset;
 
   const wavesStart = Math.min(...waves.data.wave.map(x => x.timestamp));
-  const ratingsStart = Math.min(...ratings.data.rating.map(x => x.timestamp));
+  // const ratingsStart = Math.min(...ratings.data.rating.map(x => x.timestamp));
   const windStart = Math.min(...winds.data.wind.map(x => x.timestamp));
   const tidesStart = Math.min(...tides.data.tides.map(x => x.timestamp));
   const startTimestamp = wavesStart;
 
-  if (!allEqual([wavesStart, ratingsStart, windStart, tidesStart])) {
-    console.log('uneven start times', wavesStart, ratingsStart, windStart, tidesStart);
+  if (!allEqual([wavesStart, windStart, tidesStart])) {
+    console.log('uneven start times', wavesStart, windStart, tidesStart);
   }
 
   const parsedWaves = waves.data.wave.map(({timestamp, surf}) => {
@@ -50,7 +50,7 @@ export const parseForecast = (
     return {min, max, plus, timestamp: toMillis(timestamp), description: humanRelation};
   });
 
-  const parsedRatings = ratings.data.rating.map(({timestamp, rating}) => {
+  const parsedRatings: RatingDetails[] | undefined = ratings.data.rating?.map(({timestamp, rating}) => {
     const {key, value} = rating;
     return {key, value, timestamp: toMillis(timestamp)};
   });
@@ -72,7 +72,7 @@ export const parseForecast = (
     utcOffset,
     data: {
       waves: parsedWaves, 
-      ratings: parsedRatings,
+      ratings: parsedRatings || null,
       wind: parsedWind,
       tides: parsedTides,
     }
