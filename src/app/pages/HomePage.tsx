@@ -5,7 +5,7 @@ import SpotSearch from '../components/SpotSearch';
 
 const HomePage = () => {
   return (
-    <Box sx={{display: 'flex', justifyContent: 'center'}}>
+    <Box sx={{display: 'flex', justifyContent: 'center', marginTop: '120px'}}>
       <SpotSearch />
     </Box>
   );

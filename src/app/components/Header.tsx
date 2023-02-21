@@ -6,13 +6,17 @@ import Typography from '@mui/material/Typography';
 
 import SpotSearch from './SpotSearch';
 
-const Header = () => (
+type HeaderProps = {
+  hideSearch?: boolean
+};
+
+const Header = ({hideSearch = false}: HeaderProps) => (
   <AppBar position="static" elevation={0} color="inherit">
     <Toolbar>
       <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
         Tiny Surf
       </Typography>
-      <SpotSearch small />
+      {hideSearch ? null : <SpotSearch small />}
     </Toolbar>
   </AppBar>
 );
