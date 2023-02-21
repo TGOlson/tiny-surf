@@ -17,18 +17,25 @@ const SpotSearch = ({small}: SpotSearchParams) => {
 
   const spotsData = useAppSelector(st => st.spot.spots);
   const spots = spotsData.status === 'fulfilled' ? spotsData.data : [];
-  const spotsWithSearchString = spots.map(spot => ({...spot, searchString: JSON.stringify(spot)}));
+  const spotsWithSearchString = spots.map(spot => ({...spot, searchString: `${spot.name} ${spot.locationNamePath.join(' ')}`}));
 
   return (
     <Autocomplete
-      freeSolo
       sx={{ width: small ? 260 : 360 }}
       options={spotsWithSearchString}
+      clearOnEscape
+      openOnFocus={false}
+      popupIcon={null}
+      noOptionsText="No spots found..."
       getOptionLabel={(spot) => typeof spot === 'string' ? spot : spot.name}
       onChange={(_event, value, reason) => {
+        console.log('onchange', reason);
         if (reason === 'selectOption' && value && typeof value === 'object' && 'slug' in value) {
           dispatch(spotSelected(value.slug, navigate));
         }
+      }}
+      isOptionEqualToValue={(option, value) => {
+        return option.id === value.id;
       }}
       filterOptions={createFilterOptions({
         stringify: (spot) => spot.searchString

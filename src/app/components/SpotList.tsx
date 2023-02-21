@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import { List, ListSubheader, ListItem, ListItemButton, ListItemText, Paper, Typography } from '@mui/material';
 import { GroupedVirtuoso, GroupedVirtuosoHandle, ItemProps, ListProps, GroupProps } from 'react-virtuoso';
@@ -21,6 +21,11 @@ const SpotList = ({spots, selected}: Params) => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
+  useEffect(() => {
+    const index = spots.findIndex(spot => spot.id === selected.id);
+    listRef.current?.scrollIntoView({index, align: 'center'});
+  }, [listRef.current, selected]);
+
   const index = spots.findIndex(spot => spot.id === selected.id);
 
   const height = 504; // 36 per * 14 items
@@ -32,6 +37,7 @@ const SpotList = ({spots, selected}: Params) => {
   const groupLabels = Object.keys(groups);
   const groupCounts = Object.values(groups).map(x => x.length);
 
+  
   const itemContent = (index: number) => {
     const spot = spots[index];
 
