@@ -1,5 +1,5 @@
 import path from 'path';
-import { uniq, uniqBy } from "ramda";
+import { uniqBy } from "ramda";
 
 import { fetchEarthTaxonomy, fetchTaxonomy } from "surfline/taxonomy";
 import { RatingForecast, TideForecast, WaveForecast, WindForecast } from 'surfline/forecasts/types';
@@ -9,7 +9,6 @@ import { earthTaxonomy, additionalTaxonomy, allTaxonomy, parsedSpots, parsedCASp
 import { fetchCombinedForecast, parseForecast } from "./surfline/forecast";
 import { cleanTaxonomy, inspectTaxonomy, parseSpots, flattenTaxonomyResponse } from './surfline/taxonomy';
 import { startServer } from './server';
-import { fetchForecast } from 'surfline';
 
 async function main () {
   const [_, __, cmd] = process.argv;

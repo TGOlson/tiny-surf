@@ -1,6 +1,5 @@
 import React from 'react';
-import SearchIcon from '@mui/icons-material/Search';
-import { Autocomplete, createFilterOptions, InputAdornment, TextField, Typography } from '@mui/material';
+import { Autocomplete, createFilterOptions, TextField, Typography } from '@mui/material';
 
 import { useAppDispatch, useAppSelector } from '../hooks';
 import { Box } from '@mui/system';
@@ -18,26 +17,28 @@ const SpotSearch = ({small}: SpotSearchParams) => {
 
   const spotsData = useAppSelector(st => st.spot.spots);
   const spots = spotsData.status === 'fulfilled' ? spotsData.data : [];
+  const spotsWithSearchString = spots.map(spot => ({...spot, searchString: JSON.stringify(spot)}));
 
   return (
     <Autocomplete
       freeSolo
-      sx={{ width: 300 }}
-      options={spots}
+      sx={{ width: small ? 260 : 360 }}
+      options={spotsWithSearchString}
       getOptionLabel={(spot) => typeof spot === 'string' ? spot : spot.name}
       onChange={(_event, value, reason) => {
         if (reason === 'selectOption' && value && typeof value === 'object' && 'slug' in value) {
-          navigate(`/s/${value.slug}`);
-          dispatch(spotSelected(value.slug));
+          dispatch(spotSelected(value.slug, navigate));
         }
       }}
       filterOptions={createFilterOptions({
-        stringify: (spot) => JSON.stringify(spot)
+        stringify: (spot) => spot.searchString
       })}
       renderOption={(props, spot) => (
         <Box component="li" {...props}>
-          <Typography>{spot.name} <Typography variant="caption">{smallRegion(spot).join(', ')}</Typography>
-          </Typography>
+          <Box>
+            <Typography paragraph sx={{marginBottom: 0}} variant={small ? 'body1' : 'h6'}>{spot.name}</Typography>
+            <Typography paragraph sx={{marginBottom: 0}} variant="caption" color="text.secondary">{smallRegion(spot).join(', ')}</Typography>
+          </Box>
         </Box>
       )}
       renderInput={(params) => (
@@ -46,7 +47,6 @@ const SpotSearch = ({small}: SpotSearchParams) => {
           size={small ? 'small' : 'medium'}
           variant="outlined" 
           placeholder="Search" 
-          
         />
       )}
     />

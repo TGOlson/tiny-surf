@@ -1,5 +1,4 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
 
 import { List, ListSubheader, ListItem, ListItemButton, ListItemText, Paper, Typography } from '@mui/material';
 import { GroupedVirtuoso, GroupedVirtuosoHandle, ItemProps, ListProps, GroupProps } from 'react-virtuoso';
@@ -9,6 +8,7 @@ import { Spot } from '../../shared/types';
 import { useAppDispatch } from '../hooks';
 import { spotSelected } from '../slices/spot-slice';
 import { largeRegion } from '../utils';
+import { useNavigate } from 'react-router-dom';
 
 type Params = {
   spots: Spot[],
@@ -39,10 +39,7 @@ const SpotList = ({spots, selected}: Params) => {
     
     const isSelected = spot.id === selected.id;
 
-    const onClick = () => {
-      navigate(`/s/${spot.slug}`);
-      dispatch(spotSelected(spot.slug));
-    };
+    const onClick = () => dispatch(spotSelected(spot.slug, navigate));
     
     return (
       <ListItemButton selected={isSelected} onClick={onClick}>

@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
+import { NavigateFunction } from 'react-router-dom';
 
 import * as api from '../api';
 import { Spot } from '../../shared/types';
@@ -38,6 +39,9 @@ export const spotSlice = createSlice({
   }
 });
 
-export const {spotSelected} = spotSlice.actions;
+export const spotSelected = (slug: string, navigate?: NavigateFunction) => {
+  if(navigate) navigate(`/s/${slug}`);
+  return spotSlice.actions.spotSelected(slug);
+};
 
 export default spotSlice.reducer;

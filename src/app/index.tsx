@@ -9,6 +9,7 @@ import { Provider } from 'react-redux';
 import Root from "./pages/Root";
 import SpotExplorer from "./pages/SpotExplorer";
 import ErrorPage from "./pages/ErrorPage";
+import HomePage from "./pages/HomePage";
 
 import "./index.css";
 
@@ -20,6 +21,10 @@ const router = createBrowserRouter([
     element: <Root />,
     errorElement: <ErrorPage />,
     children: [
+      {
+        index: true,
+        element: <HomePage />
+      },
       {
         path: "/s/:slug",
         element: <SpotExplorer />,

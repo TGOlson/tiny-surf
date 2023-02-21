@@ -6,7 +6,7 @@ import SpotInfo from '../components/SpotInfo';
 import SpotList from '../components/SpotList';
 
 import { useAppDispatch, useAppSelector } from '../hooks';
-import { fetchSpots, spotSelected } from '../slices/spot-slice';
+import { spotSelected } from '../slices/spot-slice';
 
 const SpotExplorer = () => {
   const params = useParams();
@@ -17,10 +17,6 @@ const SpotExplorer = () => {
   const dispatch = useAppDispatch();
   const spotsData = useAppSelector(st => st.spot.spots);
   const selected = useAppSelector(st => st.spot.selected);
-
-  useEffect(() => {
-    if (spotsData.status === 'idle') void dispatch(fetchSpots());
-  }, [spotsData.status, dispatch]);
 
   useEffect(() => {
     if (!selected) dispatch(spotSelected(paramSlug));
