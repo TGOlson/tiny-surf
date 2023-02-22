@@ -15,6 +15,7 @@ const WindChart = ({data: windData, units}: WindChartProps) => {
   const chartType = 'bar';
 
   const data = windData.map(wind => ({x: wind.datetime, y: Math.round(wind.speed)}));
+  const maxSpeed = Math.max(...windData.map(x => x.speed));
 
   const options: ChartOptions<typeof chartType> = {
     elements: {
@@ -25,7 +26,7 @@ const WindChart = ({data: windData, units}: WindChartProps) => {
     scales: {
       y: {
         min: 0,
-        suggestedMax: 30,
+        suggestedMax: Math.max(30, maxSpeed + 10),
       }
     },
     plugins: {

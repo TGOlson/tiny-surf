@@ -15,6 +15,7 @@ const WaveChart = ({data: waveData, units}: WaveChartProps) => {
   const chartType = 'line';
   
   const data = waveData.map(wave => ({x: wave.datetime, y: wave.max}));
+  const maxHeight = Math.max(...waveData.map(x => x.max));
 
   const options: ChartOptions<typeof chartType> = {
     elements: {
@@ -26,7 +27,7 @@ const WaveChart = ({data: waveData, units}: WaveChartProps) => {
     scales: {
       y: {
         min: 0,
-        suggestedMax: 20,
+        suggestedMax: Math.max(20, maxHeight + 10),
       }
     },
     plugins: {
