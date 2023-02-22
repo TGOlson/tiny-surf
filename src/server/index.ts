@@ -6,7 +6,7 @@ import { RatingForecast, TideForecast, WaveForecast, WindForecast } from 'surfli
 
 import { earthTaxonomy, additionalTaxonomy, allTaxonomy, parsedSpots, parsedCASpots, readJSON } from "./storage";
 
-import { fetchCombinedForecast, parseForecast } from "./surfline/forecast";
+import { parseForecast } from "./surfline/forecast";
 import { cleanTaxonomy, inspectTaxonomy, parseSpots, flattenTaxonomyResponse } from './surfline/taxonomy';
 import { startServer } from './server';
 
@@ -84,9 +84,13 @@ async function main () {
       // const uniqueNParts = uniq(nParts);
 
       
-      const res = await fetchCombinedForecast('5842041f4e65fad6a7708801');
-      console.log(res);
-      
+      const res = await fetch('https://www.surfline.com/surf-report/old-man-s-at-tourmaline/5842041f4e65fad6a77088c4?camId=5f29e43f4a641b0b4103763b5842041f4e65fad6a7708801');
+      console.log(res, res.status, res.statusText);
+
+      const body = await res.text();
+
+      console.log(body);
+
       return;
     }
     default:

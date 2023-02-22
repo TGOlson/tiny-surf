@@ -10,6 +10,7 @@ import Tab from '@mui/joy/Tab';
 import TabList from '@mui/joy/TabList';
 import Tabs from '@mui/joy/Tabs';
 import Typography from '@mui/joy/Typography';
+import Stack from '@mui/joy/Stack';
 
 import AutoAwesomeOutlinedIcon from '@mui/icons-material/AutoAwesomeOutlined';
 import SurfingIcon from '@mui/icons-material/Surfing';
@@ -74,14 +75,22 @@ const SpotInfo = ({spot}: Params) => {
 
     content = (
       <React.Fragment>
-        <Typography level="body3" startDecorator={<AutoAwesomeOutlinedIcon />}>RATING</Typography>
-        <p>{data.ratings?.[0]?.key}</p>
-        <Typography level="body3" startDecorator={<SurfingIcon />}>WAVES</Typography>
-        <WaveChart data={waves} units={units}/>
-        <Typography level="body3" startDecorator={<AirIcon />}>WIND</Typography>
-        <WindChart data={wind} units={units}/>
-        <Typography level="body3" startDecorator={<WavesIcon />}>TIDE</Typography>
-        <TideChart data={tides} units={units}/>
+        <Stack>
+          <Typography level="body4" startDecorator={<AutoAwesomeOutlinedIcon />}>RATING</Typography>
+          <p>{data.ratings?.[0]?.key}</p>
+        </Stack>
+        <Stack>
+          <Typography level="body4" startDecorator={<SurfingIcon />}>WAVES ({units.waveHeight.toLowerCase()}.)</Typography>
+          <WaveChart data={waves} units={units}/>
+        </Stack>
+        <Stack>
+          <Typography level="body4" startDecorator={<AirIcon />}>WIND ({units.windSpeed.toLowerCase()}.)</Typography>
+          <WindChart data={wind} units={units}/>
+        </Stack>
+        <Stack>
+          <Typography level="body4" startDecorator={<WavesIcon />}>TIDE ({units.tideHeight.toLowerCase()}.)</Typography>
+          <TideChart data={tides} units={units}/>
+        </Stack>
       </React.Fragment>
     );
   }
@@ -108,7 +117,7 @@ const SpotInfo = ({spot}: Params) => {
           </TabList>
         </Tabs>
       </Box>
-      <CardContent>
+      <CardContent sx={{gap: 1.5}}>
         {content}
       </CardContent>
     </Card>
