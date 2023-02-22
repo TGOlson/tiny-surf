@@ -41,7 +41,6 @@ const SpotList = ({spots, selected, selectionAction}: Params) => {
 
   const index = spotIndex(selected);
 
-  const height = 504; // 36 per * 14 items
   const groups = groupBy(x => x, spots.map(x => {
     // TODO: hardcoded for testing CA/US spots, clean this up...
     return largeRegion(x).join(' / ').replace('United States', 'US');
@@ -59,8 +58,11 @@ const SpotList = ({spots, selected, selectionAction}: Params) => {
 
     const onClick = () => dispatch(spotSelected({slug: spot.slug, action: 'list-click'}, navigate));
     
+    const backgroundColor = isSelected ? 'primary.100' : '';
+    const fontWeight = isSelected ? 'normal' : '';
+
     return (
-      <ListItemButton selected={isSelected} onClick={onClick} sx={{backgroundColor: isSelected ? 'primary.100' : ''}}>
+      <ListItemButton selected={isSelected} onClick={onClick} sx={{backgroundColor, fontWeight}}>
         <ListItemContent>
           <Typography noWrap level="body1" fontSize="sm">{spot.name}</Typography>
         </ListItemContent>
@@ -69,10 +71,10 @@ const SpotList = ({spots, selected, selectionAction}: Params) => {
   };
 
   return (
-    <Card variant="outlined" sx={{borderRadius: 'sm'}}>
+    <Card variant="outlined" sx={{borderRadius: 'sm', height: '100%'}}>
       <GroupedVirtuoso 
         ref={listRef}
-        style={{ height }} 
+        style={{ height: '100%' }} 
         groupCounts={groupCounts} 
         components={MUIComponents}
         initialTopMostItemIndex={{index, align: 'center'}}

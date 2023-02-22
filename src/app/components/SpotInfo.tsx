@@ -1,11 +1,11 @@
 import React, { useEffect } from 'react';
 import { DateTime, FixedOffsetZone }  from 'luxon';
 
-import Box from '@mui/system/Box';
+import Box from '@mui/joy/Box';
 import Card from '@mui/joy/Card';
 import CardContent from '@mui/joy/CardContent';
 import Divider from '@mui/joy/Divider';
-import LinearProgress from '@mui/joy/LinearProgress';
+import CircularProgress from '@mui/joy/CircularProgress';
 import Tab from '@mui/joy/Tab';
 import TabList from '@mui/joy/TabList';
 import Tabs from '@mui/joy/Tabs';
@@ -25,6 +25,7 @@ import TideChart from './charts/TideChart';
 import WindChart from './charts/WindChart';
 import { smallRegion } from '../utils';
 import RatingChart from './charts/RatingChart';
+import { CardOverflow } from '@mui/joy';
 
 type Params = {
   spot: Spot;
@@ -58,10 +59,11 @@ const SpotInfo = ({spot}: Params) => {
     content = (
       <Box sx={{ 
         width: '100%',
-        marginTop: '32px',
-        padding: '32px',
+        display: 'flex',
+        justifyContent: 'center',
+        mt: 4,
       }}>
-        <LinearProgress />
+        <CircularProgress />
       </Box>
     );
   } else if (forecast.status === 'rejected') {
@@ -113,7 +115,7 @@ const SpotInfo = ({spot}: Params) => {
   const location = smallRegion(spot).join(', ');
 
   return (
-    <Card sx={{minHeight: '504px', gap: 1.5}}>
+    <Card variant="outlined" sx={{gap: 1.5, height: '100%', borderRadius: 'sm'}}>
       <Box>
         <Typography level="h4" fontSize="lg">{spot.name}</Typography>
         <Typography level="body2">{location}</Typography>

@@ -1,5 +1,5 @@
 import React from 'react';
-import Box from '@mui/system/Box';
+import Box from '@mui/joy/Box';
 
 import FormControl from '@mui/joy/FormControl';
 import FormHelperText from '@mui/joy/FormHelperText';

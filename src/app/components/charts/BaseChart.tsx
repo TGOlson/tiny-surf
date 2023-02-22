@@ -49,6 +49,9 @@ const commonOptions: ChartOptions = {
         backdropPadding: 0,
         minRotation: 0,
         maxRotation: 0,
+        font: {
+          // size: 10,
+        },
         callback: (val, index) => {
           if (index !== 0 && index % 3 === 0) {
             return typeof val === 'string' ? val : DateTime.fromMillis(val).toFormat('ha').toLowerCase();
@@ -78,10 +81,14 @@ const commonOptions: ChartOptions = {
     datalabels: {
       anchor: 'end',
       align: 'end',
+      clamp: true,
+      font: {
+        weight: 'bold',
+      },
       display: (context) => context.dataIndex !== 0 && context.dataIndex % 3 === 0,
       formatter: (val: {x: DateTime, y: number}) => val.y,
       padding: {
-        bottom: -10,
+        bottom: -5,
       }
     }
   }

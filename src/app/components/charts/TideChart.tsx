@@ -20,6 +20,7 @@ const TideChart = ({data: tideData, units}: TideChartProps) => {
   const maxHeight = Math.max(...tideData.map(x => x.height));
 
   const options: ChartOptions<typeof chartType> = {
+    animation: false,
     elements: {
       line: {
         tension: 0.4,

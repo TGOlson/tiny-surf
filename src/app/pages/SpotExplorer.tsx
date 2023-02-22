@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 
-import Box from '@mui/system/Box';
+import Box from '@mui/joy/Box';
 import Stack from '@mui/joy/Stack';
 
 import SpotInfo from '../components/SpotInfo';
@@ -40,11 +40,11 @@ const SpotExplorer = () => {
   }
 
   return (
-    <Stack direction="row" justifyContent="center" spacing={2}>
+    <Stack direction="row" sx={{justifyContent: 'center', mt: 8, gap: 2}}>
       <Box sx={{width: 300}}>
         <SpotList spots={spots} selected={selectedSpot} selectionAction={selected.action} />
       </Box>
-      <Box sx={{width: 400}}>
+      <Box sx={{width: 400, minHeight: '486px'}}>
         <SpotInfo spot={selectedSpot} />
       </Box>
     </Stack>

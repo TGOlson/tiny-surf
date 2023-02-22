@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 
-import Stack from '@mui/system/Stack';
+import Stack from '@mui/joy/Stack';
 import { CssVarsProvider } from '@mui/joy/styles';
 import CssBaseline from '@mui/joy/CssBaseline';
 
@@ -26,7 +26,7 @@ const Root = () => {
   return (
     <CssVarsProvider>
       <CssBaseline />
-      <Stack spacing={2} sx={{height: '100vh', backgroundColor: '#e7ebf0'}}>
+      <Stack sx={{height: '100vh', backgroundColor: '#e7ebf0'}}>
         <Header hideSearch={hideSearch} />
         <Outlet />
       </Stack>

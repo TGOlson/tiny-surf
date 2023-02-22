@@ -26,11 +26,7 @@ const WaveChart = ({data: waveData, units}: WaveChartProps) => {
     },
     scales: {
       x: {
-        afterSetDimensions: (scale) => {
-          const padding = scale.getPadding ? scale.getPadding() : null;
-          console.log('padding', padding);
-          // scale.marginRight -= 15;
-        }
+        display: false,
       },
       y: {
         min: 0,
