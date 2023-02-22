@@ -37,6 +37,9 @@ const TideChart = ({data: tideData, units}: TideChartProps) => {
             return `${context.parsed.y} ${units.tideHeight.toLowerCase()}.`;
           },
         }
+      },
+      datalabels: {
+        display: (context) => tideData[context.dataIndex]?.type !== 'NORMAL'
       }
     }
   };

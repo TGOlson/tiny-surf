@@ -9,6 +9,8 @@ import { mergeDeepLeft } from 'ramda';
 // TODO: consider using register to reduce bundle size
 import 'chart.js/auto';
 import 'chartjs-adapter-luxon';
+import ChartDataLabels from 'chartjs-plugin-datalabels';
+
 
 function mergeOptions<T extends ChartType, Opts extends object = NonNullable<ChartOptions<T>>> (o1: Opts, o2: Opts): Opts {
   // a little unsafe with type cohersion, but mergedeep doesn't want to work otherwise
@@ -33,11 +35,20 @@ const commonOptions: ChartOptions = {
         // Luxon format string
         tooltipFormat: 'h a',
       },
-      ticks: {
-        display: false,
+      grid: {
+        tickLength: 4,
+        drawOnChartArea: false,
       },
-      display: false,
+      ticks: {
+        padding: 1,
+        minRotation: 0,
+        maxRotation: 0,
+        callback: (val) => typeof val === 'string' ? val : DateTime.fromMillis(val).toFormat('ha').toLowerCase(),
+      },
     },
+    y: {
+      display: false,
+    }
   },
   interaction: {
     mode: 'nearest',
@@ -51,6 +62,15 @@ const commonOptions: ChartOptions = {
     tooltip: {
       displayColors: false,
       intersect: false,
+    },
+    datalabels: {
+      anchor: 'end',
+      align: 'end',
+      display: (context) => context.dataIndex % 3 === 0,
+      formatter: (val: {x: DateTime, y: number}) => val.y,
+      padding: {
+        bottom: 0
+      }
     }
   }
 };
@@ -67,6 +87,7 @@ const BaseChart = ({type, data, options}: BaseChartProps) => {
   return (
     <Chart
       type={type} 
+      plugins={[ChartDataLabels]}
       data={{
         datasets: [{data}]
       }} 

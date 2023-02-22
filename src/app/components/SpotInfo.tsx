@@ -69,6 +69,7 @@ const SpotInfo = ({spot}: Params) => {
   } else {
     const {data, units, utcOffset} = forecast.data;
   
+    const ratings = data.ratings?.map(addDateTime(utcOffset)).filter(isDay(day));
     const waves = data.waves.map(addDateTime(utcOffset)).filter(isDay(day));
     const wind = data.wind.map(addDateTime(utcOffset)).filter(isDay(day));
     const tides = data.tides.map(addDateTime(utcOffset)).filter(isDay(day));
@@ -77,7 +78,7 @@ const SpotInfo = ({spot}: Params) => {
       <React.Fragment>
         <Stack>
           <Typography level="body4" startDecorator={<AutoAwesomeOutlinedIcon />}>RATING</Typography>
-          <p>{data.ratings?.[0]?.key}</p>
+          <Typography level="body4">{ratings?.map(x => x.value).join(', ')}</Typography>
         </Stack>
         <Stack>
           <Typography level="body4" startDecorator={<SurfingIcon />}>WAVES ({units.waveHeight.toLowerCase()}.)</Typography>
