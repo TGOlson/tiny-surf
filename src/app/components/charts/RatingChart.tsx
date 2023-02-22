@@ -13,7 +13,7 @@ const RatingChart = ({data}: RatingChartProps) => {
   return (
     <Box sx={{height: '6px', borderRadius: 'sm', display: 'flex', justifyContent: 'space-evenly', overflow: 'clip', flexGrow: 1}}>
       {data.map(rating => (
-        <Box key={rating.timestamp} sx={{backgroundColor: ratingColor(rating), flexGrow: 1}}></Box>
+        <Box key={rating.timestamp} sx={{backgroundColor: ratingColor(rating.key), flexGrow: 1}}></Box>
       ))}
     </Box>
   );

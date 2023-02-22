@@ -97,7 +97,7 @@ const SpotInfo = ({spot}: Params) => {
         </Stack>
         <Stack direction="row" sx={{alignItems: 'center'}}>      
           <SectionTitle title='WAVE (ft.)' icon={<SurfingIcon />} />
-          <WaveChart data={waves} units={units}/>
+          <WaveChart data={waves} units={units} />
         </Stack>
         <Stack direction="row" sx={{alignItems: 'center'}}>        
           <SectionTitle title='WIND (kts.)' icon={<AirIcon />} />

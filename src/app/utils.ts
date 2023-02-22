@@ -21,9 +21,11 @@ export const largeRegion = ({location}: Spot): [string, string | undefined, stri
   return [location.country, region1, region2];
 };
 
-export const ratingColor = (rating: RatingDetails): string => {
-  switch (rating.key) {
-    case 'VERY_POOR': return '#a3acba';
+export const DEFAULT_RATING_COLOR = '#a3acba';
+
+export const ratingColor = (rating: RatingDetails['key']): string => {
+  switch (rating) {
+    case 'VERY_POOR': return DEFAULT_RATING_COLOR;
     case 'POOR': return '#439cff';
     case 'POOR_TO_FAIR': return '#31d2e9';
     case 'FAIR': return '#1ad64c';
