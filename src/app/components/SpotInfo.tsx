@@ -25,7 +25,6 @@ import TideChart from './charts/TideChart';
 import WindChart from './charts/WindChart';
 import { smallRegion } from '../utils';
 import RatingChart from './charts/RatingChart';
-import { CardOverflow } from '@mui/joy';
 
 type Params = {
   spot: Spot;

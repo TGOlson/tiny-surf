@@ -38,7 +38,6 @@
     "@emotion/react": "^11.10.5",
     "@emotion/styled": "^11.10.5",
     "@fontsource/public-sans": "^4.5.12",
-    "@fontsource/roboto": "^4.5.8",
     "@mui/icons-material": "^5.11.0",
     "@mui/joy": "^5.0.0-alpha.68",
     "@reduxjs/toolkit": "^1.9.2",
