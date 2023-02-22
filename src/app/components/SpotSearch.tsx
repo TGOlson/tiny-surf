@@ -13,10 +13,11 @@ import { spotSelected } from '../slices/spot-slice';
 import { smallRegion } from '../utils';
 
 type SpotSearchParams = {
-  small?: boolean
+  small?: boolean,
+  autoFocus?: boolean,
 };
 
-const SpotSearch = ({small}: SpotSearchParams) => {
+const SpotSearch = ({small, autoFocus}: SpotSearchParams) => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
@@ -26,6 +27,7 @@ const SpotSearch = ({small}: SpotSearchParams) => {
 
   return (
     <Autocomplete
+      autoFocus={autoFocus}
       placeholder="Search for spots"
       clearOnEscape
       noOptionsText="No spots found..."

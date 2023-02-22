@@ -10,7 +10,7 @@ const HomePage = () => {
   return (
     <Box sx={{display: 'flex', justifyContent: 'center', marginTop: '120px'}}>
       <FormControl>
-        <SpotSearch />
+        <SpotSearch autoFocus />
         <FormHelperText>Find a surf spot.</FormHelperText>
       </FormControl>
     </Box>
