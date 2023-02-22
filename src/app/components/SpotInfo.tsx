@@ -2,19 +2,15 @@ import React, { useEffect } from 'react';
 import { DateTime, FixedOffsetZone }  from 'luxon';
 
 import Box from '@mui/system/Box';
-
 import Button from '@mui/joy/Button';
-
 import Card from '@mui/joy/Card';
 import CardContent from '@mui/joy/CardContent';
-import Typography from '@mui/joy/Typography';
-
 import Divider from '@mui/joy/Divider';
 import LinearProgress from '@mui/joy/LinearProgress';
-
 import Tab from '@mui/joy/Tab';
 import TabList from '@mui/joy/TabList';
 import Tabs from '@mui/joy/Tabs';
+import Typography from '@mui/joy/Typography';
 
 import AutoAwesomeOutlinedIcon from '@mui/icons-material/AutoAwesomeOutlined';
 import SurfingIcon from '@mui/icons-material/Surfing';
@@ -94,12 +90,15 @@ const SpotInfo = ({spot}: Params) => {
   const location = smallRegion(spot).join(', ');
 
   return (
-    <Card sx={{minHeight: '504px'}}>
-      <Typography level="h2">{spot.name}</Typography>
-      <Typography level="body2">{location}</Typography>
+    <Card sx={{minHeight: '504px', gap: 1.5}}>
+      <Box>
+        <Typography level="h4" fontSize="lg">{spot.name}</Typography>
+        <Typography level="body2">{location}</Typography>
+      </Box>
       <Divider />
       <Box sx={{display: 'flex', justifyContent: 'center'}}>
       <Tabs
+          size="sm"
           value={day}
           onChange={(_e, value) => dispatch(daySelected(value as (0 | 1 | 2)))}
         >

@@ -14,6 +14,7 @@ import { Spot } from '../../shared/types';
 import { useAppDispatch } from '../hooks';
 import { spotSelected } from '../slices/spot-slice';
 import { largeRegion } from '../utils';
+import { ListItemContent } from '@mui/joy';
 
 type Params = {
   spots: Spot[],
@@ -54,20 +55,22 @@ const SpotList = ({spots, selected}: Params) => {
     
     return (
       <ListItemButton selected={isSelected} onClick={onClick}>
-        <Typography noWrap>{spot.name}</Typography>
+        <ListItemContent>
+          <Typography noWrap level="body1" fontSize="sm">{spot.name}</Typography>
+        </ListItemContent>
       </ListItemButton>
     );
   };
 
   return (
-    <Card variant="outlined">
+    <Card variant="outlined" sx={{borderRadius: 'sm'}}>
       <GroupedVirtuoso 
         ref={listRef}
         style={{ height }} 
         groupCounts={groupCounts} 
         components={MUIComponents}
         initialTopMostItemIndex={{index, align: 'center'}}
-        groupContent={index => <Typography noWrap>{groupLabels[index]}</Typography>}
+        groupContent={index => <Typography noWrap level="body4" fontSize={10.5}>{groupLabels[index]}</Typography>}
         itemContent={itemContent} 
       />
     </Card>
@@ -80,6 +83,7 @@ const MUIComponents = {
   List: React.forwardRef(function MUIListComponent({style, children}: ListProps, ref: React.ForwardedRef<HTMLDivElement>) {
     return (
       <List 
+        size="sm"
         style={{ padding: 0, ...style, margin: 0 }} 
         component="div" 
         ref={ref}
@@ -91,7 +95,7 @@ const MUIComponents = {
 
   Item: ({ children, ...props }: ItemProps<unknown>) => {
     return (
-      <ListItem component="div" {...props} style={{ margin: 0, paddingLeft: '16px' }}>
+      <ListItem component="div" {...props} style={{ margin: 0 }}>
         {children}
       </ListItem>
     );
