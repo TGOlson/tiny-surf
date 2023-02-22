@@ -72,16 +72,16 @@ const SpotInfo = ({spot}: Params) => {
     const waves = data.waves.map(addDateTime(utcOffset)).filter(isDay(day));
     const wind = data.wind.map(addDateTime(utcOffset)).filter(isDay(day));
     const tides = data.tides.map(addDateTime(utcOffset)).filter(isDay(day));
-  
+
     content = (
       <React.Fragment>
-        <Button disabled size="sm" variant="plain" startDecorator={<AutoAwesomeOutlinedIcon />}>RATING</Button>
+        <Typography level="body3" startDecorator={<AutoAwesomeOutlinedIcon />}>RATING</Typography>
         <p>{data.ratings?.[0]?.key}</p>
-        <Button disabled size="sm" variant="plain" startDecorator={<SurfingIcon />}>WAVES</Button>
+        <Typography level="body3" startDecorator={<SurfingIcon />}>WAVES</Typography>
         <WaveChart data={waves} units={units}/>
-        <Button disabled size="sm" variant="plain" startDecorator={<AirIcon />}>WIND</Button>
+        <Typography level="body3" startDecorator={<AirIcon />}>WIND</Typography>
         <WindChart data={wind} units={units}/>
-        <Button disabled size="sm" variant="plain" startDecorator={<WavesIcon />}>TIDE</Button>
+        <Typography level="body3" startDecorator={<WavesIcon />}>TIDE</Typography>
         <TideChart data={tides} units={units}/>
       </React.Fragment>
     );
