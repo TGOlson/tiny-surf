@@ -1,7 +1,20 @@
 import React, { useEffect } from 'react';
-import { Box } from '@mui/system';
-import { Button, Card, CardActions, CardContent, CardHeader, Divider, LinearProgress, Tab, Tabs } from '@mui/material';
 import { DateTime, FixedOffsetZone }  from 'luxon';
+
+import Box from '@mui/system/Box';
+
+import Button from '@mui/joy/Button';
+
+import Card from '@mui/joy/Card';
+import CardContent from '@mui/joy/CardContent';
+import Typography from '@mui/joy/Typography';
+
+import Divider from '@mui/joy/Divider';
+import LinearProgress from '@mui/joy/LinearProgress';
+
+import Tab from '@mui/joy/Tab';
+import TabList from '@mui/joy/TabList';
+import Tabs from '@mui/joy/Tabs';
 
 import AutoAwesomeOutlinedIcon from '@mui/icons-material/AutoAwesomeOutlined';
 import SurfingIcon from '@mui/icons-material/Surfing';
@@ -66,13 +79,13 @@ const SpotInfo = ({spot}: Params) => {
   
     content = (
       <React.Fragment>
-        <Button disabled size="small" variant="text" startIcon={<AutoAwesomeOutlinedIcon />}>RATING</Button>
+        <Button disabled size="sm" variant="plain" startDecorator={<AutoAwesomeOutlinedIcon />}>RATING</Button>
         <p>{data.ratings?.[0]?.key}</p>
-        <Button disabled size="small" variant="text" startIcon={<SurfingIcon />}>WAVES</Button>
+        <Button disabled size="sm" variant="plain" startDecorator={<SurfingIcon />}>WAVES</Button>
         <WaveChart data={waves} units={units}/>
-        <Button disabled size="small" variant="text" startIcon={<AirIcon />}>WIND</Button>
+        <Button disabled size="sm" variant="plain" startDecorator={<AirIcon />}>WIND</Button>
         <WindChart data={wind} units={units}/>
-        <Button disabled size="small" variant="text" startIcon={<WavesIcon />}>TIDE</Button>
+        <Button disabled size="sm" variant="plain" startDecorator={<WavesIcon />}>TIDE</Button>
         <TideChart data={tides} units={units}/>
       </React.Fragment>
     );
@@ -82,22 +95,21 @@ const SpotInfo = ({spot}: Params) => {
 
   return (
     <Card sx={{minHeight: '504px'}}>
-      <CardHeader 
-        title={spot.name} 
-        subheader={location}
-        subheaderTypographyProps={{fontSize: 14}}
-      />
+      <Typography level="h2">{spot.name}</Typography>
+      <Typography level="body2">{location}</Typography>
       <Divider />
-      <CardActions sx={{display: 'flex', justifyContent: 'center'}}>
+      <Box sx={{display: 'flex', justifyContent: 'center'}}>
       <Tabs
           value={day}
           onChange={(_e, value) => dispatch(daySelected(value as (0 | 1 | 2)))}
         >
-          <Tab value={0} label="Today" />
-          <Tab value={1} label="Tomorrow" />
-          <Tab value={2} label={DateTime.now().plus({days: 2}).weekdayLong} />
+          <TabList>
+            <Tab value={0}>Today</Tab>
+            <Tab value={1}>Tomorrow</Tab>
+            <Tab value={2}>{DateTime.now().plus({days: 2}).weekdayLong}</Tab>
+          </TabList>
         </Tabs>
-      </CardActions>
+      </Box>
       <CardContent>
         {content}
       </CardContent>

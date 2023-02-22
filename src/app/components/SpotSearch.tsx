@@ -1,9 +1,14 @@
 import React from 'react';
-import { Autocomplete, createFilterOptions, TextField, Typography } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
+
+import Autocomplete, {createFilterOptions} from '@mui/joy/Autocomplete';
+import AutocompleteOption from '@mui/joy/AutocompleteOption';
+import Typography from '@mui/joy/Typography';
+import ListItemContent from '@mui/joy/ListItemContent';
+
+import SearchIcon from '@mui/icons-material/Search';
 
 import { useAppDispatch, useAppSelector } from '../hooks';
-import { Box } from '@mui/system';
-import { useNavigate } from 'react-router-dom';
 import { spotSelected } from '../slices/spot-slice';
 import { smallRegion } from '../utils';
 
@@ -21,12 +26,14 @@ const SpotSearch = ({small}: SpotSearchParams) => {
 
   return (
     <Autocomplete
-      sx={{ width: small ? 260 : 360 }}
-      options={spotsWithSearchString}
+      placeholder="Search for spots"
       clearOnEscape
-      openOnFocus={false}
-      popupIcon={null}
       noOptionsText="No spots found..."
+      startDecorator={<SearchIcon />}
+      popupIcon={null}
+      sx={{ width: small ? 260 : 360 }}
+      size={small ? 'sm' : 'lg'}
+      options={spotsWithSearchString}
       getOptionLabel={(spot) => typeof spot === 'string' ? spot : spot.name}
       onChange={(_event, value, reason) => {
         console.log('onchange', reason);
@@ -41,21 +48,14 @@ const SpotSearch = ({small}: SpotSearchParams) => {
         stringify: (spot) => spot.searchString
       })}
       renderOption={(props, spot) => (
-        <Box component="li" {...props}>
-          <Box>
-            <Typography paragraph sx={{marginBottom: 0}} variant={small ? 'body1' : 'h6'}>{spot.name}</Typography>
-            <Typography paragraph sx={{marginBottom: 0}} variant="caption" color="text.secondary">{smallRegion(spot).join(', ')}</Typography>
-          </Box>
-        </Box>
+        <AutocompleteOption {...props}>
+          <ListItemContent>
+            <Typography sx={{marginBottom: 0}} level={small ? 'body1' : 'h6'}>{spot.name}</Typography>
+            <Typography sx={{marginBottom: 0}} level="body3" textColor='text.secondary'>{smallRegion(spot).join(', ')}</Typography>
+          </ListItemContent>
+        </AutocompleteOption>
       )}
-      renderInput={(params) => (
-        <TextField 
-          {...params} 
-          size={small ? 'small' : 'medium'}
-          variant="outlined" 
-          placeholder="Search" 
-        />
-      )}
+
     />
   );
 };

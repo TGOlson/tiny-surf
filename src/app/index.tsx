@@ -11,6 +11,7 @@ import SpotExplorer from "./pages/SpotExplorer";
 import ErrorPage from "./pages/ErrorPage";
 import HomePage from "./pages/HomePage";
 
+// import '@fontsource/public-sans';
 import "./index.css";
 
 import store from './store';

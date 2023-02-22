@@ -1,8 +1,7 @@
 import React from 'react';
 
-import AppBar from '@mui/material/AppBar';
-import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
+import Box from '@mui/system/Box';
+import Typography from '@mui/joy/Typography';
 
 import SpotSearch from './SpotSearch';
 
@@ -11,14 +10,12 @@ type HeaderProps = {
 };
 
 const Header = ({hideSearch = false}: HeaderProps) => (
-  <AppBar position="static" elevation={0} color="inherit">
-    <Toolbar>
-      <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-        Tiny Surf
-      </Typography>
-      {hideSearch ? null : <SpotSearch small />}
-    </Toolbar>
-  </AppBar>
+  <Box>
+    <Typography level="h6" component="div" sx={{ flexGrow: 1 }}>
+      Tiny Surf
+    </Typography>
+    {hideSearch ? null : <SpotSearch small />}
+  </Box>
 );
 
 export default Header;

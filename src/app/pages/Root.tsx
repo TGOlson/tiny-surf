@@ -1,6 +1,9 @@
-import { CssBaseline, Grid } from '@mui/material';
 import React, { useEffect } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
+
+import Stack from '@mui/system/Stack';
+import { CssVarsProvider } from '@mui/joy/styles';
+import CssBaseline from '@mui/joy/CssBaseline';
 
 import Header from '../components/Header';
 import { useAppDispatch, useAppSelector } from '../hooks';
@@ -21,18 +24,13 @@ const Root = () => {
   }, [spotsData.status, dispatch]);
 
   return (
-    <React.Fragment>
+    <CssVarsProvider>
       <CssBaseline />
-
-      <Grid container spacing={2} className='content'>
-        <Grid item xs={12}>
-          <Header hideSearch={hideSearch} />
-        </Grid>
-        <Grid item xs={12}>
-          <Outlet />
-        </Grid>
-      </Grid>
-    </React.Fragment>
+      <Stack spacing={2} sx={{height: '100vh', backgroundColor: '#e7ebf0'}}>
+        <Header hideSearch={hideSearch} />
+        <Outlet />
+      </Stack>
+    </CssVarsProvider>
   );
 };
 

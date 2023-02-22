@@ -1,10 +1,11 @@
-import { Stack } from '@mui/material';
-import { Box } from '@mui/system';
 import React, { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
+
+import Box from '@mui/system/Box';
+import Stack from '@mui/joy/Stack';
+
 import SpotInfo from '../components/SpotInfo';
 import SpotList from '../components/SpotList';
-
 import { useAppDispatch, useAppSelector } from '../hooks';
 import { spotSelected } from '../slices/spot-slice';
 
