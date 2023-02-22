@@ -3,6 +3,7 @@ import { Chart } from 'react-chartjs-2';
 import { ChartOptions, ChartType } from 'chart.js';
 import { DateTime } from 'luxon';
 import { mergeDeepLeft } from 'ramda';
+import Box from '@mui/joy/Box';
 
 // import chart.js for side effects
 // alternative is to use `.register` on every component we use
@@ -19,6 +20,10 @@ function mergeOptions<T extends ChartType, Opts extends object = NonNullable<Cha
 }
 
 const commonOptions: ChartOptions = {
+  maintainAspectRatio: false,
+  layout: {
+    padding: 0,
+  },
   elements: {
     point: {
       pointStyle: false
@@ -40,7 +45,8 @@ const commonOptions: ChartOptions = {
         drawOnChartArea: false,
       },
       ticks: {
-        padding: 1,
+        padding: 0,
+        backdropPadding: 0,
         minRotation: 0,
         maxRotation: 0,
         callback: (val, index) => {
@@ -54,7 +60,7 @@ const commonOptions: ChartOptions = {
     },
     y: {
       display: false,
-    }
+    },
   },
   interaction: {
     mode: 'nearest',
@@ -84,24 +90,28 @@ const commonOptions: ChartOptions = {
 type BaseChartProps = {
   type: 'line' | 'bar',
   data: {x: DateTime, y: number}[],
-  options: ChartOptions
+  options: ChartOptions,
 };
 
 const BaseChart = ({type, data, options}: BaseChartProps) => {
   const opts = mergeOptions(options, commonOptions);
 
+  // some chart have weird padding that I can't get ride of
+  // use this to pixel-push X-axis margins and make things line up
+  const margins = type === 'line' ? {marginLeft: '-4px', marginRight: '-5px'} : {marginRight: '-2px'};
+
   return (
-    <Chart
-      type={type} 
-      plugins={[ChartDataLabels]}
-      data={{
-        datasets: [{data}]
-      }} 
-      options={opts}
-      style={{
-        maxHeight: 100,
-      }}
-    />
+    <Box sx={{width: '100%', maxHeight: '100px'}}>
+      <Chart
+        type={type} 
+        plugins={[ChartDataLabels]}
+        data={{
+          datasets: [{data}]
+        }} 
+        options={opts}
+        style={{...margins}}
+      />
+    </Box>
   );
 };
 

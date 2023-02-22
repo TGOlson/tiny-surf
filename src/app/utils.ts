@@ -1,4 +1,4 @@
-import { Spot } from "../shared/types";
+import { RatingDetails, Spot } from "../shared/types";
 
 // returns two smallest region segments for a spot
 export const smallRegion = ({location}: Spot): [string, string | undefined] => {
@@ -19,4 +19,16 @@ export const largeRegion = ({location}: Spot): [string, string | undefined, stri
   const region2 = location.regions[1];
 
   return [location.country, region1, region2];
+};
+
+export const ratingColor = (rating: RatingDetails): string => {
+  switch (rating.key) {
+    case 'VERY_POOR': return '#a3acba';
+    case 'POOR': return '#439cff';
+    case 'POOR_TO_FAIR': return '#31d2e9';
+    case 'FAIR': return '#1ad64c';
+    case 'FAIR_TO_GOOD': return '#ffd102';
+    case 'GOOD': return '#ff8f00';
+    case 'EPIC': return '#dd452e';
+  }
 };

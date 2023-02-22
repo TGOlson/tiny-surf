@@ -1,4 +1,4 @@
-import { Tide, Units, WaveSizeDescription, Wind } from "surfline/forecasts/types";
+import { RatingDescription, Tide, Units, WaveSizeDescription, Wind } from "surfline/forecasts/types";
 
 export type Spot = {
   id: string, // corresponds to surfline spot id
@@ -29,7 +29,7 @@ export type Spot = {
 
 export type RatingDetails = {
   timestamp: number,
-  key: string,
+  key: RatingDescription,
   value: number,
 };
 

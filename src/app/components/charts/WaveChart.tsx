@@ -25,6 +25,13 @@ const WaveChart = ({data: waveData, units}: WaveChartProps) => {
       }
     },
     scales: {
+      x: {
+        afterSetDimensions: (scale) => {
+          const padding = scale.getPadding ? scale.getPadding() : null;
+          console.log('padding', padding);
+          // scale.marginRight -= 15;
+        }
+      },
       y: {
         min: 0,
         suggestedMax: Math.max(20, maxHeight + 5),

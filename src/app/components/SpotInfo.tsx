@@ -12,7 +12,6 @@ import Tabs from '@mui/joy/Tabs';
 import Typography from '@mui/joy/Typography';
 import Stack from '@mui/joy/Stack';
 
-import AutoAwesomeOutlinedIcon from '@mui/icons-material/AutoAwesomeOutlined';
 import SurfingIcon from '@mui/icons-material/Surfing';
 import WavesIcon from '@mui/icons-material/Waves';
 import AirIcon from '@mui/icons-material/Air';
@@ -25,6 +24,7 @@ import WaveChart from './charts/WaveChart';
 import TideChart from './charts/TideChart';
 import WindChart from './charts/WindChart';
 import { smallRegion } from '../utils';
+import RatingChart from './charts/RatingChart';
 
 type Params = {
   spot: Spot;
@@ -74,22 +74,36 @@ const SpotInfo = ({spot}: Params) => {
     const wind = data.wind.map(addDateTime(utcOffset)).filter(isDay(day));
     const tides = data.tides.map(addDateTime(utcOffset)).filter(isDay(day));
 
+    const SectionTitle = ({title, icon}: {title: string, icon: React.ReactElement | null}) => (
+        <Typography sx={{minWidth: '52px', maxWidth: '52px'}} level="body4" startDecorator={icon}>{title}</Typography>
+    );
+
+    const ratingIcon = <Box
+      component="span"
+      sx={{
+        bgcolor: 'neutral.400',
+        width: '0.5em',
+        height: '0.5em',
+        borderRadius: '50%',
+      }}
+    />;
+
     content = (
       <React.Fragment>
-        <Stack>
-          <Typography level="body4" startDecorator={<AutoAwesomeOutlinedIcon />}>RATING</Typography>
-          <Typography level="body4">{ratings?.map(x => x.value).join(', ')}</Typography>
+        <Stack direction="row" sx={{mb: 1, alignItems: 'center'}}>
+          <SectionTitle title='RATING' icon={ratingIcon} />
+          {ratings ? <RatingChart data={ratings} /> : <Typography level="body4">n/a</Typography>}
         </Stack>
-        <Stack>
-          <Typography level="body4" startDecorator={<SurfingIcon />}>WAVES ({units.waveHeight.toLowerCase()}.)</Typography>
+        <Stack direction="row" sx={{alignItems: 'center'}}>      
+          <SectionTitle title='WAVE (ft.)' icon={<SurfingIcon />} />
           <WaveChart data={waves} units={units}/>
         </Stack>
-        <Stack>
-          <Typography level="body4" startDecorator={<AirIcon />}>WIND ({units.windSpeed.toLowerCase()}.)</Typography>
+        <Stack direction="row" sx={{alignItems: 'center'}}>        
+          <SectionTitle title='WIND (kts.)' icon={<AirIcon />} />
           <WindChart data={wind} units={units}/>
         </Stack>
-        <Stack>
-          <Typography level="body4" startDecorator={<WavesIcon />}>TIDE ({units.tideHeight.toLowerCase()}.)</Typography>
+        <Stack direction="row" sx={{alignItems: 'center'}}>        
+          <SectionTitle title='TIDE (ft.)' icon={<WavesIcon />} />
           <TideChart data={tides} units={units}/>
         </Stack>
       </React.Fragment>
@@ -105,7 +119,7 @@ const SpotInfo = ({spot}: Params) => {
         <Typography level="body2">{location}</Typography>
       </Box>
       <Divider />
-      <Box sx={{display: 'flex', justifyContent: 'center'}}>
+      <Box sx={{display: 'flex', justifyContent: 'center', mb: 1}}>
         <Tabs
           size="sm"
           value={day}
@@ -118,7 +132,7 @@ const SpotInfo = ({spot}: Params) => {
           </TabList>
         </Tabs>
       </Box>
-      <CardContent sx={{gap: 1.5}}>
+      <CardContent>
         {content}
       </CardContent>
     </Card>
