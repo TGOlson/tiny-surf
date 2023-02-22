@@ -66,10 +66,10 @@ const commonOptions: ChartOptions = {
     datalabels: {
       anchor: 'end',
       align: 'end',
-      display: (context) => context.dataIndex % 3 === 0,
+      display: (context) => context.dataIndex !== 0 && context.dataIndex % 3 === 0,
       formatter: (val: {x: DateTime, y: number}) => val.y,
       padding: {
-        bottom: 0
+        bottom: -10,
       }
     }
   }

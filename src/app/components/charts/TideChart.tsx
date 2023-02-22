@@ -15,6 +15,7 @@ const TideChart = ({data: tideData, units}: TideChartProps) => {
   const chartType = 'line';
 
   const data = tideData.map(tide => ({x: tide.datetime, y: tide.height}));
+  const maxHeight = Math.max(...tideData.map(x => x.height));
 
   const options: ChartOptions<typeof chartType> = {
     elements: {
@@ -26,7 +27,7 @@ const TideChart = ({data: tideData, units}: TideChartProps) => {
     scales: {
       y: {
         suggestedMin: -5,
-        suggestedMax: 10,
+        suggestedMax: Math.max(10, maxHeight + 5),
       }
     },
     plugins: {
