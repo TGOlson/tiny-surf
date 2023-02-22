@@ -40,7 +40,7 @@ const SpotSearch = ({small, autoFocus}: SpotSearchParams) => {
       onChange={(_event, value, reason) => {
         console.log('onchange', reason);
         if (reason === 'selectOption' && value && typeof value === 'object' && 'slug' in value) {
-          dispatch(spotSelected(value.slug, navigate));
+          dispatch(spotSelected({slug: value.slug, action: 'search'}, navigate));
         }
       }}
       isOptionEqualToValue={(option, value) => {

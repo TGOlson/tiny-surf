@@ -20,10 +20,10 @@ const SpotExplorer = () => {
   const selected = useAppSelector(st => st.spot.selected);
 
   useEffect(() => {
-    if (!selected) dispatch(spotSelected(paramSlug));
+    if (!selected) dispatch(spotSelected({slug: paramSlug, action: 'direct-nav'}));
   }, [selected, dispatch]);
   
-  if (spotsData.status === 'idle' || spotsData.status === 'pending' ) {
+  if (spotsData.status === 'idle' || spotsData.status === 'pending' || !selected) {
     return <p>Loading...</p>;
   }
 
@@ -33,7 +33,7 @@ const SpotExplorer = () => {
   
   const spots = spotsData.data;
 
-  const selectedSpot = spots.find(spot => spot.slug === selected);
+  const selectedSpot = spots.find(spot => spot.slug === selected.slug);
   
   if (!selectedSpot) {
     return <p>Unable to find spot {paramSlug}</p>;
@@ -42,7 +42,7 @@ const SpotExplorer = () => {
   return (
     <Stack direction="row" justifyContent="center" spacing={2}>
       <Box sx={{width: 300}}>
-        <SpotList spots={spots} selected={selectedSpot} />
+        <SpotList spots={spots} selected={selectedSpot} selectionAction={selected.action} />
       </Box>
       <Box sx={{width: 400}}>
         <SpotInfo spot={selectedSpot} />

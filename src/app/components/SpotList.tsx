@@ -12,27 +12,34 @@ import Typography from '@mui/joy/Typography';
 
 import { Spot } from '../../shared/types';
 import { useAppDispatch } from '../hooks';
-import { spotSelected } from '../slices/spot-slice';
+import { SelectionActionType, spotSelected } from '../slices/spot-slice';
 import { largeRegion } from '../utils';
 import { ListItemContent } from '@mui/joy';
 
 type Params = {
   spots: Spot[],
   selected: Spot;
+  selectionAction: SelectionActionType;
 };
 
-const SpotList = ({spots, selected}: Params) => {
+const SpotList = ({spots, selected, selectionAction}: Params) => {
   const listRef: React.RefObject<GroupedVirtuosoHandle> = React.useRef(null);
 
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
+  const spotIndex = (spot: Spot): number => spots.findIndex(({id}) => id === spot.id);
+
   useEffect(() => {
-    const index = spots.findIndex(spot => spot.id === selected.id);
-    listRef.current?.scrollIntoView({index, align: 'center'});
+    // if selection change is result of a list click, use smooth scrolling for nice UI
+    // otherwise jump directly to the item (eg. if change is from search or direct nav)
+    const behavior = selectionAction === 'list-click' ? 'smooth' : 'auto';
+
+    const index = spotIndex(selected);
+    listRef.current?.scrollToIndex({index, align: 'center', behavior});
   }, [listRef.current, selected]);
 
-  const index = spots.findIndex(spot => spot.id === selected.id);
+  const index = spotIndex(selected);
 
   const height = 504; // 36 per * 14 items
   const groups = groupBy(x => x, spots.map(x => {
@@ -42,7 +49,6 @@ const SpotList = ({spots, selected}: Params) => {
 
   const groupLabels = Object.keys(groups);
   const groupCounts = Object.values(groups).map(x => x.length);
-
   
   const itemContent = (index: number) => {
     const spot = spots[index];
@@ -51,7 +57,7 @@ const SpotList = ({spots, selected}: Params) => {
     
     const isSelected = spot.id === selected.id;
 
-    const onClick = () => dispatch(spotSelected(spot.slug, navigate));
+    const onClick = () => dispatch(spotSelected({slug: spot.slug, action: 'list-click'}, navigate));
     
     return (
       <ListItemButton selected={isSelected} onClick={onClick}>

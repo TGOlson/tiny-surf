@@ -5,9 +5,16 @@ import * as api from '../api';
 import { Spot } from '../../shared/types';
 import { LoadingState } from './types';
 
+export type SelectionActionType = 'list-click' | 'search' | 'direct-nav';
+
 type State = {
   spots: LoadingState<Spot[]>;
-  selected: string | null;
+  selected: null | {
+    slug: string,
+
+    // components will use this to determine how to handle change in selection
+    action: SelectionActionType,
+  };
 };
 
 const initialState: State = {
@@ -21,7 +28,7 @@ export const spotSlice = createSlice({
   name: 'spot',
   initialState,
   reducers: {
-    spotSelected: (state, {payload}: PayloadAction<string>) => {
+    spotSelected: (state, {payload}: PayloadAction<State['selected']>) => {
       state.selected = payload;
     }
   },
@@ -39,9 +46,9 @@ export const spotSlice = createSlice({
   }
 });
 
-export const spotSelected = (slug: string, navigate?: NavigateFunction) => {
-  if(navigate) navigate(`/s/${slug}`);
-  return spotSlice.actions.spotSelected(slug);
+export const spotSelected = (payload: NonNullable<State['selected']>, navigate?: NavigateFunction) => {
+  if(navigate) navigate(`/s/${payload.slug}`);
+  return spotSlice.actions.spotSelected(payload);
 };
 
 export default spotSlice.reducer;
