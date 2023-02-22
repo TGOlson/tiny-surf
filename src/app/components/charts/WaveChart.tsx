@@ -26,7 +26,7 @@ const WaveChart = ({data: waveData, units}: WaveChartProps) => {
     scales: {
       y: {
         min: 0,
-        suggestedMax: 15,
+        suggestedMax: 20,
       }
     },
     plugins: {
