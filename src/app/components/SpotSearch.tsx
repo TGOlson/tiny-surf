@@ -28,9 +28,9 @@ const SpotSearch = ({small, autoFocus}: SpotSearchParams) => {
   return (
     <Autocomplete
       autoFocus={autoFocus}
-      placeholder="Search for spots"
+      placeholder="Search"
       clearOnEscape
-      noOptionsText="No spots found..."
+      noOptionsText="No spots found"
       startDecorator={<SearchIcon />}
       popupIcon={null}
       sx={{ width: small ? 260 : 360 }}

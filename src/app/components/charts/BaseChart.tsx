@@ -43,7 +43,13 @@ const commonOptions: ChartOptions = {
         padding: 1,
         minRotation: 0,
         maxRotation: 0,
-        callback: (val) => typeof val === 'string' ? val : DateTime.fromMillis(val).toFormat('ha').toLowerCase(),
+        callback: (val, index) => {
+          if (index !== 0 && index % 3 === 0) {
+            return typeof val === 'string' ? val : DateTime.fromMillis(val).toFormat('ha').toLowerCase();
+          }
+
+          return null;
+        }
       },
     },
     y: {

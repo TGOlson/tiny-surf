@@ -106,7 +106,7 @@ const SpotInfo = ({spot}: Params) => {
       </Box>
       <Divider />
       <Box sx={{display: 'flex', justifyContent: 'center'}}>
-      <Tabs
+        <Tabs
           size="sm"
           value={day}
           onChange={(_e, value) => dispatch(daySelected(value as (0 | 1 | 2)))}

@@ -60,7 +60,7 @@ const SpotList = ({spots, selected, selectionAction}: Params) => {
     const onClick = () => dispatch(spotSelected({slug: spot.slug, action: 'list-click'}, navigate));
     
     return (
-      <ListItemButton selected={isSelected} onClick={onClick}>
+      <ListItemButton selected={isSelected} onClick={onClick} sx={{backgroundColor: isSelected ? 'primary.100' : ''}}>
         <ListItemContent>
           <Typography noWrap level="body1" fontSize="sm">{spot.name}</Typography>
         </ListItemContent>

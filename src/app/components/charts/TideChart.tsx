@@ -14,7 +14,9 @@ type TideChartProps = {
 const TideChart = ({data: tideData, units}: TideChartProps) => {
   const chartType = 'line';
 
-  const data = tideData.map(tide => ({x: tide.datetime, y: tide.height}));
+  const round = (x: number): number => Math.round(x * 10) / 10;
+  
+  const data = tideData.map(tide => ({x: tide.datetime, y: round(tide.height)}));
   const maxHeight = Math.max(...tideData.map(x => x.height));
 
   const options: ChartOptions<typeof chartType> = {
