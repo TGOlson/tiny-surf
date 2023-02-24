@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Outlet, useLocation } from 'react-router-dom';
+import { Outlet } from 'react-router-dom';
 
 import Stack from '@mui/joy/Stack';
 import { CssVarsProvider } from '@mui/joy/styles';
@@ -12,10 +12,6 @@ import { fetchSpots } from '../slices/spot-slice';
 const Root = () => {
   const dispatch = useAppDispatch();
   const spotsData = useAppSelector(st => st.spot.spots);
-  const location = useLocation();
-
-  // hacky way to hide navbar search when on home page
-  const hideSearch = location.pathname === '/';
 
   // Fetch spots from root component, as all other pages need this data
   // TODO: is there a better place to do this root loading?
@@ -27,7 +23,7 @@ const Root = () => {
     <CssVarsProvider>
       <CssBaseline />
       <Stack sx={{height: '100vh', backgroundColor: '#e7ebf0'}}>
-        <Header hideSearch={hideSearch} />
+        <Header hideSearch />
         <Outlet />
       </Stack>
     </CssVarsProvider>

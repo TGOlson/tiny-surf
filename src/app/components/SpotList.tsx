@@ -1,20 +1,20 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { groupBy } from 'ramda';
 import { useNavigate } from 'react-router-dom';
-import { GroupedVirtuoso, GroupedVirtuosoHandle, ItemProps, ListProps, GroupProps } from 'react-virtuoso';
+import { GroupedVirtuoso, GroupedVirtuosoHandle } from 'react-virtuoso';
 
-import List from '@mui/joy/List';
-import ListSubheader from '@mui/joy/ListSubheader';
-import ListItem from '@mui/joy/ListItem';
 import ListItemButton from '@mui/joy/ListItemButton';
 import Card from '@mui/joy/Card';
+import Input from '@mui/joy/Input';
 import Typography from '@mui/joy/Typography';
+import ListItemContent from '@mui/joy/ListItemContent';
+import Stack from '@mui/joy/Stack';
 
 import { Spot } from '../../shared/types';
 import { useAppDispatch } from '../hooks';
 import { SelectionActionType, spotSelected } from '../slices/spot-slice';
 import { largeRegion } from '../utils';
-import { ListItemContent } from '@mui/joy';
+import SpotListComponentMapping from './SpotListComponentMapping';
 
 type Params = {
   spots: Spot[],
@@ -24,24 +24,29 @@ type Params = {
 
 const SpotList = ({spots, selected, selectionAction}: Params) => {
   const listRef: React.RefObject<GroupedVirtuosoHandle> = React.useRef(null);
+  const [filter, setFilter] = useState('');
 
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  const spotIndex = (spot: Spot): number => spots.findIndex(({id}) => id === spot.id);
+  const spotFilterString = (spot: Spot): string => `${spot.name} ${largeRegion(spot).join(' ')}`.toLowerCase();
+
+  const filteredSpots = filter ? spots.filter(spot => spotFilterString(spot).includes(filter.toLowerCase())) : spots;
+  const selectedIndex = filteredSpots.findIndex(({id}) => id === selected.id);
+
+  useEffect(() => {
+    if (selectedIndex >= 0) listRef.current?.scrollToIndex({index: selectedIndex, align: 'center'});      
+  }, [filter]);
 
   useEffect(() => {
     // if selection change is result of a list click, use smooth scrolling for nice UI
     // otherwise jump directly to the item (eg. if change is from search or direct nav)
     const behavior = selectionAction === 'list-click' ? 'smooth' : 'auto';
 
-    const index = spotIndex(selected);
-    listRef.current?.scrollToIndex({index, align: 'center', behavior});
-  }, [listRef.current, selected]);
+    if (selectedIndex >= 0) listRef.current?.scrollToIndex({index: selectedIndex, align: 'center', behavior});
+  }, [selected]);
 
-  const index = spotIndex(selected);
-
-  const groups = groupBy(x => x, spots.map(x => {
+  const groups = groupBy(x => x, filteredSpots.map(x => {
     // TODO: hardcoded for testing CA/US spots, clean this up...
     return largeRegion(x).join(' / ').replace('United States', 'US');
   }));
@@ -50,7 +55,7 @@ const SpotList = ({spots, selected, selectionAction}: Params) => {
   const groupCounts = Object.values(groups).map(x => x.length);
   
   const itemContent = (index: number) => {
-    const spot = spots[index];
+    const spot = filteredSpots[index];
 
     if (!spot) throw new Error('Unexpected access error');
     
@@ -71,58 +76,21 @@ const SpotList = ({spots, selected, selectionAction}: Params) => {
   };
 
   return (
-    <Card variant="outlined" sx={{borderRadius: 'sm', height: '100%'}}>
-      <GroupedVirtuoso 
-        ref={listRef}
-        style={{ height: '100%' }} 
-        groupCounts={groupCounts} 
-        components={MUIComponents}
-        initialTopMostItemIndex={{index, align: 'center'}}
-        groupContent={index => <Typography noWrap level="body4" fontSize={10.5}>{groupLabels[index]}</Typography>}
-        itemContent={itemContent} 
-      />
-    </Card>
+    <Stack sx={{height: '100%', gap: 1}}>
+      <Input placeholder="Search..." size="sm" onChange={(e) => setFilter(e.target.value)} />
+      <Card variant="outlined" sx={{borderRadius: 'sm', height: '100%'}}>
+        <GroupedVirtuoso 
+          ref={listRef}
+          style={{ height: '100%' }} 
+          groupCounts={groupCounts} 
+          components={SpotListComponentMapping}
+          initialTopMostItemIndex={{index: selectedIndex, align: 'center'}}
+          groupContent={index => <Typography noWrap level="body4" fontSize={10.5}>{groupLabels[index]}</Typography>}
+          itemContent={itemContent} 
+        />
+      </Card>
+    </Stack>
   );
-};
-
-// kind of clunky mapping of different component libraries
-// mostly taken from: https://virtuoso.dev/material-ui-endless-scrolling/
-const MUIComponents = {
-  List: React.forwardRef(function MUIListComponent({style, children}: ListProps, ref: React.ForwardedRef<HTMLDivElement>) {
-    return (
-      <List 
-        size="sm"
-        style={{ padding: 0, ...style, margin: 0 }} 
-        component="div" 
-        ref={ref}
-      >
-        {children}
-      </List>
-    );
-  }),
-
-  Item: ({ children, ...props }: ItemProps<unknown>) => {
-    return (
-      <ListItem component="div" {...props} style={{ margin: 0 }}>
-        {children}
-      </ListItem>
-    );
-  },
-
-  Group: ({ children, style, ...props }: GroupProps) => {
-    return (
-      <ListSubheader
-        component="div"
-        {...props}
-        style={{
-          ...style,
-          backgroundColor: 'white',
-        }}
-      >
-        {children}
-      </ListSubheader>
-    );
-  },
 };
 
 export default SpotList;
