@@ -109,7 +109,6 @@ const RatingChart = ({data: ratingData, type: chartType}: RatingChartProps) => {
       type={chartType} 
       datasets={[data, dataInverse]} 
       options={options}
-      unit={'n/a'}
     />
   );
 };

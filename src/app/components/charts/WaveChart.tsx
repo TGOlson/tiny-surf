@@ -56,7 +56,6 @@ const WaveChart = ({data: waveData, units}: WaveChartProps) => {
       type={chartType} 
       datasets={[data]} 
       options={options}
-      unit={units.waveHeight}
     />
   );
 };

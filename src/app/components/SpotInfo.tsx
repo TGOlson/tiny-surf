@@ -37,8 +37,10 @@ function addDateTime<T extends object & {timestamp: number}>(utcOffset: number):
   return (x: T) => ({...x, datetime: getDateTime(x.timestamp, utcOffset)});
 }
 
-const isDay = (dayOffset: number) => (x: object & {datetime: DateTime}) => 
-  x.datetime.day === DateTime.now().plus({days: dayOffset}).day;
+const isDay = (timezoneOffset: number, dayOffset: number) => (x: object & {datetime: DateTime}) => {
+  const zone = FixedOffsetZone.instance(timezoneOffset * 60); // offset in minutes
+  return x.datetime.day === DateTime.now().setZone(zone).plus({days: dayOffset}).day;
+}
 
 const SpotInfo = ({spot}: Params) => {
   const dispatch = useAppDispatch();
@@ -68,10 +70,10 @@ const SpotInfo = ({spot}: Params) => {
   } else {
     const {data, units, utcOffset} = forecast.data;
   
-    const ratings = data.ratings?.map(addDateTime(utcOffset)).filter(isDay(day));
-    const waves = data.waves.map(addDateTime(utcOffset)).filter(isDay(day));
-    const wind = data.wind.map(addDateTime(utcOffset)).filter(isDay(day));
-    const tides = data.tides.map(addDateTime(utcOffset)).filter(isDay(day));
+    const ratings = data.ratings?.map(addDateTime(utcOffset)).filter(isDay(utcOffset, day));
+    const waves = data.waves.map(addDateTime(utcOffset)).filter(isDay(utcOffset, day));
+    const wind = data.wind.map(addDateTime(utcOffset)).filter(isDay(utcOffset, day));
+    const tides = data.tides.map(addDateTime(utcOffset)).filter(isDay(utcOffset, day));
 
     content = (
       <React.Fragment>

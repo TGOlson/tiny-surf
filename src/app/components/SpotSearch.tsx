@@ -50,7 +50,7 @@ const SpotSearch = ({small, autoFocus}: SpotSearchParams) => {
         stringify: (spot) => spot.searchString
       })}
       renderOption={(props, spot) => (
-        <AutocompleteOption {...props}>
+        <AutocompleteOption key={spot.slug} {...props}>
           <ListItemContent>
             <Typography sx={{marginBottom: 0}} level={small ? 'body1' : 'h6'}>{spot.name}</Typography>
             <Typography sx={{marginBottom: 0}} level="body3" textColor='text.secondary'>{smallRegion(spot).join(', ')}</Typography>

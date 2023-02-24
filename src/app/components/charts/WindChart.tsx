@@ -54,7 +54,6 @@ const WindChart = ({data: windData, units}: WindChartProps) => {
       type={chartType}
       datasets={[data]} 
       options={options}
-      unit={units.windSpeed}
     />
   );
 };
