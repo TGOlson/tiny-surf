@@ -18,7 +18,7 @@ function mergeOptions<T extends ChartType, Opts extends object = NonNullable<Cha
   return mergeDeepLeft(o1, o2) as Opts;
 }
 
-const commonOptions: ChartOptions = {
+const commonOptions = (unit: string): ChartOptions => ({
   maintainAspectRatio: false,
   layout: {
     padding: 0,
@@ -85,24 +85,24 @@ const commonOptions: ChartOptions = {
         weight: 'bold',
         size: 11
       },
-      // clip: true,
       display: (context) => context.dataIndex !== 0 && context.dataIndex % 6 === 0,
-      formatter: (val: {x: DateTime, y: number}) => `${val.y} ft.`,
+      formatter: (val: {x: DateTime, y: number}) => `${val.y} ${unit.toLowerCase()}.`,
       padding: {
         bottom: -5,
       }
     }
   }
-};
+});
 
 type BaseChartProps = {
   type: 'line' | 'bar',
   datasets: {x: DateTime, y: number}[][],
+  unit: string,
   options: ChartOptions,
 };
 
-const BaseChart = ({type, datasets, options}: BaseChartProps) => {
-  const opts = mergeOptions(options, commonOptions);
+const BaseChart = ({type, datasets, options, unit}: BaseChartProps) => {
+  const opts = mergeOptions(options, commonOptions(unit));
 
   // some chart have weird padding that I can't get ride of
   // use this to pixel-push X-axis margins and make things line up

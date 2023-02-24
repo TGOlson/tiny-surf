@@ -14,8 +14,8 @@ type ForecastCardProps = {
 
 const ForecastCard = ({title, icon, children, height}: ForecastCardProps) => {
   return (
-    <Stack sx={{gap: 0.5}}>        
-      <Typography sx={{minWidth: '52px', maxWidth: '52px'}} level="body4" startDecorator={icon}>{title}</Typography>
+    <Stack sx={{gap: '2px'}}>        
+      <Typography level="body4" startDecorator={icon}>{title}</Typography>
       <Card variant="outlined" sx={{borderRadius: 'sm'}}>
         <CardOverflow sx={{padding: 0, height: height ?? '80px'}}>
           {children}

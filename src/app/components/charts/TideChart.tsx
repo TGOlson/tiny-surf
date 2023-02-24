@@ -57,6 +57,7 @@ const TideChart = ({data: tideData, units}: TideChartProps) => {
       type={chartType} 
       datasets={[data]} 
       options={options} 
+      unit={units.tideHeight}
     />
   );
 };
