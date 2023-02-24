@@ -25,11 +25,11 @@ const WindChart = ({data: windData, units}: WindChartProps) => {
     },
     scales: {
       x: {
-        display: false,
+        // display: false,
       },
       y: {
         min: 0,
-        suggestedMax: Math.max(30, maxSpeed + 5),
+        suggestedMax: Math.max(20, maxSpeed + 5),
       }
     },
     plugins: {
@@ -52,7 +52,7 @@ const WindChart = ({data: windData, units}: WindChartProps) => {
   return (
     <BaseChart
       type={chartType}
-      data={data} 
+      datasets={[data]} 
       options={options}
     />
   );

@@ -3,7 +3,6 @@ import { Chart } from 'react-chartjs-2';
 import { ChartOptions, ChartType } from 'chart.js';
 import { DateTime } from 'luxon';
 import { mergeDeepLeft } from 'ramda';
-import Box from '@mui/joy/Box';
 
 // import chart.js for side effects
 // alternative is to use `.register` on every component we use
@@ -50,7 +49,7 @@ const commonOptions: ChartOptions = {
         minRotation: 0,
         maxRotation: 0,
         font: {
-          // size: 10,
+          size: 10,
         },
         callback: (val, index) => {
           if (index !== 0 && index % 3 === 0) {
@@ -81,12 +80,14 @@ const commonOptions: ChartOptions = {
     datalabels: {
       anchor: 'end',
       align: 'end',
-      clamp: true,
+      // clamp: true,
       font: {
         weight: 'bold',
+        size: 11
       },
-      display: (context) => context.dataIndex !== 0 && context.dataIndex % 3 === 0,
-      formatter: (val: {x: DateTime, y: number}) => val.y,
+      // clip: true,
+      display: (context) => context.dataIndex !== 0 && context.dataIndex % 6 === 0,
+      formatter: (val: {x: DateTime, y: number}) => `${val.y} ft.`,
       padding: {
         bottom: -5,
       }
@@ -96,29 +97,27 @@ const commonOptions: ChartOptions = {
 
 type BaseChartProps = {
   type: 'line' | 'bar',
-  data: {x: DateTime, y: number}[],
+  datasets: {x: DateTime, y: number}[][],
   options: ChartOptions,
 };
 
-const BaseChart = ({type, data, options}: BaseChartProps) => {
+const BaseChart = ({type, datasets, options}: BaseChartProps) => {
   const opts = mergeOptions(options, commonOptions);
 
   // some chart have weird padding that I can't get ride of
   // use this to pixel-push X-axis margins and make things line up
-  const margins = type === 'line' ? {marginLeft: '-4px', marginRight: '-5px'} : {marginRight: '-2px'};
+  const margins = type === 'line' ? {marginLeft: '-5px', marginRight: '-5px'} : {};
 
   return (
-    <Box sx={{width: '100%', maxHeight: '100px'}}>
-      <Chart
-        type={type} 
-        plugins={[ChartDataLabels]}
-        data={{
-          datasets: [{data}]
-        }} 
-        options={opts}
-        style={{...margins}}
-      />
-    </Box>
+    <Chart
+      type={type} 
+      plugins={[ChartDataLabels]}
+      data={{
+        datasets: datasets.map(data => ({data}))
+      }} 
+      options={opts}
+      style={{...margins}}
+    />
   );
 };
 

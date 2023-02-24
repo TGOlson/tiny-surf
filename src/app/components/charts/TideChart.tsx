@@ -17,6 +17,7 @@ const TideChart = ({data: tideData, units}: TideChartProps) => {
   const round = (x: number): number => Math.round(x * 10) / 10;
 
   const data = tideData.map(tide => ({x: tide.datetime, y: round(tide.height)}));
+  const minHeight = Math.min(...tideData.map(x => x.height));
   const maxHeight = Math.max(...tideData.map(x => x.height));
 
   const options: ChartOptions<typeof chartType> = {
@@ -28,8 +29,11 @@ const TideChart = ({data: tideData, units}: TideChartProps) => {
       }
     },
     scales: {
+      x: {
+        // display: false
+      },
       y: {
-        suggestedMin: -5,
+        suggestedMin: Math.min(-1, minHeight),
         suggestedMax: Math.max(10, maxHeight + 5),
       }
     },
@@ -51,7 +55,7 @@ const TideChart = ({data: tideData, units}: TideChartProps) => {
   return (
     <BaseChart
       type={chartType} 
-      data={data} 
+      datasets={[data]} 
       options={options} 
     />
   );

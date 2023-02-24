@@ -21,16 +21,15 @@ export const largeRegion = ({location}: Spot): [string, string | undefined, stri
   return [location.country, region1, region2];
 };
 
-export const DEFAULT_RATING_COLOR = '#a3acba';
-
-export const ratingColor = (rating: RatingDetails['key']): string => {
+// https://support.surfline.com/hc/en-us/articles/9780949042843-Surf-Conditions-Ratings-Colors
+export const ratingColor = (rating: RatingDetails['key'], opacity = 1): string => {
   switch (rating) {
-    case 'VERY_POOR': return DEFAULT_RATING_COLOR;
-    case 'POOR': return '#439cff';
-    case 'POOR_TO_FAIR': return '#31d2e9';
-    case 'FAIR': return '#1ad64c';
-    case 'FAIR_TO_GOOD': return '#ffd102';
-    case 'GOOD': return '#ff8f00';
-    case 'EPIC': return '#dd452e';
+    case 'VERY_POOR': return `rgba(163, 172, 186, ${opacity})`;
+    case 'POOR': return `rgba(67, 156, 255, ${opacity})`;
+    case 'POOR_TO_FAIR': return `rgba(49, 210, 233, ${opacity})`;
+    case 'FAIR': return `rgba(26, 214, 76, ${opacity})`;
+    case 'FAIR_TO_GOOD': return `rgba(255, 209, 2, ${opacity})`;
+    case 'GOOD': return `rgba(255, 143, 0, ${opacity})`;
+    case 'EPIC': return `rgba(221, 69, 46, ${opacity})`;
   }
 };

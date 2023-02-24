@@ -26,11 +26,11 @@ const WaveChart = ({data: waveData, units}: WaveChartProps) => {
     },
     scales: {
       x: {
-        display: false,
+        // display: false,
       },
       y: {
         min: 0,
-        suggestedMax: Math.max(20, maxHeight + 5),
+        suggestedMax: Math.max(20, maxHeight * 1.5),
       }
     },
     plugins: {
@@ -54,7 +54,7 @@ const WaveChart = ({data: waveData, units}: WaveChartProps) => {
   return (
     <BaseChart
       type={chartType} 
-      data={data} 
+      datasets={[data]} 
       options={options}
     />
   );
