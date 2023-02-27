@@ -30,7 +30,7 @@ const WaveChart = ({data: waveData, units}: WaveChartProps) => {
       },
       y: {
         min: 0,
-        suggestedMax: Math.max(20, maxHeight * 1.5),
+        suggestedMax: Math.max(20, maxHeight + 5),
       }
     },
     plugins: {

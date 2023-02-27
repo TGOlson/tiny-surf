@@ -16,12 +16,11 @@ import WaveChart from './charts/WaveChart';
 import TideChart from './charts/TideChart';
 import WindChart from './charts/WindChart';
 import RatingChart from './charts/RatingChart';
-import ForecastCard from './ForecastCard';
+import ForecastItem from './ForecastItem';
 
 import { Spot } from '../../shared/types';
 import { useAppDispatch, useAppSelector } from '../hooks';
 import { fetchForecast } from '../slices/forecast-slice';
-import { smallRegion } from '../utils';
 import DayTabs from './DayTabs';
 import SpotHeader from './SpotHeader';
 
@@ -76,24 +75,26 @@ const SpotInfo = ({spot}: Params) => {
     const wind = data.wind.map(addDateTime(utcOffset)).filter(isDay(utcOffset, day));
     const tides = data.tides.map(addDateTime(utcOffset)).filter(isDay(utcOffset, day));
 
+    // TODO: make own components
     content = (
-      <React.Fragment>
-        <ForecastCard title='RATING' icon={<AutoAwesomeIcon />} height={'40px'}>
+      <Card variant="outlined" sx={{borderRadius: 'sm', gap: 2}}>
+
+        <ForecastItem title='RATING' icon={<AutoAwesomeIcon />} height={'40px'}>
           {ratings ? <RatingChart type="bar" data={ratings} /> : <Typography level="body4">n/a</Typography>}
-        </ForecastCard>
+        </ForecastItem>
 
-        <ForecastCard title='WAVE' icon={<SurfingIcon />}>
+        <ForecastItem title='WAVE' icon={<SurfingIcon />}>
           <WaveChart data={waves} units={units} />
-        </ForecastCard>
+        </ForecastItem>
 
-        <ForecastCard title='WIND' icon={<AirIcon />}>
+        <ForecastItem title='WIND' icon={<AirIcon />}>
           <WindChart data={wind} units={units}/>
-        </ForecastCard>
+        </ForecastItem>
 
-        <ForecastCard title='TIDE' icon={<WavesIcon />}>
+        <ForecastItem title='TIDE' icon={<WavesIcon />}>
           <TideChart data={tides} units={units}/>
-        </ForecastCard>
-      </React.Fragment>
+        </ForecastItem>
+      </Card>
     );
   }
   

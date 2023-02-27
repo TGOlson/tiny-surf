@@ -4,11 +4,14 @@ import { NavigateFunction } from 'react-router-dom';
 import * as api from '../api';
 import { Spot } from '../../shared/types';
 import { LoadingState } from './types';
+import { largeRegion } from '../utils';
 
 export type SelectionActionType = 'list-click' | 'search' | 'direct-nav';
 
+export type SpotWithSearchString = Spot & {searchString: string};
+
 type State = {
-  spots: LoadingState<Spot[]>;
+  spots: LoadingState<SpotWithSearchString[]>;
   selected: null | {
     slug: string,
 
@@ -38,7 +41,12 @@ export const spotSlice = createSlice({
         state.spots = {status: 'pending'};
       })
       .addCase(fetchSpots.fulfilled, (state: State, {payload}: PayloadAction<Spot[]>) => {
-        state.spots = {status: 'fulfilled', data: payload};
+        const data = payload.map(spot => {
+          const searchString = `${spot.name} ${largeRegion(spot).join(' ')}`.toLowerCase();
+          return {...spot, searchString};
+        });
+
+        state.spots = {status: 'fulfilled', data};
       })
       .addCase(fetchSpots.rejected, (state: State, action) => {
         state.spots = {status: 'rejected', error: action.error.message ?? 'Unknown error'};

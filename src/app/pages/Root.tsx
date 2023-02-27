@@ -23,7 +23,7 @@ const Root = () => {
     <CssVarsProvider>
       <CssBaseline />
       <Stack sx={{height: '100vh', backgroundColor: '#e7ebf0'}}>
-        <Header hideSearch />
+        <Header />
         <Outlet />
       </Stack>
     </CssVarsProvider>

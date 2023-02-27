@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { groupBy } from 'ramda';
 import { useNavigate } from 'react-router-dom';
-import { GroupedVirtuoso, GroupedVirtuosoHandle } from 'react-virtuoso';
+import { GroupedVirtuoso, GroupedVirtuosoHandle, Virtuoso } from 'react-virtuoso';
 
 import ListItemButton from '@mui/joy/ListItemButton';
 import Card from '@mui/joy/Card';
@@ -12,13 +12,13 @@ import Stack from '@mui/joy/Stack';
 
 import { Spot } from '../../shared/types';
 import { useAppDispatch } from '../hooks';
-import { SelectionActionType, spotSelected } from '../slices/spot-slice';
+import { SelectionActionType, spotSelected, SpotWithSearchString } from '../slices/spot-slice';
 import { largeRegion } from '../utils';
 import SpotListComponentMapping from './SpotListComponentMapping';
 import SpotHeader from './SpotHeader';
 
 type Params = {
-  spots: Spot[],
+  spots: SpotWithSearchString[],
   selected: Spot;
   selectionAction: SelectionActionType;
 };
@@ -30,9 +30,7 @@ const SpotList = ({spots, selected, selectionAction}: Params) => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  const spotFilterString = (spot: Spot): string => `${spot.name} ${largeRegion(spot).join(' ')}`.toLowerCase();
-
-  const filteredSpots = filter ? spots.filter(spot => spotFilterString(spot).includes(filter.toLowerCase())) : spots;
+  const filteredSpots = filter ? spots.filter(spot => spot.searchString.includes(filter.toLowerCase())) : spots;
   const selectedIndex = filteredSpots.findIndex(({id}) => id === selected.id);
 
   useEffect(() => {
@@ -70,7 +68,7 @@ const SpotList = ({spots, selected, selectionAction}: Params) => {
     return (
       <ListItemButton selected={isSelected} onClick={onClick} sx={{backgroundColor, fontWeight}}>
         <ListItemContent>
-          <SpotHeader spot={spot} small />
+          <SpotHeader spot={spot} small hideLocation/>
         </ListItemContent>
       </ListItemButton>
     );
@@ -80,9 +78,10 @@ const SpotList = ({spots, selected, selectionAction}: Params) => {
     <Stack sx={{height: '100%', gap: 1}}>
       <Input placeholder="Search..." size="sm" onChange={(e) => setFilter(e.target.value)} />
       <Card variant="outlined" sx={{borderRadius: 'sm', height: '100%'}}>
-        <GroupedVirtuoso 
+        <GroupedVirtuoso
           ref={listRef}
           style={{ height: '100%' }} 
+          // totalCount={filteredSpots.length}
           groupCounts={groupCounts} 
           components={SpotListComponentMapping}
           initialTopMostItemIndex={{index: selectedIndex, align: 'center'}}

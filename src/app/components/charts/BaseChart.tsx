@@ -87,7 +87,7 @@ const commonOptions: ChartOptions = {
       display: (context) => context.dataIndex !== 0 && context.dataIndex % 3 === 0,
       formatter: (val: {x: DateTime, y: number}) => `${val.y}`,
       padding: {
-        bottom: -5,
+        bottom: -7,
       }
     }
   }
