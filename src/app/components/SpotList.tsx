@@ -15,6 +15,7 @@ import { useAppDispatch } from '../hooks';
 import { SelectionActionType, spotSelected } from '../slices/spot-slice';
 import { largeRegion } from '../utils';
 import SpotListComponentMapping from './SpotListComponentMapping';
+import SpotHeader from './SpotHeader';
 
 type Params = {
   spots: Spot[],
@@ -69,7 +70,7 @@ const SpotList = ({spots, selected, selectionAction}: Params) => {
     return (
       <ListItemButton selected={isSelected} onClick={onClick} sx={{backgroundColor, fontWeight}}>
         <ListItemContent>
-          <Typography noWrap level="body1" fontSize="sm">{spot.name}</Typography>
+          <SpotHeader spot={spot} small />
         </ListItemContent>
       </ListItemButton>
     );

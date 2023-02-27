@@ -23,6 +23,7 @@ import { useAppDispatch, useAppSelector } from '../hooks';
 import { fetchForecast } from '../slices/forecast-slice';
 import { smallRegion } from '../utils';
 import DayTabs from './DayTabs';
+import SpotHeader from './SpotHeader';
 
 type Params = {
   spot: Spot;
@@ -96,13 +97,10 @@ const SpotInfo = ({spot}: Params) => {
     );
   }
   
-  const location = smallRegion(spot).join(', ');
-
   return (
     <Stack sx={{gap: 2}}>
       <Card variant="outlined" sx={{borderRadius: 'sm'}}>
-        <Typography level="h4" fontSize="lg">{spot.name}</Typography>
-        <Typography level="body2">{location}</Typography>
+        <SpotHeader spot={spot} />
       </Card>
     <Box sx={{display: 'flex', justifyContent: 'center'}}>
       <DayTabs day={day} />

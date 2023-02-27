@@ -11,6 +11,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import { useAppDispatch, useAppSelector } from '../hooks';
 import { spotSelected } from '../slices/spot-slice';
 import { smallRegion } from '../utils';
+import SpotHeader from './SpotHeader';
 
 type SpotSearchParams = {
   small?: boolean,
@@ -52,8 +53,7 @@ const SpotSearch = ({small, autoFocus}: SpotSearchParams) => {
       renderOption={(props, spot) => (
         <AutocompleteOption key={spot.slug} {...props}>
           <ListItemContent>
-            <Typography sx={{marginBottom: 0}} level={small ? 'body1' : 'h6'}>{spot.name}</Typography>
-            <Typography sx={{marginBottom: 0}} level="body3" textColor='text.secondary'>{smallRegion(spot).join(', ')}</Typography>
+            <SpotHeader spot={spot} small={small}/>
           </ListItemContent>
         </AutocompleteOption>
       )}
