@@ -83,8 +83,8 @@ const RatingChart = ({data: ratingData, type: chartType}: RatingChartProps) => {
         display: false,
       },
       y: {
-        suggestedMin: -6,
-        suggestedMax: 6,
+        min: -7,
+        max: 7,
       },
     },
     plugins: {

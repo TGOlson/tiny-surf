@@ -34,7 +34,7 @@ const TideChart = ({data: tideData, units}: TideChartProps) => {
       },
       y: {
         min: Math.min(-2, minHeight),
-        max: Math.max(8, maxHeight + 5),
+        max: Math.max(8, maxHeight + 3),
       }
     },
     plugins: {
