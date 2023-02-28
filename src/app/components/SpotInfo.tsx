@@ -5,6 +5,10 @@ import Box from '@mui/joy/Box';
 import Card from '@mui/joy/Card';
 import CircularProgress from '@mui/joy/CircularProgress';
 import Stack from '@mui/joy/Stack';
+import Link from '@mui/joy/Link';
+
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 
 import DayTabs from './DayTabs';
 import SpotName from './SpotName';
@@ -14,7 +18,6 @@ import ForecastContent from './ForecastContent';
 import { Spot } from '../../shared/types';
 import { useAppDispatch, useAppSelector } from '../hooks';
 import { fetchForecast } from '../slices/forecast-slice';
-import { Link } from '@mui/joy';
 import { useNavigate } from 'react-router-dom';
 
 type SpotInfoProps = {
@@ -77,14 +80,22 @@ const SpotInfo = ({spot, experiments = false}: SpotInfoProps) => {
   const linkOnclick = () => experiments
     ? navigate(`/s/${spot.slug}`)
     : navigate(`/s/${spot.slug}/experiments`);
+
+  const decorator = experiments ? <VisibilityOffIcon /> : <VisibilityIcon />;
   
   return (
-    <Stack gap={2}>
-      <Card variant="outlined" sx={{borderRadius: 'sm'}}>
-        <SpotName spot={spot} />
-        <SpotLocation spot={spot} type={'small-region'} />
-      </Card>
-      <Link onClick={linkOnclick} level="body3" endDecorator={">"}>{experiments ? 'Back' : 'Experiments'}</Link>
+    <Stack gap={2} sx={{marginTop: '-16px'}}>
+      <Box>
+        <Box display='flex' justifyContent='flex-end'>
+          <Link onClick={linkOnclick} level="body3" endDecorator={decorator}>
+            {experiments ? 'Experiments' : 'Experiments'}
+          </Link>
+        </Box>
+        <Card variant="outlined" sx={{borderRadius: 'sm'}}>
+          <SpotName spot={spot} />
+          <SpotLocation spot={spot} type={'small-region'} />
+        </Card>
+      </Box>
       <Box sx={{display: 'flex', justifyContent: 'center'}}>
         <DayTabs day={day} />
       </Box>

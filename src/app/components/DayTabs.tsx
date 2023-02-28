@@ -14,6 +14,7 @@ type DayTabsProps = {
 
 const DayTabs = ({day}: DayTabsProps) => {
   const dispatch = useAppDispatch();
+
   return (
     <Tabs
       size="sm"
