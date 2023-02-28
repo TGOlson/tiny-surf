@@ -3,15 +3,14 @@ import { useNavigate } from 'react-router-dom';
 
 import Autocomplete, {createFilterOptions} from '@mui/joy/Autocomplete';
 import AutocompleteOption from '@mui/joy/AutocompleteOption';
-import Typography from '@mui/joy/Typography';
 import ListItemContent from '@mui/joy/ListItemContent';
 
 import SearchIcon from '@mui/icons-material/Search';
 
 import { useAppDispatch, useAppSelector } from '../hooks';
 import { spotSelected } from '../slices/spot-slice';
-import { smallRegion } from '../utils';
-import SpotHeader from './SpotHeader';
+import SpotName from './SpotName';
+import SpotLocation from './SpotLocation';
 
 type SpotSearchParams = {
   small?: boolean,
@@ -53,7 +52,8 @@ const SpotSearch = ({small, autoFocus}: SpotSearchParams) => {
       renderOption={(props, spot) => (
         <AutocompleteOption key={spot.slug} {...props}>
           <ListItemContent>
-            <SpotHeader spot={spot} small={small}/>
+            <SpotName spot={spot} small={small} />
+            <SpotLocation spot={spot} small={small} type={'small-region'} />
           </ListItemContent>
         </AutocompleteOption>
       )}

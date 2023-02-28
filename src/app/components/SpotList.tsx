@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { groupBy } from 'ramda';
 import { useNavigate } from 'react-router-dom';
-import { GroupedVirtuoso, GroupedVirtuosoHandle, Virtuoso } from 'react-virtuoso';
+import { GroupedVirtuoso, GroupedVirtuosoHandle } from 'react-virtuoso';
 
 import ListItemButton from '@mui/joy/ListItemButton';
 import Card from '@mui/joy/Card';
@@ -15,7 +15,8 @@ import { useAppDispatch } from '../hooks';
 import { SelectionActionType, spotSelected, SpotWithSearchString } from '../slices/spot-slice';
 import { largeRegion } from '../utils';
 import SpotListComponentMapping from './SpotListComponentMapping';
-import SpotHeader from './SpotHeader';
+import SpotName from './SpotName';
+import SpotLocation from './SpotLocation';
 
 type Params = {
   spots: SpotWithSearchString[],
@@ -30,7 +31,21 @@ const SpotList = ({spots, selected, selectionAction}: Params) => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  const filteredSpots = filter ? spots.filter(spot => spot.searchString.includes(filter.toLowerCase())) : spots;
+  const filteredSpotsAll = filter ? spots.filter(spot => spot.searchString.includes(filter.toLowerCase())) : spots;
+
+  // TODO: move to reducer or server
+  const groups = groupBy(spot => {
+    // TODO: hardcoded for testing CA/US spots, clean this up...
+    return largeRegion(spot).join(' / ').replace('United States', 'US');
+  }, filteredSpotsAll);
+
+  const groupLabels = Object.keys(groups);
+
+  // TODO: remove duplication here
+  const groupCounts = Object.values(groups).map(x => x.length);
+  
+  const filteredSpots = Object.values(groups).flat();
+
   const selectedIndex = filteredSpots.findIndex(({id}) => id === selected.id);
 
   useEffect(() => {
@@ -45,14 +60,6 @@ const SpotList = ({spots, selected, selectionAction}: Params) => {
     if (selectedIndex >= 0) listRef.current?.scrollToIndex({index: selectedIndex, align: 'center', behavior});
   }, [selected]);
 
-  const groups = groupBy(x => x, filteredSpots.map(x => {
-    // TODO: hardcoded for testing CA/US spots, clean this up...
-    return largeRegion(x).join(' / ').replace('United States', 'US');
-  }));
-
-  const groupLabels = Object.keys(groups);
-  const groupCounts = Object.values(groups).map(x => x.length);
-  
   const itemContent = (index: number) => {
     const spot = filteredSpots[index];
 
@@ -68,7 +75,8 @@ const SpotList = ({spots, selected, selectionAction}: Params) => {
     return (
       <ListItemButton selected={isSelected} onClick={onClick} sx={{backgroundColor, fontWeight}}>
         <ListItemContent>
-          <SpotHeader spot={spot} small hideLocation/>
+          <SpotName spot={spot} small />
+          <SpotLocation spot={spot} small type={'smallest-region'} />
         </ListItemContent>
       </ListItemButton>
     );
@@ -81,7 +89,6 @@ const SpotList = ({spots, selected, selectionAction}: Params) => {
         <GroupedVirtuoso
           ref={listRef}
           style={{ height: '100%' }} 
-          // totalCount={filteredSpots.length}
           groupCounts={groupCounts} 
           components={SpotListComponentMapping}
           initialTopMostItemIndex={{index: selectedIndex, align: 'center'}}

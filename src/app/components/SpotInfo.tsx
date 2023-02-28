@@ -22,7 +22,8 @@ import { Spot } from '../../shared/types';
 import { useAppDispatch, useAppSelector } from '../hooks';
 import { fetchForecast } from '../slices/forecast-slice';
 import DayTabs from './DayTabs';
-import SpotHeader from './SpotHeader';
+import SpotName from './SpotName';
+import SpotLocation from './SpotLocation';
 
 type Params = {
   spot: Spot;
@@ -40,7 +41,7 @@ function addDateTime<T extends object & {timestamp: number}>(utcOffset: number):
 const isDay = (timezoneOffset: number, dayOffset: number) => (x: object & {datetime: DateTime}) => {
   const zone = FixedOffsetZone.instance(timezoneOffset * 60); // offset in minutes
   return x.datetime.day === DateTime.now().setZone(zone).plus({days: dayOffset}).day;
-}
+};
 
 const SpotInfo = ({spot}: Params) => {
   const dispatch = useAppDispatch();
@@ -101,7 +102,8 @@ const SpotInfo = ({spot}: Params) => {
   return (
     <Stack sx={{gap: 2}}>
       <Card variant="outlined" sx={{borderRadius: 'sm'}}>
-        <SpotHeader spot={spot} />
+        <SpotName spot={spot} />
+        <SpotLocation spot={spot} type={'small-region'} />
       </Card>
     <Box sx={{display: 'flex', justifyContent: 'center'}}>
       <DayTabs day={day} />

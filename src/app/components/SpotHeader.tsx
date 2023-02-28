@@ -9,17 +9,18 @@ import { smallRegion } from '../utils';
 type SpotHeaderProps = {
   spot: Spot;
   small?: boolean;
-  hideLocation?: boolean;
+  locationSubheader: (spot: Spot) => string | null;
 };
 
-const SpotHeader = ({spot, small = false, hideLocation = false}: SpotHeaderProps) => {
+export const noLocation = () => null;
+export const smallRegionLocation = (spot: Spot) => smallRegion(spot).join(', ');
+export const smallestRegionLocation = (spot: Spot) => smallRegion(spot)[0];
 
-  const location = smallRegion(spot).join(', ');
-
+const SpotHeader = ({spot, small = false, locationSubheader}: SpotHeaderProps) => {
   return (
     <Box>
       <Typography sx={{marginBottom: 0}} level={small ? 'body1' : 'h6'} fontSize={small ? 'sm' : ''}>{spot.name}</Typography>
-      { hideLocation ? null : <Typography sx={{marginBottom: 0}} level={small ? 'body3' : 'body2'} textColor='text.secondary'>{location}</Typography>}
+      <Typography sx={{marginBottom: 0}} level={small ? 'body3' : 'body2'} textColor='text.secondary'>{locationSubheader(spot)}</Typography>
     </Box>
   );
 };
