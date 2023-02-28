@@ -25,7 +25,7 @@ const location = (type: LocationType, spot: Spot) => {
   switch (type) {
     case 'small-region': return smallRegion(spot).join(', ');
     case 'smallest-region': return smallRegion(spot)[0];
-    // case 'large-region':
+    // case 'large-region': return largeRegion(spot).join(' / ').replace('United States', 'US');
   }
 };
 

@@ -9,6 +9,8 @@ import Input from '@mui/joy/Input';
 import Typography from '@mui/joy/Typography';
 import ListItemContent from '@mui/joy/ListItemContent';
 import Stack from '@mui/joy/Stack';
+import ClearIcon from '@mui/icons-material/ClearRounded';
+import Button from '@mui/joy/Button';
 
 import { Spot } from '../../shared/types';
 import { useAppDispatch } from '../hooks';
@@ -17,19 +19,64 @@ import { largeRegion } from '../utils';
 import SpotListComponentMapping from './SpotListComponentMapping';
 import SpotName from './SpotName';
 import SpotLocation from './SpotLocation';
+import { get } from '../../shared/util';
 
-type Params = {
+type SpotListProps = {
   spots: SpotWithSearchString[],
-  selected: Spot;
-  selectionAction: SelectionActionType;
+  selected: Spot,
+  selectionAction: SelectionActionType,
 };
 
-const SpotList = ({spots, selected, selectionAction}: Params) => {
-  const listRef: React.RefObject<GroupedVirtuosoHandle> = React.useRef(null);
-  const [filter, setFilter] = useState('');
+type SpotListFilterProps = {
+  filter: string,
+  setFilter: (filter: string) => void,
+};
 
+type SpotListItemContentProps = {
+  spot: Spot,
+  isSelected: boolean,
+};
+
+const SpotListFilter = ({filter, setFilter}: SpotListFilterProps) => {
+  const button = (
+    <Button variant='plain' color='neutral' size='sm' sx={{padding: '4px'}} onClick={() => setFilter('')}>
+      <ClearIcon sx={{width: '16px', height: '16px'}} fontSize='medium' color="secondary" />
+    </Button>
+  );
+
+  return (
+    <Input 
+      placeholder="Search..." 
+      value={filter}
+      size="sm" 
+      onChange={(e) => setFilter(e.target.value)} 
+      endDecorator={filter.length > 0 ? button : null}
+    />
+  );
+  };
+
+const SpotListItemContent = ({spot, isSelected}: SpotListItemContentProps) => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+
+  const onClick = () => dispatch(spotSelected({slug: spot.slug, action: 'list-click'}, navigate));
+    
+  const backgroundColor = isSelected ? 'primary.100' : '';
+  const fontWeight = isSelected ? 'normal' : '';
+
+  return (
+    <ListItemButton selected={isSelected} onClick={onClick} sx={{backgroundColor, fontWeight}}>
+      <ListItemContent>
+        <SpotName spot={spot} small />
+        <SpotLocation spot={spot} small type={'smallest-region'} />
+      </ListItemContent>
+    </ListItemButton>
+  );
+};
+
+const SpotList = ({spots, selected, selectionAction}: SpotListProps) => {
+  const listRef: React.RefObject<GroupedVirtuosoHandle> = React.useRef(null);
+  const [filter, setFilter] = useState('');
 
   const filteredSpotsAll = filter ? spots.filter(spot => spot.searchString.includes(filter.toLowerCase())) : spots;
 
@@ -40,16 +87,17 @@ const SpotList = ({spots, selected, selectionAction}: Params) => {
   }, filteredSpotsAll);
 
   const groupLabels = Object.keys(groups);
+  const groupValues = Object.values(groups);
 
-  // TODO: remove duplication here
-  const groupCounts = Object.values(groups).map(x => x.length);
-  
-  const filteredSpots = Object.values(groups).flat();
+  const groupCounts = groupValues.map(x => x.length);
+  const filteredSpots = groupValues.flat();
 
   const selectedIndex = filteredSpots.findIndex(({id}) => id === selected.id);
 
   useEffect(() => {
-    if (selectedIndex >= 0) listRef.current?.scrollToIndex({index: selectedIndex, align: 'center'});      
+    if (selectedIndex >= 0 && filter === '') {
+      listRef.current?.scrollToIndex({index: selectedIndex, align: 'center'});      
+    }
   }, [filter]);
 
   useEffect(() => {
@@ -61,30 +109,15 @@ const SpotList = ({spots, selected, selectionAction}: Params) => {
   }, [selected]);
 
   const itemContent = (index: number) => {
-    const spot = filteredSpots[index];
-
-    if (!spot) throw new Error('Unexpected access error');
-    
+    const spot = get(index, filteredSpots);
     const isSelected = spot.id === selected.id;
 
-    const onClick = () => dispatch(spotSelected({slug: spot.slug, action: 'list-click'}, navigate));
-    
-    const backgroundColor = isSelected ? 'primary.100' : '';
-    const fontWeight = isSelected ? 'normal' : '';
-
-    return (
-      <ListItemButton selected={isSelected} onClick={onClick} sx={{backgroundColor, fontWeight}}>
-        <ListItemContent>
-          <SpotName spot={spot} small />
-          <SpotLocation spot={spot} small type={'smallest-region'} />
-        </ListItemContent>
-      </ListItemButton>
-    );
+    return <SpotListItemContent spot={spot} isSelected={isSelected} />;
   };
 
   return (
     <Stack sx={{height: '100%', gap: 1}}>
-      <Input placeholder="Search..." size="sm" onChange={(e) => setFilter(e.target.value)} />
+      <SpotListFilter filter={filter} setFilter={setFilter} />
       <Card variant="outlined" sx={{borderRadius: 'sm', height: '100%'}}>
         <GroupedVirtuoso
           ref={listRef}
