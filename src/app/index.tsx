@@ -30,6 +30,10 @@ const router = createBrowserRouter([
         path: "/s/:slug",
         element: <SpotExplorer />,
       },
+      {
+        path: "/s/:slug/experiments",
+        element: <SpotExplorer experiments />,
+      },
     ],
   },
 ]);

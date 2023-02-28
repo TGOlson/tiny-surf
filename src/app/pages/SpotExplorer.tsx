@@ -9,7 +9,11 @@ import SpotList from '../components/SpotList';
 import { useAppDispatch, useAppSelector } from '../hooks';
 import { spotSelected } from '../slices/spot-slice';
 
-const SpotExplorer = () => {
+type SpotExplorerProps = {
+  experiments?: boolean,
+};
+
+const SpotExplorer = ({experiments = false}: SpotExplorerProps) => {
   const params = useParams();
   const paramSlug = params.slug;
 
@@ -44,8 +48,8 @@ const SpotExplorer = () => {
       <Box sx={{width: 300}}>
         <SpotList spots={spots} selected={selectedSpot} selectionAction={selected.action} />
       </Box>
-      <Box sx={{width: 400, minHeight: '486px'}}>
-        <SpotInfo spot={selectedSpot} />
+      <Box sx={{width: 400}}>
+        <SpotInfo spot={selectedSpot} experiments={experiments} />
       </Box>
     </Stack>
   );

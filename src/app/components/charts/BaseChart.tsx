@@ -19,7 +19,7 @@ function mergeOptions<T extends ChartType, Opts extends object = NonNullable<Cha
 }
 
 const commonOptions: ChartOptions = {
-  maintainAspectRatio: false,
+  // maintainAspectRatio: false,
   layout: {
     padding: 0,
   },
@@ -102,10 +102,6 @@ type BaseChartProps = {
 const BaseChart = ({type, datasets, options}: BaseChartProps) => {
   const opts = mergeOptions(options, commonOptions);
 
-  // some chart have weird padding that I can't get ride of
-  // use this to pixel-push X-axis margins and make things line up
-  const margins = type === 'line' ? {marginLeft: '-5px', marginRight: '-5px'} : {};
-
   return (
     <Chart
       type={type} 
@@ -114,7 +110,6 @@ const BaseChart = ({type, datasets, options}: BaseChartProps) => {
         datasets: datasets.map(data => ({data}))
       }} 
       options={opts}
-      style={{...margins}}
     />
   );
 };

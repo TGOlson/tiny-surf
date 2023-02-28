@@ -52,7 +52,7 @@ const RatingChart = ({data: ratingData, type: chartType}: RatingChartProps) => {
   const makeBackgroundGradient = setupGradient(backgroundColors);
 
   const options: ChartOptions<typeof chartType> = {
-    animation: false,
+    // animation: false,
     datasets: {
       line: {
         fill: true,
@@ -80,11 +80,11 @@ const RatingChart = ({data: ratingData, type: chartType}: RatingChartProps) => {
     scales: {
       x: {
         stacked: true,
-        display: false,
+        // display: false,
       },
       y: {
-        min: -7,
-        max: 7,
+        min: -10,
+        max: 10,
       },
     },
     plugins: {

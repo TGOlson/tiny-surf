@@ -4,29 +4,22 @@ import { DateTime, FixedOffsetZone }  from 'luxon';
 import Box from '@mui/joy/Box';
 import Card from '@mui/joy/Card';
 import CircularProgress from '@mui/joy/CircularProgress';
-import Typography from '@mui/joy/Typography';
 import Stack from '@mui/joy/Stack';
 
-import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
-import AirIcon from '@mui/icons-material/Air';
-import SurfingIcon from '@mui/icons-material/Surfing';
-import WavesIcon from '@mui/icons-material/Waves';
-
-import WaveChart from './charts/WaveChart';
-import TideChart from './charts/TideChart';
-import WindChart from './charts/WindChart';
-import RatingChart from './charts/RatingChart';
-import ForecastItem from './ForecastItem';
+import DayTabs from './DayTabs';
+import SpotName from './SpotName';
+import SpotLocation from './SpotLocation';
+import ForecastContent from './ForecastContent';
 
 import { Spot } from '../../shared/types';
 import { useAppDispatch, useAppSelector } from '../hooks';
 import { fetchForecast } from '../slices/forecast-slice';
-import DayTabs from './DayTabs';
-import SpotName from './SpotName';
-import SpotLocation from './SpotLocation';
+import { Link } from '@mui/joy';
+import { useNavigate } from 'react-router-dom';
 
-type Params = {
+type SpotInfoProps = {
   spot: Spot;
+  experiments?: boolean;
 };
 
 const getDateTime = (ts: number, offset: number): DateTime => {
@@ -43,8 +36,9 @@ const isDay = (timezoneOffset: number, dayOffset: number) => (x: object & {datet
   return x.datetime.day === DateTime.now().setZone(zone).plus({days: dayOffset}).day;
 };
 
-const SpotInfo = ({spot}: Params) => {
+const SpotInfo = ({spot, experiments = false}: SpotInfoProps) => {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   
   const forecast = useAppSelector(st => st.forecast.forecasts[spot.id]);
   const day = useAppSelector(st => st.forecast.day);
@@ -73,41 +67,27 @@ const SpotInfo = ({spot}: Params) => {
   
     const ratings = data.ratings?.map(addDateTime(utcOffset)).filter(isDay(utcOffset, day));
     const waves = data.waves.map(addDateTime(utcOffset)).filter(isDay(utcOffset, day));
-    const wind = data.wind.map(addDateTime(utcOffset)).filter(isDay(utcOffset, day));
+    const winds = data.wind.map(addDateTime(utcOffset)).filter(isDay(utcOffset, day));
     const tides = data.tides.map(addDateTime(utcOffset)).filter(isDay(utcOffset, day));
 
-    // TODO: make own components
-    content = (
-      <Card variant="outlined" sx={{borderRadius: 'sm', gap: 2}}>
-
-        <ForecastItem title='RATING' icon={<AutoAwesomeIcon />} height={'40px'}>
-          {ratings ? <RatingChart type="bar" data={ratings} /> : <Typography level="body4">n/a</Typography>}
-        </ForecastItem>
-
-        <ForecastItem title='WAVE' icon={<SurfingIcon />}>
-          <WaveChart data={waves} units={units} />
-        </ForecastItem>
-
-        <ForecastItem title='WIND' icon={<AirIcon />}>
-          <WindChart data={wind} units={units}/>
-        </ForecastItem>
-
-        <ForecastItem title='TIDE' icon={<WavesIcon />}>
-          <TideChart data={tides} units={units}/>
-        </ForecastItem>
-      </Card>
-    );
+    const props = {ratings, waves, winds, tides, units, experiments};
+    content = <ForecastContent {...props} />;
   }
+
+  const linkOnclick = () => experiments
+    ? navigate(`/s/${spot.slug}`)
+    : navigate(`/s/${spot.slug}/experiments`);
   
   return (
-    <Stack sx={{gap: 2}}>
+    <Stack gap={2}>
       <Card variant="outlined" sx={{borderRadius: 'sm'}}>
         <SpotName spot={spot} />
         <SpotLocation spot={spot} type={'small-region'} />
       </Card>
-    <Box sx={{display: 'flex', justifyContent: 'center'}}>
-      <DayTabs day={day} />
-    </Box>
+      <Link onClick={linkOnclick} level="body3" endDecorator={">"}>{experiments ? 'Back' : 'Experiments'}</Link>
+      <Box sx={{display: 'flex', justifyContent: 'center'}}>
+        <DayTabs day={day} />
+      </Box>
       {content}
     </Stack>
   );
