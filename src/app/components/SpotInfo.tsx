@@ -83,7 +83,7 @@ const SpotInfo = ({spot, experiments = false}: SpotInfoProps) => {
   const decorator = experiments ? <VisibilityOffIcon /> : <VisibilityIcon />;
   
   return (
-    <Stack gap={2} sx={{marginTop: '-16px', marginBottom: '-24px'}}>
+    <Stack gap={2} sx={{mt: -1.5, mb: -2}}>
       <Box>
         <Box display='flex' justifyContent='flex-end'>
           <Link onClick={linkOnclick} level="body3" endDecorator={decorator}>
@@ -96,7 +96,7 @@ const SpotInfo = ({spot, experiments = false}: SpotInfoProps) => {
         <DayTabs day={day} />
       </Box>
       {content}
-      <Box display='flex' justifyContent='flex-end' sx={{marginTop: '-8px'}}>
+      <Box display='flex' justifyContent='flex-end' sx={{mt: -1.5}}>
         <SurflineLink spot={spot} />
       </Box>
     </Stack>
