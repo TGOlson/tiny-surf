@@ -5,12 +5,13 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build:server": "npx webpack --config webpack/common.js --config webpack/server.js --merge",
-    "watch:server": "npx webpack watch --config webpack/common.js --config webpack/server.js --merge",
-    "build:app": "npx webpack --config webpack/common.js --config webpack/app.js --merge",
-    "serve:app": "npx webpack serve --config webpack/common.js --config webpack/app.js --merge",
-    "build": "npx webpack --config webpack/common.js --config webpack/app.js --config webpack/server.js --merge",
-    "watch": "npx webpack watch --config webpack/common.js --config webpack/app.js --config webpack/server.js --merge"
+    
+    "server:build": "npx webpack --config webpack/common.js --config webpack/server.js --merge",
+    "server:watch": "npx webpack watch --config webpack/common.js --config webpack/server.js --merge",
+    "server:run": "npx nodemon ./dist/server.bundle.js --start-server --watch ./dist/server.bundle.js",
+
+    "app:build": "npx webpack --config webpack/common.js --config webpack/app.js --merge",
+    "app:serve": "npx webpack serve --config webpack/common.js --config webpack/app.js --merge"
   },
   "author": "",
   "license": "ISC",
@@ -27,6 +28,7 @@
     "eslint": "^8.33.0",
     "eslint-plugin-import": "^2.27.5",
     "eslint-plugin-react": "^7.32.2",
+    "nodemon": "^2.0.20",
     "style-loader": "^3.3.1",
     "ts-loader": "^9.4.2",
     "typescript": "^4.9.5",
