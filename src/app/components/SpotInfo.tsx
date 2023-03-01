@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react';
 import { DateTime, FixedOffsetZone }  from 'luxon';
+import { useNavigate } from 'react-router-dom';
 
 import Box from '@mui/joy/Box';
-import Card from '@mui/joy/Card';
 import CircularProgress from '@mui/joy/CircularProgress';
 import Stack from '@mui/joy/Stack';
 import Link from '@mui/joy/Link';
@@ -11,15 +11,13 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 
 import DayTabs from './DayTabs';
-import SpotName from './SpotName';
-import SpotLocation from './SpotLocation';
 import ForecastContent from './ForecastContent';
+import SurflineLink from './SurflineLink';
+import SpotInfoHeader from './SpotInfoHeader';
 
 import { Spot } from '../../shared/types';
 import { useAppDispatch, useAppSelector } from '../hooks';
 import { fetchForecast } from '../slices/forecast-slice';
-import { useNavigate } from 'react-router-dom';
-import SurflineLink from './SurflineLink';
 
 type SpotInfoProps = {
   spot: Spot;
@@ -92,10 +90,7 @@ const SpotInfo = ({spot, experiments = false}: SpotInfoProps) => {
             {experiments ? 'Experiments' : 'Experiments'}
           </Link>
         </Box>
-        <Card variant="outlined" sx={{borderRadius: 'sm'}}>
-          <SpotName spot={spot} />
-          <SpotLocation spot={spot} type={'small-region'} />
-        </Card>
+        <SpotInfoHeader spot={spot} />
       </Box>
       <Box sx={{display: 'flex', justifyContent: 'center'}}>
         <DayTabs day={day} />
