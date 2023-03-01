@@ -1,24 +1,27 @@
 import { RatingDetails, Spot } from "../shared/types";
+import { notNull } from "../shared/util";
 
-// returns two smallest region segments for a spot
-export const smallRegion = ({location}: Spot): [string, string | undefined] => {
+// returns up to 2 smallest region segments for a spot
+// guaranteed to have at least one item
+export const smallRegion = ({location}: Spot): string[] => {
   const parts = [location.country, ...location.regions];
   const nParts = parts.length;
 
   const smallRegion1 = parts[nParts - 1];
   const smallRegion2 = parts[nParts - 2];
-
+  
   if (!smallRegion1) throw new Error('Unexpected access error');
-
-  return [smallRegion1, smallRegion2];
+  
+  return [smallRegion1, smallRegion2].filter(notNull);
 };
 
-// returns 2 largest region pieces for a spot, excluding continent
-export const largeRegion = ({location}: Spot): [string, string | undefined, string | undefined] => {
+// returns up to 3 largest region pieces for a spot, excluding continent
+// guaranteed to have at least one item
+export const largeRegion = ({location}: Spot): string[] => {
   const region1 = location.regions[0];
   const region2 = location.regions[1];
 
-  return [location.country, region1, region2];
+  return [location.country, region1, region2].filter(notNull);
 };
 
 // https://support.surfline.com/hc/en-us/articles/9780949042843-Surf-Conditions-Ratings-Colors

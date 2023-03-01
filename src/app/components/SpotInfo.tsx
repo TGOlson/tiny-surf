@@ -11,6 +11,7 @@ import IconButton from '@mui/joy/IconButton';
 import Typography from '@mui/joy/Typography';
 
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import AirIcon from '@mui/icons-material/Air';
 import WavesIcon from '@mui/icons-material/Waves';
 
@@ -105,20 +106,21 @@ const SpotInfo = ({spot}: SpotInfoProps) => {
         {error ? error : waveChart}
         <Divider inset='none' sx={{mt: 1}} />
         {expanded ? 
-          <Box sx={{mt: 1.5, mb: 1}}>
+          <Box sx={{mt: 1.5}}>
             <Stack display="flex">
               <Typography level="body4" startDecorator={<AirIcon />}>WIND</Typography>
               {windChart}
               <Divider inset='none' sx={{mt: 1.5, mb: 1.5}}/>
               <Typography level="body4" startDecorator={<WavesIcon />}>TIDE</Typography>
               {tideChart}
+              <Divider inset='none' sx={{mt: 1}}/>
             </Stack>
           </Box> 
           : null
         }
         <CardOverflow sx={{display: 'flex', justifyContent: 'center'}}>
           <IconButton sx={{"--IconButton-size": "20px"}} color="neutral" variant="plain" onClick={onExpandedClick}>
-            <ExpandMoreIcon />
+            {expanded ? <ExpandLessIcon /> : <ExpandMoreIcon />}
           </IconButton>
         </CardOverflow>
       </Card>
