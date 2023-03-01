@@ -15,7 +15,7 @@ const ForecastCard = ({title, icon, children}: ForecastCardProps) => {
     <Card variant="outlined" sx={{borderRadius: 'xs', minWidth: 0}}>
       <CardOverflow sx={{padding: 0}}>
         <Typography level="body4" startDecorator={icon} sx={{padding: 1, paddingBottom: 0}}>{title}</Typography>
-          {children}
+        {children}
       </CardOverflow>
     </Card>
   );

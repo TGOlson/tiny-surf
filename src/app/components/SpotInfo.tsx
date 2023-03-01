@@ -1,23 +1,30 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { DateTime, FixedOffsetZone }  from 'luxon';
-import { useNavigate } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 
 import Box from '@mui/joy/Box';
-import CircularProgress from '@mui/joy/CircularProgress';
 import Stack from '@mui/joy/Stack';
-import Link from '@mui/joy/Link';
+import Card from '@mui/joy/Card';
+import CardOverflow from '@mui/joy/CardOverflow';
+import Divider from '@mui/joy/Divider';
+import IconButton from '@mui/joy/IconButton';
+import Typography from '@mui/joy/Typography';
 
-import VisibilityIcon from '@mui/icons-material/Visibility';
-import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import AirIcon from '@mui/icons-material/Air';
+import WavesIcon from '@mui/icons-material/Waves';
 
+import SpotName from './SpotName';
+import SpotLocation from './SpotLocation';
+import WindChart from './charts/WindChart';
+import TideChart from './charts/TideChart';
+import RatingChartGradient from './charts/RatingChartGradient';
 import DayTabs from './DayTabs';
-import ForecastContent from './ForecastContent';
-import SurflineLink from './SurflineLink';
-import SpotInfoHeader from './SpotInfoHeader';
 
 import { Spot } from '../../shared/types';
 import { useAppDispatch, useAppSelector } from '../hooks';
 import { fetchForecast } from '../slices/forecast-slice';
+import SurflineLink from './SurflineLink';
 
 type SpotInfoProps = {
   spot: Spot;
@@ -38,9 +45,13 @@ const isDay = (timezoneOffset: number, dayOffset: number) => (x: object & {datet
   return x.datetime.day === DateTime.now().setZone(zone).plus({days: dayOffset}).day;
 };
 
-const SpotInfo = ({spot, experiments = false}: SpotInfoProps) => {
+const SpotInfo = ({spot}: SpotInfoProps) => {
   const dispatch = useAppDispatch();
-  const navigate = useNavigate();
+
+  const [searchParams, setSearchParams] = useSearchParams();
+  const initialExpandedState = parseInt(searchParams.get('expanded') ?? '') === 1;
+
+  const [expanded, setExpanded] = useState(initialExpandedState);
   
   const forecast = useAppSelector(st => st.forecast.forecasts[spot.id]);
   const day = useAppSelector(st => st.forecast.day);
@@ -49,21 +60,19 @@ const SpotInfo = ({spot, experiments = false}: SpotInfoProps) => {
     if (!forecast || forecast.status === 'idle') void dispatch(fetchForecast(spot.id));
   }, [forecast, dispatch]);
 
-  let content = null;
+  let error: React.ReactNode = null;
+  let waveChart: React.ReactNode = null;
+  let windChart: React.ReactNode = null;
+  let tideChart: React.ReactNode = null;
+
+  const emptyChart = <Box className='placeholder' sx={{width: '466px', height: '46px'}}></Box>;
 
   if (!forecast || forecast.status === 'idle' || forecast.status === 'pending' ) {
-    content = (
-      <Box sx={{ 
-        width: '100%',
-        display: 'flex',
-        justifyContent: 'center',
-        mt: 4,
-      }}>
-        <CircularProgress />
-      </Box>
-    );
+    waveChart = emptyChart;
+    windChart = emptyChart;
+    tideChart = emptyChart;
   } else if (forecast.status === 'rejected') {
-    content = <p>Error: {forecast.error}</p>;
+    error = <p>Error: {forecast.error}</p>;
   } else {
     const {data, units, utcOffset} = forecast.data;
   
@@ -72,32 +81,49 @@ const SpotInfo = ({spot, experiments = false}: SpotInfoProps) => {
     const winds = data.wind.map(addDateTime(utcOffset)).filter(isDay(utcOffset, day));
     const tides = data.tides.map(addDateTime(utcOffset)).filter(isDay(utcOffset, day));
 
-    const props = {ratings, waves, winds, tides, units, experiments};
-    content = <ForecastContent {...props} />;
+    waveChart = <RatingChartGradient ratings={ratings} waves={waves} units={units} />;
+    windChart = <WindChart data={winds} units={units}/>;
+    tideChart = <TideChart data={tides} units={units}/>;
   }
 
-  const linkOnclick = () => experiments
-    ? navigate(`/s/${spot.slug}`)
-    : navigate(`/s/${spot.slug}/experiments`);
-
-  const decorator = experiments ? <VisibilityOffIcon /> : <VisibilityIcon />;
+  const onExpandedClick = () => {
+    const nextExpanded = !expanded;
+    setExpanded(nextExpanded);
+    setSearchParams(nextExpanded ? {expanded: '1'} : {});
+  };
   
   return (
-    <Stack gap={2} sx={{mt: -1.5, mb: -2}}>
-      <Box>
-        <Box display='flex' justifyContent='flex-end'>
-          <Link onClick={linkOnclick} level="body3" endDecorator={decorator}>
-            {experiments ? 'Experiments' : 'Experiments'}
-          </Link>
-        </Box>
-        <SpotInfoHeader spot={spot} />
-      </Box>
-      <Box sx={{display: 'flex', justifyContent: 'center'}}>
-        <DayTabs day={day} />
-      </Box>
-      {content}
-      <Box display='flex' justifyContent='flex-end' sx={{mt: -1.5}}>
+    <Stack sx={{mt: '-15px'}}>
+      <Box sx={{display: 'flex', justifyContent: 'end', mr: '2px'}}>
         <SurflineLink spot={spot} />
+      </Box>
+      <Card variant="outlined" sx={{borderRadius: 'xs'}}>
+        <Box sx={{mb: 1.5}}>
+          <SpotName spot={spot} />
+          <SpotLocation spot={spot} type={'small-region'} />
+        </Box>
+        {error ? error : waveChart}
+        <Divider inset='none' sx={{mt: 1}} />
+        {expanded ? 
+          <Box sx={{mt: 1.5, mb: 1}}>
+            <Stack display="flex">
+              <Typography level="body4" startDecorator={<AirIcon />}>WIND</Typography>
+              {windChart}
+              <Divider inset='none' sx={{mt: 1.5, mb: 1.5}}/>
+              <Typography level="body4" startDecorator={<WavesIcon />}>TIDE</Typography>
+              {tideChart}
+            </Stack>
+          </Box> 
+          : null
+        }
+        <CardOverflow sx={{display: 'flex', justifyContent: 'center'}}>
+          <IconButton sx={{"--IconButton-size": "20px"}} color="neutral" variant="plain" onClick={onExpandedClick}>
+            <ExpandMoreIcon />
+          </IconButton>
+        </CardOverflow>
+      </Card>
+      <Box sx={{display: 'flex', justifyContent: 'center', mt: 1}}>
+        <DayTabs day={day} />
       </Box>
     </Stack>
   );

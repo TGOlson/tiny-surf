@@ -18,18 +18,19 @@ const WindChart = ({data: windData, units}: WindChartProps) => {
   const maxSpeed = Math.max(...windData.map(x => x.speed));
 
   const options: ChartOptions<typeof chartType> = {
+    aspectRatio: 10,
     elements: {
       bar: {
-        borderRadius: 3,
+        borderRadius: 2,
       },
     },
     scales: {
       x: {
-        // display: false,
+        display: false,
       },
       y: {
         min: 0,
-        max: Math.max(20, maxSpeed + 5),
+        max: Math.max(25, maxSpeed + 10),
       }
     },
     plugins: {
@@ -42,7 +43,7 @@ const WindChart = ({data: windData, units}: WindChartProps) => {
             const directionType = wind.directionType;
             const speed = context.parsed.y;
 
-            return `${directionType} ${speed} ${units.windSpeed.toLowerCase()}.`;
+            return `${directionType} ${speed} ${units.windSpeed.toLowerCase()}`;
           },
         }
       }
@@ -54,6 +55,7 @@ const WindChart = ({data: windData, units}: WindChartProps) => {
       type={chartType}
       datasets={[data]} 
       options={options}
+      unit={units.windSpeed}
     />
   );
 };

@@ -22,6 +22,7 @@ const TideChart = ({data: tideData, units}: TideChartProps) => {
 
   const options: ChartOptions<typeof chartType> = {
     animation: false,
+    aspectRatio: 10,
     elements: {
       line: {
         tension: 0.4,
@@ -30,11 +31,11 @@ const TideChart = ({data: tideData, units}: TideChartProps) => {
     },
     scales: {
       x: {
-        // display: false
+        display: false
       },
       y: {
         min: Math.min(-2, minHeight),
-        max: Math.max(8, maxHeight + 3),
+        max: Math.max(10, maxHeight + 5),
       }
     },
     plugins: {
@@ -42,7 +43,7 @@ const TideChart = ({data: tideData, units}: TideChartProps) => {
         intersect: false,
         callbacks: {
           label: (context: TooltipItem<typeof chartType>) => {
-            return `${context.parsed.y} ${units.tideHeight.toLowerCase()}.`;
+            return `${context.parsed.y} ${units.tideHeight.toLowerCase()}`;
           },
         }
       },
@@ -57,6 +58,7 @@ const TideChart = ({data: tideData, units}: TideChartProps) => {
       type={chartType} 
       datasets={[data]} 
       options={options} 
+      unit={units.tideHeight}
     />
   );
 };

@@ -2,3 +2,21 @@
   background-color: #f5f6f7;
   /* background-image: url('https://spot-thumbnails.cdn-surfline.com/spots/5842041f4e65fad6a77088c4/5842041f4e65fad6a77088c4_1500.jpg'); */
 }
+
+.placeholder {
+  background-color: rgba(0, 0, 0, 0.05);
+  animation: 1.5s ease-in-out 0.5s infinite normal none running fade;
+  border-radius: 4px;
+}
+
+@keyframes fade {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.4;
+  }
+  100% {
+    opacity: 1;
+  }
+}
