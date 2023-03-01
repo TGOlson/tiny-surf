@@ -18,14 +18,14 @@ const DayTabs = ({day}: DayTabsProps) => {
   return (
     <Tabs
       size="sm"
-      sx={{ borderRadius: 'md' }}
+      sx={{ borderRadius: 'xs' }}
       value={day}
       onChange={(_e, value) => dispatch(daySelected(value as (0 | 1 | 2)))}
     >
-      <TabList variant="soft">
-        <Tab value={0}>Today</Tab>
-        <Tab value={1}>Tomorrow</Tab>
-        <Tab value={2}>{DateTime.now().plus({days: 2}).weekdayLong}</Tab>
+      <TabList variant="soft" sx={{ borderRadius: 'xs' }}>
+        <Tab sx={{ borderRadius: 'xs' }} value={0}>Today</Tab>
+        <Tab sx={{ borderRadius: 'xs' }} value={1}>Tomorrow</Tab>
+        <Tab sx={{ borderRadius: 'xs' }} value={2}>{DateTime.now().plus({days: 2}).weekdayLong}</Tab>
       </TabList>
     </Tabs>
   );

@@ -51,6 +51,7 @@ const SpotListFilter = ({filter, setFilter}: SpotListFilterProps) => {
       size="sm" 
       onChange={(e) => setFilter(e.target.value)} 
       endDecorator={filter.length > 0 ? button : null}
+      sx={{borderRadius: 'xs'}}
     />
   );
   };
@@ -118,7 +119,7 @@ const SpotList = ({spots, selected, selectionAction}: SpotListProps) => {
   return (
     <Stack sx={{height: '100%', gap: 1}}>
       <SpotListFilter filter={filter} setFilter={setFilter} />
-      <Card variant="outlined" sx={{borderRadius: 'sm', height: '100%'}}>
+      <Card variant="outlined" sx={{borderRadius: 'xs', height: '100%'}}>
         <GroupedVirtuoso
           ref={listRef}
           style={{ height: '100%' }} 

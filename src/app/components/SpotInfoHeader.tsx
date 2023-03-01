@@ -19,7 +19,7 @@ type SpotInfoHeaderProps = {
 
 const SpotInfoHeader = ({spot}: SpotInfoHeaderProps) => {
   return (
-    <Card variant="outlined" sx={{borderRadius: 'sm'}}>
+    <Card variant="outlined" sx={{borderRadius: 'xs'}}>
       <SpotName spot={spot} />
       <SpotLocation spot={spot} type={'small-region'} />
       <Divider sx={{mt: 1}} inset='none'/>

@@ -44,7 +44,7 @@ const SpotExplorer = ({experiments = false}: SpotExplorerProps) => {
   }
 
   return (
-    <Stack direction="row" sx={{justifyContent: 'center', mt: 8, gap: 8}}>
+    <Stack direction="row" sx={{justifyContent: 'center', mt: 8, gap: 6}}>
       <Box sx={{width: 300, height: 490}}>
         <SpotList spots={spots} selected={selectedSpot} selectionAction={selected.action} />
       </Box>

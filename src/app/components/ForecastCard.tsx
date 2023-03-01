@@ -12,10 +12,10 @@ type ForecastCardProps = {
 
 const ForecastCard = ({title, icon, children}: ForecastCardProps) => {
   return (
-    <Card variant="outlined" sx={{borderRadius: 'sm', minWidth: 0}}>
+    <Card variant="outlined" sx={{borderRadius: 'xs', minWidth: 0}}>
       <CardOverflow sx={{padding: 0}}>
         <Typography level="body4" startDecorator={icon} sx={{padding: 1, paddingBottom: 0}}>{title}</Typography>
-        {children}
+          {children}
       </CardOverflow>
     </Card>
   );
