@@ -8,7 +8,7 @@
     "build:server": "npx webpack --config webpack/common.js --config webpack/server.js --merge",
     "watch:server": "npx webpack watch --config webpack/common.js --config webpack/server.js --merge",
     "build:app": "npx webpack --config webpack/common.js --config webpack/app.js --merge",
-    "watch:app": "npx webpack watch --config webpack/common.js --config webpack/app.js --merge",
+    "serve:app": "npx webpack serve --config webpack/common.js --config webpack/app.js --merge",
     "build": "npx webpack --config webpack/common.js --config webpack/app.js --config webpack/server.js --merge",
     "watch": "npx webpack watch --config webpack/common.js --config webpack/app.js --config webpack/server.js --merge"
   },

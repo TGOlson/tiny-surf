@@ -21,7 +21,7 @@ const forecastCache = makeTTLCache({
   debug: true
 });
 
-const PORT = 3000;
+const PORT = 8080;
 
 const hasMessage = (error: unknown): error is object & {message: string} => {
   return error !== null 

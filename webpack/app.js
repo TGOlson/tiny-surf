@@ -10,6 +10,7 @@ module.exports = {
   output: {
     filename: '[name].bundle.js',
     path: path.resolve(__dirname, '../dist'),
+    publicPath: '/assets/js',
   },
   module: { 
     rules: [{
@@ -23,4 +24,20 @@ module.exports = {
       console: false,
     }
   },
+  devServer: {
+    port: 3000,
+    historyApiFallback: true,
+    static: [
+      { 
+        directory: path.resolve(__dirname, '../public') 
+      },
+      { 
+        directory: path.resolve(__dirname, '../dist'),
+        publicPath: '/assets/js',
+      },
+    ],
+    proxy: {
+      '/api': 'http://localhost:8080'
+    }
+  }
 };

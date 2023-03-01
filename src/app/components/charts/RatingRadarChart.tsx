@@ -21,7 +21,7 @@ const RatingRadarChart = ({ratings, waves}: RatingRadarChartProps) => {
     scales: {
       r: {
         min: 0,
-        suggestedMax: 5,
+        suggestedMax: 10,
       },
     },
     plugins: {
