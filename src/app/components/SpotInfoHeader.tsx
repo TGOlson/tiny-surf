@@ -3,7 +3,7 @@ import React from 'react';
 import Card from '@mui/joy/Card';
 import Divider from '@mui/joy/Divider';
 import CardOverflow from '@mui/joy/CardOverflow';
-import Typography from '@mui/joy/Typography';
+import IconButton from '@mui/joy/IconButton';
 
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
@@ -11,7 +11,6 @@ import SpotName from './SpotName';
 import SpotLocation from './SpotLocation';
 
 import { Spot } from '../../shared/types';
-import { Box, IconButton } from '@mui/joy';
 
 type SpotInfoHeaderProps = {
   spot: Spot;

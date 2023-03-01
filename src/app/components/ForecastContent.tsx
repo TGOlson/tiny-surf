@@ -39,19 +39,19 @@ const ForecastContent = ({ratings, waves, winds, tides, units, experiments = fal
       </Grid>
 
       <Grid xs={6}>
-        <ForecastCard title='WAVE' icon={<SurfingIcon />}>
+        <ForecastCard title={`WAVE (${units.waveHeight.toLowerCase()}.)`} icon={<SurfingIcon />}>
           <WaveChart data={waves} units={units} />
         </ForecastCard>
       </Grid>
 
       <Grid xs={6}>
-        <ForecastCard title="WIND" icon={<AirIcon />}>
+        <ForecastCard title={`WIND (${units.windSpeed.toLowerCase()}.)`} icon={<AirIcon />}>
           <WindChart data={winds} units={units}/>
         </ForecastCard>          
       </Grid>
       
       <Grid xs={6}>
-        <ForecastCard title="TIDE" icon={<WavesIcon />}>
+        <ForecastCard title={`TIDE (${units.tideHeight.toLowerCase()}.)`} icon={<WavesIcon />}>
           <TideChart data={tides} units={units}/>
         </ForecastCard>
       </Grid>
@@ -61,12 +61,12 @@ const ForecastContent = ({ratings, waves, winds, tides, units, experiments = fal
   const experimentContent = (
     <React.Fragment>
       <Grid xs={6}>
-        <ForecastCard title="WAVES" icon={<SurfingIcon />}>
+        <ForecastCard title={`WAVE (${units.waveHeight.toLowerCase()}.)`} icon={<SurfingIcon />}>
           {ratings ? <RatingRadarChart ratings={ratings} waves={waves} /> : <Typography level="body4">n/a</Typography>}
         </ForecastCard>
       </Grid>
       <Grid xs={6}>
-        <ForecastCard title="WAVES" icon={<SurfingIcon />}>
+        <ForecastCard title={`WAVE (${units.waveHeight.toLowerCase()}.)`} icon={<SurfingIcon />}>
           {ratings ? <RatingRadarChart ratings={ratings} waves={waves} /> : <Typography level="body4">n/a</Typography>}
         </ForecastCard>
       </Grid>

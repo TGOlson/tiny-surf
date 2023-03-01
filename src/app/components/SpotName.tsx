@@ -13,7 +13,7 @@ const SpotName = ({spot, small = false}: SpotNameProps) =>
   (
     <Typography 
       sx={{marginBottom: 0}} 
-      level={small ? 'body1' : 'h6'} 
+      level={small ? 'body1' : 'h2'} 
       fontSize={small ? 'sm' : ''}
     >
       {spot.name}
