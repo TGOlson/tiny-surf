@@ -46,6 +46,12 @@ async function main () {
     case '--parse-spots': {
       const txs = await allTaxonomy.read();
       const spots = parseSpots(txs);
+
+      const uniqueBySlug = uniqBy(x => x.slug, spots);
+
+      if (spots.length !== uniqueBySlug.length) {
+        throw new Error('Slug collision detected');
+      }
       
       return await parsedSpots.write(spots);
     }
@@ -82,7 +88,9 @@ async function main () {
       // const spots = await parsedSpots.read();
       // const res = spots.filter(spot => spot.locationNamePath.length > 6);
       // const uniqueNParts = uniq(nParts);
+      // const slugs = spots.map(createSlug);
 
+      // console.log(slugs);
       
       const res = await fetch('https://www.surfline.com/surf-report/old-man-s-at-tourmaline/5842041f4e65fad6a77088c4?camId=5f29e43f4a641b0b4103763b5842041f4e65fad6a7708801');
       console.log(res, res.status, res.statusText);

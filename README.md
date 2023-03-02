@@ -7,9 +7,11 @@ A tiny way to check the waves.
 WIP whimsical: https://whimsical.com/tiny-surf-RaVBmPqAwErJb2BGGa9rWe
 
 ### todo
-* remove headings on list, add some location info
-* put graphs back on card, leave name header on seperate card
 * fix main search, need to use virtual list
+* fix slug to be url friendly
+* some sort of sorting / grouping of spots on server
+* try to include spot meta info
+* swell charts?
 
 ### ideas
 

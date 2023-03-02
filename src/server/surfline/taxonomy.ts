@@ -87,9 +87,15 @@ export const inspectTaxonomy = (txs: Taxonomy[]): TaxonomyInspection => {
   };
 };
 
-const createSlug = (spot: SpotTaxonomy): string => {
+export const createSlug = (spot: SpotTaxonomy): string => {
+  // spot name + last 4 #s of spot id
+  // empirically tested to not have collisions on dataset as of march 2023
   const base = `${spot.name} ${spot.spot.slice(20)}`;
-  return base.toLowerCase().replace(/ /g, '-');
+  // return base.toLowerCase().replace(/ /g, '-');
+
+  return base.toLowerCase()
+    .replace(/[^\w ]+/g, '')
+    .replace(/ +/g, '-');
 };
 
 // another invalid spot id, seems like it's used for testing, filter it out...
