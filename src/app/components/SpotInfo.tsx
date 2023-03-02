@@ -15,7 +15,6 @@ import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import AirIcon from '@mui/icons-material/Air';
 import WavesIcon from '@mui/icons-material/Waves';
 
-import SpotName from './SpotName';
 import SpotLocation from './SpotLocation';
 import WindChart from './charts/WindChart';
 import TideChart from './charts/TideChart';
@@ -100,7 +99,7 @@ const SpotInfo = ({spot}: SpotInfoProps) => {
       </Box>
       <Card variant="outlined" sx={{borderRadius: 'xs'}}>
         <Box sx={{mb: 1.5}}>
-          <SpotName spot={spot} />
+          <Typography sx={{marginBottom: 0}} level='h2'>{spot.name}</Typography>
           <SpotLocation spot={spot} type={'small-region'} />
         </Box>
         {error ? error : waveChart}

@@ -7,11 +7,13 @@ A tiny way to check the waves.
 WIP whimsical: https://whimsical.com/tiny-surf-RaVBmPqAwErJb2BGGa9rWe
 
 ### todo
+* [done] fix slug to be url friendly
 * fix main search, need to use virtual list
-* fix slug to be url friendly
 * some sort of sorting / grouping of spots on server
 * try to include spot meta info
 * swell charts?
+* keyboard shortcuts for nav
+* error handling for 404s or missing forecasts
 
 ### ideas
 

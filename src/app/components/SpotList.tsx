@@ -17,7 +17,6 @@ import { useAppDispatch } from '../hooks';
 import { SelectionActionType, spotSelected, SpotWithSearchString } from '../slices/spot-slice';
 import { largeRegion } from '../utils';
 import SpotListComponentMapping from './SpotListComponentMapping';
-import SpotName from './SpotName';
 import SpotLocation from './SpotLocation';
 import { get } from '../../shared/util';
 
@@ -68,7 +67,7 @@ const SpotListItemContent = ({spot, isSelected}: SpotListItemContentProps) => {
   return (
     <ListItemButton selected={isSelected} onClick={onClick} sx={{backgroundColor, fontWeight}}>
       <ListItemContent>
-        <SpotName spot={spot} small />
+        <Typography sx={{marginBottom: 0}} level='body1' fontSize='sm'>{spot.name}</Typography>
         <SpotLocation spot={spot} small type={'smallest-region'} />
       </ListItemContent>
     </ListItemButton>

@@ -2,6 +2,7 @@ import React from "react";
 import ReactDOMClient from 'react-dom/client';
 import {
   createBrowserRouter,
+  redirect,
   RouterProvider,
 } from "react-router-dom";
 import { Provider } from 'react-redux';
@@ -9,8 +10,9 @@ import { Provider } from 'react-redux';
 import Root from "./pages/Root";
 import SpotExplorer from "./pages/SpotExplorer";
 import ErrorPage from "./pages/ErrorPage";
-import HomePage from "./pages/HomePage";
 
+// I don't really love the public-sans font,
+// just let joy-ui fallback to its defaults
 // import '@fontsource/public-sans';
 import "./index.css";
 
@@ -24,7 +26,9 @@ const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <HomePage />
+        element: null,
+        // no real index page, start every at tourmaline and let them go from there!
+        loader: () => redirect('/s/old-mans-at-tourmaline-88c4'),
       },
       {
         path: "/s/:slug",

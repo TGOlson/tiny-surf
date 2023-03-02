@@ -4,20 +4,19 @@ import { useNavigate } from 'react-router-dom';
 import Autocomplete, {createFilterOptions} from '@mui/joy/Autocomplete';
 import AutocompleteOption from '@mui/joy/AutocompleteOption';
 import ListItemContent from '@mui/joy/ListItemContent';
+import Typography from '@mui/joy/Typography';
 
 import SearchIcon from '@mui/icons-material/Search';
 
 import { useAppDispatch, useAppSelector } from '../hooks';
 import { spotSelected } from '../slices/spot-slice';
-import SpotName from './SpotName';
 import SpotLocation from './SpotLocation';
 
 type SpotSearchParams = {
-  small?: boolean,
   autoFocus?: boolean,
 };
 
-const SpotSearch = ({small, autoFocus}: SpotSearchParams) => {
+const SpotSearch = ({autoFocus}: SpotSearchParams) => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
@@ -33,8 +32,8 @@ const SpotSearch = ({small, autoFocus}: SpotSearchParams) => {
       noOptionsText="No spots found"
       startDecorator={<SearchIcon />}
       popupIcon={null}
-      sx={{ width: small ? 260 : 360 }}
-      size={small ? 'sm' : 'lg'}
+      sx={{ width: 360 }}
+      size={'lg'}
       options={spotsWithSearchString}
       getOptionLabel={(spot) => typeof spot === 'string' ? spot : spot.name}
       onChange={(_event, value, reason) => {
@@ -52,8 +51,8 @@ const SpotSearch = ({small, autoFocus}: SpotSearchParams) => {
       renderOption={(props, spot) => (
         <AutocompleteOption key={spot.slug} {...props}>
           <ListItemContent>
-            <SpotName spot={spot} small={small} />
-            <SpotLocation spot={spot} small={small} type={'small-region'} />
+            <Typography sx={{marginBottom: 0}} level='h6'>{spot.name}</Typography>
+            <SpotLocation spot={spot} type={'small-region'} />
           </ListItemContent>
         </AutocompleteOption>
       )}

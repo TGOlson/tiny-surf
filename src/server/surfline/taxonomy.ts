@@ -40,7 +40,6 @@ export type TaxonomyInspection = {
 export const cleanTaxonomy = (txs: Taxonomy[]): Taxonomy[] => {
   return uniqBy(x => x._id, txs)
     .filter(x => x.liesIn ? !referencesBadId(x) : true);
-
 };
 
 // A taxonomy is a slightly-complicated semi-recursive data structre with a few different sub-types
