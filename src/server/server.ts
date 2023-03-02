@@ -17,7 +17,8 @@ app.use('/assets/js', express.static(path.resolve(__dirname, '../dist')));
 
 const forecastCache = makeTTLCache({
   // forecasts don't change often, only expire entries after 30m
-  ttlSeconds: 60 * 30, 
+  ttl: 30 * 60 * 1000, 
+  flushInterval: 15 * 60 * 1000,
   debug: true
 });
 

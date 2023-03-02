@@ -5,38 +5,43 @@ export type TTLCache<T> = {
 };
 
 export type TTLCacheConfig = {
-  ttlSeconds: number,
+  ttl: number, // ms
+  flushInterval: number, // ms
   debug?: boolean
 };
 
-type InternalCache<T> = Map<string, {setAt: number, val: T}>;
+type InternalCacheItem<T> = {setAt: number, val: T};
+type InternalCache<T> = Map<string, InternalCacheItem<T>>;
 
-const secondsElapsed = (t: number): number => 
-  (Date.now() - t) / 1000;
+const log = (debug: boolean, pieces: string[]): void => {
+  if (debug) console.log(`[${(new Date()).toISOString()}] [tll-cache]`, ...pieces);
+};
 
-export function makeTTLCache<T>({ttlSeconds, debug}: TTLCacheConfig): TTLCache<T> {
+export function makeTTLCache<T>({ttl, flushInterval, debug = false}: TTLCacheConfig): TTLCache<T> {
   const cache: InternalCache<T> = new Map();
+
+  const isExpired = (entry: InternalCacheItem<T>): boolean => (Date.now() - entry.setAt) > ttl;
 
   const get = (id: string) => {
     const entry = cache.get(id);
 
     if (entry === undefined) {
-      if (debug) console.log('[ttl-cache] no entry found for id:', id);
+      log(debug, ['no entry found for id:', id]);
       return undefined;
     }
     
-    if (secondsElapsed(entry.setAt) > ttlSeconds) {
-      if (debug) console.log('[ttl-cache] entry past TTL for id:', id);
+    if (isExpired(entry)) {
+      log(debug, ['entry past TTL for id:', id]);
       del(id);
       return undefined;
     }
     
-    if (debug) console.log('[ttl-cache] entry found for id:', id);
+    log(debug, ['entry found for id:', id]);
     return entry.val;
   };
   
   const set = (id: string, val: T) => {
-    if (debug) console.log('[ttl-cache] setting entry for id:', id);
+    log(debug, ['setting entry for id:', id]);
     
     cache.set(id, {
       setAt: Date.now(),
@@ -45,9 +50,18 @@ export function makeTTLCache<T>({ttlSeconds, debug}: TTLCacheConfig): TTLCache<T
   };
   
   const del = (id: string) => {
-    if (debug) console.log('Deleting entry for id:', id);
+    log(debug, ['deleting entry for id:', id]);
     cache.delete(id);
   };
+  
+  const flush = () => {
+    log(debug, ['flushing cache']);
+    for (const [id, entry] of cache.entries()) {
+      if (isExpired(entry)) del(id);
+    }
+  };
+
+  setInterval(flush, flushInterval);
 
   return {get, set, delete: del};
 }
