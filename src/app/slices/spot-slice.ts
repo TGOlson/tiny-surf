@@ -4,7 +4,6 @@ import { NavigateFunction } from 'react-router-dom';
 import * as api from '../api';
 import { Spot } from '../../shared/types';
 import { LoadingState } from './types';
-import { largeRegion } from '../utils';
 
 export type SelectionActionType = 'list-click' | 'search' | 'direct-nav';
 

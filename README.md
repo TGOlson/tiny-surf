@@ -8,8 +8,8 @@ WIP whimsical: https://whimsical.com/tiny-surf-RaVBmPqAwErJb2BGGa9rWe
 
 ### todo
 * [done] fix slug to be url friendly
+* [done] some sort of sorting / grouping of spots on server
 * [skip] fix main search, need to use virtual list
-* some sort of sorting / grouping of spots on server
 * try to include spot meta info
 * swell charts?
 * keyboard shortcuts for nav
