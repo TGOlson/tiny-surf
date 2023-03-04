@@ -18,3 +18,11 @@ export function get<T>(i: number, xs: T[]): T {
 
   return x;
 }
+
+export function getObj<T>(k: string, obj: Record<string, T>): T {
+  const x = obj[k];
+
+  if (x === undefined) throw new Error('Unexpected access error in `get`');
+
+  return x;
+}

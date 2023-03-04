@@ -6,7 +6,7 @@ export type Spot = {
   name: string,
   slug: string,
   location: {
-    coordinates: {
+    coords: {
       lat: number,
       long: number,
     },

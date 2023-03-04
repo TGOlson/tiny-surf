@@ -72,7 +72,7 @@ export const parseForecast = (
     utcOffset,
     data: {
       waves: parsedWaves, 
-      ratings: parsedRatings || null,
+      ratings: parsedRatings ?? null,
       wind: parsedWind,
       tides: parsedTides,
     }

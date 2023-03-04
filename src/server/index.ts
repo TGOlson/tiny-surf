@@ -1,5 +1,5 @@
 import path from 'path';
-import { uniqBy } from "ramda";
+import { uniq, uniqBy } from "ramda";
 
 import { fetchEarthTaxonomy, fetchTaxonomy } from "surfline/taxonomy";
 import { RatingForecast, TideForecast, WaveForecast, WindForecast } from 'surfline/forecasts/types';
@@ -7,8 +7,10 @@ import { RatingForecast, TideForecast, WaveForecast, WindForecast } from 'surfli
 import { earthTaxonomy, additionalTaxonomy, allTaxonomy, parsedSpots, parsedCASpots, readJSON } from "./storage";
 
 import { parseForecast } from "./surfline/forecast";
-import { cleanTaxonomy, inspectTaxonomy, parseSpots, flattenTaxonomyResponse } from './surfline/taxonomy';
+import { cleanTaxonomy, inspectTaxonomy, flattenTaxonomyResponse } from './surfline/taxonomy';
 import { startServer } from './server';
+import { parseSpots } from './surfline/parse-spots';
+import { sortSpots } from './surfline/sort-spots';
 
 async function main () {
   const [_, __, cmd] = process.argv;
@@ -46,19 +48,14 @@ async function main () {
     case '--parse-spots': {
       const txs = await allTaxonomy.read();
       const spots = parseSpots(txs);
-
-      const uniqueBySlug = uniqBy(x => x.slug, spots);
-
-      if (spots.length !== uniqueBySlug.length) {
-        throw new Error('Slug collision detected');
-      }
+      const sortedSpots = sortSpots(spots);
       
-      return await parsedSpots.write(spots);
+      return await parsedSpots.write(sortedSpots);
     }
     case '--parse-ca-spots': {
       const txs = await allTaxonomy.read();
       const spots = parseSpots(txs).filter(s => s.locationNamePath.includes('California'));
-      const sortedSpots = spots.sort((a, b) => b.location.coordinates.lat - a.location.coordinates.lat);
+      const sortedSpots = sortSpots(spots);
       
       return await parsedCASpots.write(sortedSpots);
     }
@@ -85,19 +82,39 @@ async function main () {
       return;
     }
     case '--test': {
-      // const spots = await parsedSpots.read();
-      // const res = spots.filter(spot => spot.locationNamePath.length > 6);
-      // const uniqueNParts = uniq(nParts);
-      // const slugs = spots.map(createSlug);
+      const spots = await parsedSpots.read();
+      const sorted = sortSpots(spots).map(s => s.locationNamePath.slice(1, 4).join(','));
+      // const path = spots.map(x => [x.location.continent, x.location.country, x.location.regions[0]].join(','));
+      // const regions = spots.map(x => x.location.regions[0]);
 
-      // console.log(slugs);
+      console.log(uniq(sorted));
+
+      // generateReasonableDefaultSortOrder(spots).forEach(x => console.log(x));
+
+      // console.log(uniq(spots.map(x => x.location.continent)));
+
+      // Object.keys(groups).forEach(async (cont) => {
+
+
+      // })
+      // groups.forEach()
+
+      // writeFile
+
+      // console.log('done');
+
+      // const regions = uniq(spots.filter(spot => spot.location.country === 'Indonesia').map(spot => spot.location.regions[0]));
+      // console.log(regions);
+
+      // const groups = groupSpots(spots);
+      // console.log(groups.map(x => x.group.str), groups.length);
       
-      const res = await fetch('https://www.surfline.com/surf-report/old-man-s-at-tourmaline/5842041f4e65fad6a77088c4?camId=5f29e43f4a641b0b4103763b5842041f4e65fad6a7708801');
-      console.log(res, res.status, res.statusText);
+      // const res = await fetch('https://www.surfline.com/surf-report/old-man-s-at-tourmaline/5842041f4e65fad6a77088c4?camId=5f29e43f4a641b0b4103763b5842041f4e65fad6a7708801');
+      // console.log(res, res.status, res.statusText);
 
-      const body = await res.text();
+      // const body = await res.text();
 
-      console.log(body);
+      // console.log(body);
 
       return;
     }
