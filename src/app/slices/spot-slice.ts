@@ -42,7 +42,7 @@ export const spotSlice = createSlice({
       })
       .addCase(fetchSpots.fulfilled, (state: State, {payload}: PayloadAction<Spot[]>) => {
         const data = payload.map(spot => {
-          const searchString = `${spot.name} ${largeRegion(spot).join(' ')}`.toLowerCase();
+          const searchString = `${spot.name} ${spot.locationNamePath.slice(1).join(' ')}`.toLowerCase();
           return {...spot, searchString};
         });
 

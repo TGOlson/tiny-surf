@@ -83,7 +83,7 @@ async function main () {
     }
     case '--test': {
       const spots = await parsedSpots.read();
-      const sorted = sortSpots(spots).map(s => s.locationNamePath.slice(1, 4).join(','));
+      const sorted = sortSpots(spots).filter(x => x.location.country === 'Indonesia').map(s => s.locationNamePath.slice(1, 4).join(','));
       // const path = spots.map(x => [x.location.continent, x.location.country, x.location.regions[0]].join(','));
       // const regions = spots.map(x => x.location.regions[0]);
 

@@ -125,7 +125,7 @@ const SpotList = ({spots, selected, selectionAction}: SpotListProps) => {
           groupCounts={groupCounts} 
           components={SpotListComponentMapping}
           initialTopMostItemIndex={{index: selectedIndex, align: 'center'}}
-          groupContent={index => <Typography noWrap level="body4" fontSize={10.5}>{groupLabels[index]}</Typography>}
+          groupContent={index => <Typography noWrap level="body4" fontSize={10}>{groupLabels[index]}</Typography>}
           itemContent={itemContent} 
         />
       </Card>
