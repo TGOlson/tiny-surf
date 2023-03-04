@@ -5,11 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    
     "server:build": "npx webpack --config webpack/common.js --config webpack/server.js --merge",
     "server:watch": "npx webpack watch --config webpack/common.js --config webpack/server.js --merge",
     "server:run": "npx nodemon ./dist/server.bundle.js --start-server --watch ./dist/server.bundle.js",
-
     "app:build": "npx webpack --config webpack/common.js --config webpack/app.js --merge",
     "app:serve": "npx webpack serve --config webpack/common.js --config webpack/app.js --merge"
   },
@@ -58,6 +56,6 @@
     "react-router-dom": "^6.8.1",
     "react-virtuoso": "^4.1.0",
     "redux-logger": "^3.0.6",
-    "surfline": "^0.0.9"
+    "surfline": "^0.0.10"
   }
 }
