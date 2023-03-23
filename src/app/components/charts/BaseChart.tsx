@@ -11,7 +11,6 @@ import 'chart.js/auto';
 import 'chartjs-adapter-luxon';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 
-
 function mergeOptions<T extends ChartType, Opts extends object = NonNullable<ChartOptions<T>>> (o1: Opts, o2: Opts): Opts {
   // a little unsafe with type cohersion, but mergedeep doesn't want to work otherwise
   // mergeDeepLeft<T, T> => T
