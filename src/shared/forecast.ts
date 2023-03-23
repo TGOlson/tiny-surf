@@ -4,13 +4,22 @@ import { Forecast, RatingDetails } from "./types";
 import { allEqual } from './util';
 
 export async function fetchCombinedForecast(spotId: string): Promise<Forecast> {
-  const partialConfig = {spotId, days: 3, intervalHours: 1};
+  // console.log('process.env.PRODUCTION', process.env.NODE_ENV);
+
+  const config = {
+    spotId, 
+    days: 3, 
+    intervalHours: 1,
+    // name of small proxy server on gcp
+    // TODO: move to env var
+    proxy: 'https://tiny-surf-proxy.uw.r.appspot.com/',
+  };
 
   const [waves, ratings, winds, tides] = await Promise.all([
-    fetchForecast({type: 'wave', ...partialConfig}),
-    fetchForecast({type: 'rating', ...partialConfig}),
-    fetchForecast({type: 'wind', ...partialConfig}),
-    fetchForecast({type: 'tides', ...partialConfig}),
+    fetchForecast({type: 'wave', ...config}),
+    fetchForecast({type: 'rating', ...config}),
+    fetchForecast({type: 'wind', ...config}),
+    fetchForecast({type: 'tides', ...config}),
   ]);
 
   return parseForecast(spotId, waves, ratings, winds, tides);
