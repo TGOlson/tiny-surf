@@ -8,7 +8,7 @@ module.exports = {
   target: 'node',
   devtool: 'inline-source-map',
   output: {
-    filename: '[name].bundle.js',
+    filename: 'server.bundle.js',
     path: path.resolve(__dirname, '../dist')
   },
   resolve: {
