@@ -10,7 +10,7 @@ module.exports = {
   output: {
     filename: 'app.bundle.js',
     path: path.resolve(__dirname, '../dist'),
-    publicPath: '/assets',
+    publicPath: '/tiny-surf/assets',
   },
   module: { 
     rules: [{
@@ -33,11 +33,7 @@ module.exports = {
       },
       { 
         directory: path.resolve(__dirname, '../data'),
-        publicPath: '/data',
-      },
-      { 
-        directory: path.resolve(__dirname, '../dist'),
-        publicPath: '/assets',
+        publicPath: '/tiny-surf/data',
       },
     ],
   }
