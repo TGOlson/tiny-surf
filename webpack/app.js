@@ -37,7 +37,7 @@ module.exports = {
       },
       { 
         directory: path.resolve(__dirname, '../dist'),
-        publicPath: '/dist',
+        publicPath: '/assets',
       },
     ],
   }

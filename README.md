@@ -1,6 +1,8 @@
 # tiny-surf
 
-A tiny way to check the waves.
+https://maybetyler.com/tiny-surf
+
+A tiny way to check the waves. 
 
 ### design
 
@@ -32,4 +34,30 @@ WIP whimsical: https://whimsical.com/tiny-surf-RaVBmPqAwErJb2BGGa9rWe
 * https://observablehq.com/@justingosses/surfline-api-exploration
 * https://services.surfline.com/kbyg/regions/forecasts/conditions?subregionId=58581a836630e24c44878fd4&days=6
 
-# dev
+### dev
+
+Install deps
+
+```
+$ npm install
+```
+
+Build and serve app
+
+```
+$ npm run app:serve
+```
+
+Build server tool (not really a serve, but used for fetching and persisting some surfline data)
+
+```
+$ npm run server:watch
+```
+
+Deploy
+
+*Note: Site is serve from `main` branch. This assumes all changes are staged and committed before running.*
+
+```
+$ ./deploy.sh
+```
