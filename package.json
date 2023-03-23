@@ -10,7 +10,7 @@
     "app:build": "npx webpack --config webpack/common.js --config webpack/app.js --merge",
     "app:build-prod": "npx webpack --config webpack/common.js --config webpack/app.prod.js --merge",
     "app:serve": "npx webpack serve --config webpack/common.js --config webpack/app.js --merge",
-    "clean": "rm -rf dist/"
+    "clean": "rm -rf dist/ && rm -rf assets/"
   },
   "author": "",
   "license": "ISC",
