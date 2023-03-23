@@ -1,11 +1,12 @@
 import { Forecast, Spot } from "../shared/types";
+import { fetchCombinedForecast } from "../shared/forecast";
 
 export async function fetchSpots(): Promise<Spot[]> {
-  return fetch('/api/spots').then(res => res.json() as Promise<Spot[]>);
+  return fetch('/data/parsed/spots.json').then(res => res.json() as Promise<Spot[]>);
 }
 
 export async function fetchForecast(spotId: string): Promise<Forecast> {
   console.log('fetching forecast for spot', spotId);
 
-  return fetch(`/api/forecast/${spotId}`).then(res => res.json() as Promise<Forecast>);
+  return fetchCombinedForecast(spotId);
 }

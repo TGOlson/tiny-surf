@@ -10,7 +10,7 @@ module.exports = {
   output: {
     filename: '[name].bundle.js',
     path: path.resolve(__dirname, '../dist'),
-    publicPath: '/assets/js',
+    publicPath: '/dist',
   },
   module: { 
     rules: [{
@@ -32,8 +32,12 @@ module.exports = {
         directory: path.resolve(__dirname, '../public') 
       },
       { 
+        directory: path.resolve(__dirname, '../data'),
+        publicPath: '/data',
+      },
+      { 
         directory: path.resolve(__dirname, '../dist'),
-        publicPath: '/assets/js',
+        publicPath: '/dist',
       },
     ],
     proxy: {

@@ -1,8 +1,7 @@
 import { fetchForecast } from 'surfline';
 import { RatingForecast, TideForecast, WaveForecast, WindForecast } from 'surfline/forecasts/types';
-import { Forecast, RatingDetails } from "../../shared/types";
-import { allEqual } from '../../shared/util';
-import { logInterestingWaveFields, logInterestingWindFields } from './log-interesting-fields';
+import { Forecast, RatingDetails } from "./types";
+import { allEqual } from './util';
 
 export async function fetchCombinedForecast(spotId: string): Promise<Forecast> {
   const partialConfig = {spotId, days: 3, intervalHours: 1};
@@ -13,9 +12,6 @@ export async function fetchCombinedForecast(spotId: string): Promise<Forecast> {
     fetchForecast({type: 'wind', ...partialConfig}),
     fetchForecast({type: 'tides', ...partialConfig}),
   ]);
-
-  await logInterestingWaveFields(waves);
-  await logInterestingWindFields(winds);
 
   return parseForecast(spotId, waves, ratings, winds, tides);
 }

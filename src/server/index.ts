@@ -1,14 +1,13 @@
 import path from 'path';
-import { uniq, uniqBy } from "ramda";
+import { uniqBy } from "ramda";
 
 import { fetchEarthTaxonomy, fetchTaxonomy } from "surfline/taxonomy";
 import { RatingForecast, TideForecast, WaveForecast, WindForecast } from 'surfline/forecasts/types';
 
 import { earthTaxonomy, additionalTaxonomy, allTaxonomy, parsedSpots, parsedCASpots, readJSON } from "./storage";
 
-import { parseForecast } from "./surfline/forecast";
+import { parseForecast } from "../shared/forecast";
 import { cleanTaxonomy, inspectTaxonomy, flattenTaxonomyResponse } from './surfline/taxonomy';
-import { startServer } from './server';
 import { parseSpots } from './surfline/parse-spots';
 import { sortSpots } from './surfline/sort-spots';
 
@@ -54,7 +53,7 @@ async function main () {
     }
     case '--parse-ca-spots': {
       const txs = await allTaxonomy.read();
-      const spots = parseSpots(txs).filter(s => s.locationNamePath.includes('California'));
+      const spots = parseSpots(txs).filter(s => s.location.regions[0]?.includes('California'));
       const sortedSpots = sortSpots(spots);
       
       return await parsedCASpots.write(sortedSpots);
@@ -77,44 +76,11 @@ async function main () {
       
       return;
     }
-    case '--start-server': {
-      startServer();
-      return;
-    }
     case '--test': {
-      const spots = await parsedSpots.read();
-      const sorted = sortSpots(spots).filter(x => x.location.country === 'Indonesia').map(s => s.locationNamePath.slice(1, 4).join(','));
-      // const path = spots.map(x => [x.location.continent, x.location.country, x.location.regions[0]].join(','));
-      // const regions = spots.map(x => x.location.regions[0]);
+      // const spots = await parsedSpots.read();
+      // const sorted = sortSpots(spots).filter(x => x.location.country === 'Indonesia').map(s => s.locationNamePath.slice(1, 4).join(','));
 
-      console.log(uniq(sorted));
-
-      // generateReasonableDefaultSortOrder(spots).forEach(x => console.log(x));
-
-      // console.log(uniq(spots.map(x => x.location.continent)));
-
-      // Object.keys(groups).forEach(async (cont) => {
-
-
-      // })
-      // groups.forEach()
-
-      // writeFile
-
-      // console.log('done');
-
-      // const regions = uniq(spots.filter(spot => spot.location.country === 'Indonesia').map(spot => spot.location.regions[0]));
-      // console.log(regions);
-
-      // const groups = groupSpots(spots);
-      // console.log(groups.map(x => x.group.str), groups.length);
-      
-      // const res = await fetch('https://www.surfline.com/surf-report/old-man-s-at-tourmaline/5842041f4e65fad6a77088c4?camId=5f29e43f4a641b0b4103763b5842041f4e65fad6a7708801');
-      // console.log(res, res.status, res.statusText);
-
-      // const body = await res.text();
-
-      // console.log(body);
+      // console.log(uniq(sorted));
 
       return;
     }

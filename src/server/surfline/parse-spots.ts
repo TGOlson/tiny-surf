@@ -65,7 +65,6 @@ export const parseSpots = (txs: Taxonomy[]): Spot[] => {
       },
       geonames: geonames.map(geo => ({id: geo._id, name: geo.name})),
       geonameId: closestGeoname._id,
-      locationNamePath
     };
   });
 
@@ -79,7 +78,7 @@ export const parseSpots = (txs: Taxonomy[]): Spot[] => {
 };
 
 // All spots have at least 3 location pieces (normally 5-7)
-const spotLocation = (parts: Spot['locationNamePath']): Omit<Spot['location'], 'coords'> => {
+const spotLocation = (parts: string[]): Omit<Spot['location'], 'coords'> => {
   // parts[0] === 'Earth'
   const continent = parts[1];
   const country = parts[2];

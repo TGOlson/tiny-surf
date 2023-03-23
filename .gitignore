@@ -1,5 +1,5 @@
 dist
 node_modules
 sample-data/taxonomy-earth*
-data
+data/raw
 logs
