@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOMClient from 'react-dom/client';
 import {
-  createBrowserRouter,
+  createHashRouter,
   redirect,
   RouterProvider,
 } from "react-router-dom";
@@ -18,7 +18,7 @@ import "./index.css";
 
 import store from './store';
 
-const router = createBrowserRouter([
+const router = createHashRouter([
   {
     path: "/",
     element: <Root />,
