@@ -1,6 +1,6 @@
 # tiny-surf
 
-https://maybetyler.com/tiny-surf
+https://maybetyler.com/tiny-surf (note: live forecasts are broken due to surfline api changes)
 
 A tiny way to check the waves. 
 
